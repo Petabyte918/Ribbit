@@ -5,3 +5,7 @@ body{
 canvas {
 	margin: auto;
 }
+
+#title-text{
+	font-family: 'Roboto', sans-serif;
+}
