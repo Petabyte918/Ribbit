@@ -9,3 +9,7 @@ canvas {
 #title-text{
 	font-family: 'Roboto', sans-serif;
 }
+
+.description{
+	text-align:left; display:inline-block; width:640px
+}
