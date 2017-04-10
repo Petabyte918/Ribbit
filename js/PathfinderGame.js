@@ -31,6 +31,9 @@ var rockCG;
 var marker;
 var markerGroup;
 
+
+
+
 var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100];
 
 function tongueRetracted(){
@@ -109,6 +112,7 @@ function screenClicked(){
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
 	console.log("x:" + clickedWorldX + ", y:" + clickedWorldY);
+    
 }
 
 function getClickedWorldX(){return top_down.game.input.x + top_down.game.camera.x;}
@@ -174,6 +178,9 @@ function initControls(){
 	aKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.A);
 	sKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.S);
 	dKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.D);
+    
+    // To test opening mouth
+    xKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.X);
 }
 
 /*called by update function to check/handle any controls being pressed*/
@@ -191,7 +198,18 @@ function checkControls(){
 		}
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
-		}	
+		}
+        
+        // testng open mouth
+        if(xKey.isDown){
+            frog.animations.play('openMouth');
+        }    
+    
+        else{
+            //plays idle animation if nothing is pressed
+            frog.animations.play('idle');
+
+        }
 }
 
 
@@ -233,7 +251,12 @@ top_down.Game.prototype = {
 		frog.body.mass = 4;
 		frog.body.setCollisionGroup(frogCG);
 		frog.body.collides([blockedCG]);
-		
+        
+        //adding frog animations
+        frog.animations.add('idle', [0,0,0,0,0,0,1,2,3,4], 5, true);
+        frog.animations.add('openMouth', [5,6,7,8,], 10, true);
+        
+        
 		markerGroup = this.add.group(); //sets up a group for our tongue markers
 		
 		this.backgroundLayer.resizeWorld(); //make world the size of background tile map
@@ -241,9 +264,11 @@ top_down.Game.prototype = {
 		//adjust starting camera position
 		this.camera.x = 0;
 		this.camera.y = 1200;
+        
 	},
 	update: function(){
 		checkControls(); //checks if controls have been pressed
+
 
 	}
 }
