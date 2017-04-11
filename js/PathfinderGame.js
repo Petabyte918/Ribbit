@@ -28,6 +28,8 @@ var blockedCG;
 var markerCG;
 var rockCG;
 
+var currentMarker;
+
 var marker;
 var markerGroup;
 var distanceBetweenFrogAndRock;
@@ -36,57 +38,32 @@ var wallAnchor;
 var markerX;
 var markerY;
 
-
-
+var tongueOut;
 
 var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100];
 
-
-function tongueRetracted(){
-	if(tongueBeingRetracted){
-		tongueMarker.body.velocity.x = 0;
-		tongueMarker.body.velocity.y = 0;
-		tongueMarker.body.x = frog.body.x + 42;
-		tongueMarker.body.y = frog.body.y + 32;
-	}
-	tongueBeingRetracted = false;
-}
-
-function tongueHitSomethingElse(){
-	tongueMarker.body.velocity.x = 0;
-	tongueMarker.body.velocity.y = 0;
-	//retract tongue
-	top_down.game.physics.arcade.moveToXY(tongueMarker, frog.body.x, frog.body.y, 800);
-	tongueBeingRetracted = true;
-}
-
-function tongueHitRock(){
-	tongueAnchored = true;
-	//tongueMarker.visibility = false;
-	//top_down.game.physics.arcade.moveToXY(tongueMarker, frog.body.x, frog.body.y, 1);
-	tongueMarker.body.x = frog.x + 42;
-	tongueMarker.body.y = frog.y + 32;
-	tongueMarker.body.velocity.x = 0;
-	tongueMarker.body.velocity.y = 0;
-
-	
-}
-
 function updateTonguePoints(){
-	
 	var startX = frog.x + 42;
 	var startY = frog.y + 32;
 	var dx;
 	var dy;
-	if(tongueAnchored){
+	if(tongueAnchored && tongueOut){
 		dx = (startX - wallAnchor.x);
 		dy = (startY - wallAnchor.y);
 	} else {
-		dx = (startX - markerX);
-		dy = (startY - markerY);
+		if(marker != undefined){
+			dx = (startX - marker.x);
+			dy = (startY - marker.y);
+		} else {
+			dx = 20;
+			dy = 20;
+		}
 	}
-
-	//console.log(dx, dy);
+	
+	if(!tongueOut){
+		dx = 20;
+		dy = 20;
+	}
 	
 	tongue.reset(frog.x + 42, frog.y + 32);
 	tongueArray[0].x = -20;
@@ -94,22 +71,6 @@ function updateTonguePoints(){
 	tongueArray[1].x = -dx;
 	tongueArray[1].y = -dy;
 }	
-
-function extendTongue(destX, destY){
-	tongueMarker.visibility = true;
-	tongueArray[1].x = 0;
-	tongueArray[1].y = 0;
-	anchorX = destX;
-	anchorY = destY;
-	tongueAnchored = false;
-	tongueMarker.x = frog.x + 42;
-	tongueMarker.y = frog.y + 22;
-	top_down.game.physics.arcade.moveToXY(tongueMarker, anchorX, anchorY, 800);
-}
-
-
-
-
 
 function screenClicked(){
 	var clickedWorldX = getClickedWorldX();
@@ -122,7 +83,6 @@ function getClickedWorldX(){return top_down.game.input.x + top_down.game.camera.
 
 function getClickedWorldY(){return top_down.game.input.y + top_down.game.camera.y;}
 
-
 function clearConstraints(){
 	for(var i = 0; i < constraints.length; i++){
 		top_down.game.physics.p2.removeConstraint(constraints[i]);
@@ -130,6 +90,10 @@ function clearConstraints(){
 	constraints = [];
 }
 
+function markerHitBlock(marker, block){
+	console.log("marker  hit block");
+	tongueBeingRetracted = true;
+}
 
 function markerHitRock(marker, rock){
 	markerX = rock.x;
@@ -144,6 +108,17 @@ function markerHitRock(marker, rock){
 	//constraints.push(top_down.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock, 100000));
 }
 
+function moveObjToObj(obj1, obj2, speed){
+	console.log(obj2.x, obj2.y)
+	var angle = Math.atan2(obj2.y - obj1.body.y, obj2.x - obj1.body.x)
+	obj1.body.velocity.x = Math.cos(angle) * speed;
+	obj1.body.velocity.y = Math.sin(angle) * speed;
+	console.log(obj1)
+	if(obj1.overlap(obj2)){
+		return true;
+	}
+	return false;
+}
 
 function moveObjToXY(obj, x, y, speed){
 	var angle = Math.atan2(y - obj.body.y, x - obj.body.x)
@@ -152,14 +127,22 @@ function moveObjToXY(obj, x, y, speed){
 }
 
 function shootMarker(destX, destY){
-	marker = markerGroup.create(frog.x, frog.y, 'tongue', 3);
+	tongueOut = true;
+    console.log("SHOOTING TONGUE");
+	tongueAnchored = false;
+	console.log(markerGroup.length);
+	for(var i = 0; i < markerGroup.length; i++){
+		markerGroup.remove(markerGroup.getAt(i));
+	}
+	marker = markerGroup.create(frog.x, frog.y, 'tongue', 1);
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
-	//console.log(markerAngle);
 	marker.body.angle = markerAngle;
 	marker.body.setCollisionGroup(markerCG);
 	marker.body.collides([rockCG]);
+	marker.body.collides([blockedCG]);
 	marker.body.createGroupCallback(rockCG, markerHitRock, this);
+	marker.body.createGroupCallback(blockedCG, markerHitBlock, this);
 	marker.body.data.gravityScale = 0;
 	moveObjToXY(marker, destX, destY, 800);
 }
@@ -171,7 +154,6 @@ function rockClicked(){
 	//console.log("rock clicked");
 	shootMarker(getClickedWorldX(), getClickedWorldY());
 }
-
 
 function initRocks(){
 	rockGroup = top_down.game.add.group();
@@ -187,6 +169,18 @@ function initRocks(){
 		tempRock.body.setCollisionGroup(rockCG);
 		tempRock.body.collides([markerCG]);
 	}
+}
+
+function tongueGone(){
+	marker.x = frog.x;
+	marker.y = frog.y;
+	tongueOut = false;
+	tongueArray[1].x = -20;
+	tongueArray[1].y = -20;
+	for(var i = 0; i < markerGroup.length; i++){
+		markerGroup.remove(markerGroup.getAt(i));
+	}
+	console.log("STEVE");
 }
 
 function initControls(){
@@ -259,6 +253,7 @@ top_down.Game.prototype = {
 		for(var i = 0; i < blockedLayerTiles.length; i++){
 			blockedLayerTiles[i].setCollisionGroup(blockedCG);
 			blockedLayerTiles[i].collides([frogCG]);
+			blockedLayerTiles[i].collides([markerCG]);
 		}
 		
 		//set up frog and frog physics
@@ -281,8 +276,10 @@ top_down.Game.prototype = {
 			updateTonguePoints();
 		};
 		
-		tongueAnchored = false;
-		tongueBeingRetracted = true;
+
+		tongueBeingRetracted = false;
+		tongueOut = false;
+		
 		markerGroup = this.add.group(); //sets up a group for our tongue markers
 		
 		this.backgroundLayer.resizeWorld(); //make world the size of background tile map
@@ -295,19 +292,7 @@ top_down.Game.prototype = {
 	update: function(){
 		checkControls(); //checks if controls have been pressed
 		clearConstraints();
-		if(tongueAnchored){
-			//console.log(distanceBetweenFrogAndRock);
-			if(distanceBetweenFrogAndRock >= 40){
-				distanceBetweenFrogAndRock -= 3;
-			}
-			//console.log(distanceBetweenFrogAndRock);
-			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
-			//console.log(constraints);
-		} else {
-			
-		}
-        
-        if (tongueAnchored == true){
+           if (tongueOut == true){
             frog.animations.play("openMouthRight");
             
             
@@ -327,10 +312,31 @@ top_down.Game.prototype = {
 
                 //console.log("Face: Left");
             }
-            
         }
 		
+		if(tongueBeingRetracted && tongueOut){
+			if(moveObjToObj(marker, frog, 800)){
+				tongueBeingRetracted = false;
+				marker.body.velocity.x = 0;
+				marker.body.velocity.y = 0;
+				tongueGone();
+			}
+		}
+		
+		
+		
+		if(tongueAnchored){
+			tongueOut = true;
+			//console.log(distanceBetweenFrogAndRock);
+			if(distanceBetweenFrogAndRock >= 40){
+				distanceBetweenFrogAndRock -= 4.5;
+			}
+			//console.log(distanceBetweenFrogAndRock);
+			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
 
 
+     
+        }
+		
 	}
 }
