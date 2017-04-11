@@ -7,6 +7,7 @@ var wKey;
 var aKey;
 var sKey;
 var dKey;
+var eKey;
 
 var frog;
 var tongue;
@@ -70,7 +71,11 @@ function updateTonguePoints(){
 	tongueArray[0].y = -20;
 	tongueArray[1].x = -dx;
 	tongueArray[1].y = -dy;
-}	
+}
+
+function screenReleased(){
+	tongueBeingRetracted = true;
+}
 
 function screenClicked(){
 	var clickedWorldX = getClickedWorldX();
@@ -91,7 +96,7 @@ function clearConstraints(){
 }
 
 function markerHitBlock(marker, block){
-	console.log("marker  hit block");
+	//console.log("marker  hit block");
 	tongueBeingRetracted = true;
 }
 
@@ -109,11 +114,11 @@ function markerHitRock(marker, rock){
 }
 
 function moveObjToObj(obj1, obj2, speed){
-	console.log(obj2.x, obj2.y)
+	//console.log(obj2.x, obj2.y)
 	var angle = Math.atan2(obj2.y - obj1.body.y, obj2.x - obj1.body.x)
 	obj1.body.velocity.x = Math.cos(angle) * speed;
 	obj1.body.velocity.y = Math.sin(angle) * speed;
-	console.log(obj1)
+	//console.log(obj1)
 	if(obj1.overlap(obj2)){
 		return true;
 	}
@@ -130,7 +135,7 @@ function shootMarker(destX, destY){
 	tongueOut = true;
     console.log("SHOOTING TONGUE");
 	tongueAnchored = false;
-	console.log(markerGroup.length);
+	//console.log(markerGroup.length);
 	for(var i = 0; i < markerGroup.length; i++){
 		markerGroup.remove(markerGroup.getAt(i));
 	}
@@ -172,15 +177,17 @@ function initRocks(){
 }
 
 function tongueGone(){
+	console.log("TONGUE GONE");
 	marker.x = frog.x;
 	marker.y = frog.y;
 	tongueOut = false;
-	tongueArray[1].x = -20;
-	tongueArray[1].y = -20;
+	tongueArray[1].x = 20;
+	tongueArray[1].y = 20;
+	/*
 	for(var i = 0; i < markerGroup.length; i++){
 		markerGroup.remove(markerGroup.getAt(i));
 	}
-	console.log("STEVE");
+	*/
 }
 
 function initControls(){
@@ -188,9 +195,9 @@ function initControls(){
 	aKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.A);
 	sKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.S);
 	dKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    
     // To test opening mouth
     xKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.X);
+	eKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.E);
 }
 
 /*called by update function to check/handle any controls being pressed*/
@@ -209,7 +216,6 @@ function checkControls(){
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
 		}
-        
         // testng open mouth
         if(xKey.isDown){
             frog.animations.play('openMouth');
@@ -221,6 +227,10 @@ function checkControls(){
                 frog.animations.play('idle');
             }
         }
+		if(eKey.isDown){
+			//markerGroup.destroy();
+			console.log(markerGroup);
+		}
 }
 
 
@@ -238,6 +248,9 @@ top_down.Game.prototype = {
 		this.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	
 		this.input.onDown.add(screenClicked, this); //listen for the screen to be be clicked
+		this.input.onUp.add(screenReleased, this);
+		
+		
 		
 		//set up collision groups
 		frogCG = this.physics.p2.createCollisionGroup();
@@ -315,15 +328,17 @@ top_down.Game.prototype = {
         }
 		
 		if(tongueBeingRetracted && tongueOut){
+			/*
 			if(moveObjToObj(marker, frog, 800)){
+				
 				tongueBeingRetracted = false;
 				marker.body.velocity.x = 0;
 				marker.body.velocity.y = 0;
 				tongueGone();
+				
 			}
+			*/
 		}
-		
-		
 		
 		if(tongueAnchored){
 			tongueOut = true;
