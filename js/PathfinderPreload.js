@@ -18,6 +18,28 @@ top_down.Preload.prototype = {
 		//this.load.image('open_marker', 'assets/open_marker.png');
 		//this.load.image('path_marker', 'assets/path_marker.png');
 		//this.load.image('trace_marker', 'assets/trace_marker.png');
+		
+		this.load.image('background', 'Ribbit/background.png');
+		this.load.image('help', 'Ribbit/Help.png');
+		this.load.image('menu','Ribbit/menuButton.png');
+		this.load.image('popup', 'Ribbit/plainMenu.png');
+		this.load.image('restart', 'Ribbit/restart.png');
+		this.load.image('resume', 'Ribbit/resumeButton.png');
+		this.load.image('volumeOff', 'Ribbit/volume.png');
+		this.load.image('volumeOn', 'Ribbit/volumeOn.png');
+		this.load.image('logo', 'Ribbit/logo.png');
+		this.load.image('home', 'Ribbit/home.png');
+		this.load.image('controls', 'Ribbit/controls.png');
+		this.load.image('greenHelp', 'Ribbit/greenHelp.png');
+		this.load.image('greenOn', 'Ribbit/greenVolumeOn.png');
+		this.load.image('greenOff', 'Ribbit/greenVolumeOff.png');
+		this.load.image('playGame', 'Ribbit/playGame.png');
+		this.load.image('helpScreen', 'Ribbit/helpMenu.png');
+		this.load.image('controlScreen', 'Ribbit/controlMenu.png');
+		this.load.image('levelSelect', 'Ribbit/levelSelect.png');
+		this.load.image('lock', 'Ribbit/locked.png');
+		this.load.image('lvlone', 'Ribbit/levelOne.png');
+		
 	},
 	
 	create: function(){

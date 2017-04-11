@@ -3,6 +3,29 @@ var top_down = top_down || {};
 
 top_down.Game = function(){};
 
+
+var homeMenu;
+var playGame;
+var controls;
+var greenVolume;
+var greenHelp;
+
+var level;
+var locked = [12];
+
+var gameMenu;
+var menuButton;
+var resumeButton;
+var helpButton;
+var volumeButton;
+var restartButton;
+var levelSelect;
+var helpMenu;
+var background;
+var popup;
+var logo;
+var home;
+
 var wKey;
 var aKey;
 var sKey;
@@ -210,66 +233,37 @@ function checkControls(){
 		}	
 }
 
-
+var flag = true;
 top_down.Game.prototype = {
-	create: function(){
-		this.physics.startSystem(Phaser.Physics.P2JS); //start physics system
-		this.physics.p2.setImpactEvents(true);
-		this.physics.p2.gravity.y = 1400; //set up world gravity
-		
-		//set up tilemap and layers
-		this.map = this.game.add.tilemap('test_map');
-		this.map.addTilesetImage('spritesheet2','tiles2');
-		this.backgroundLayer = this.map.createLayer('background_nc');
-		this.blockedLayer = this.map.createLayer('twig_c');
-		this.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	
-		this.input.onDown.add(screenClicked, this); //listen for the screen to be be clicked
+	create: function(){		
 		
-		//set up collision groups
-		frogCG = this.physics.p2.createCollisionGroup();
-		blockedCG = this.physics.p2.createCollisionGroup();
-		markerCG = this.physics.p2.createCollisionGroup();
-		rockCG = this.physics.p2.createCollisionGroup();
+		homeCreate();
 		
-		initRocks(); //spawn rock objects
-		initControls(); //tell Phaser to look for key presses
-		
-		//make all tiles in the blocked layer impassable
-		var blockedLayerTiles = this.physics.p2.convertTilemap(this.map, this.blockedLayer);
-		for(var i = 0; i < blockedLayerTiles.length; i++){
-			blockedLayerTiles[i].setCollisionGroup(blockedCG);
-			blockedLayerTiles[i].collides([frogCG]);
-		}
-		
-		//set up frog and frog physics
-		frog = this.add.sprite(160, 1400, 'frog'); //add frog to game
-		this.physics.p2.enable(frog); //give the frog physics
-		frog.enableBody = true;
-		frog.body.mass = 4;
-		frog.body.setCollisionGroup(frogCG);
-		frog.body.collides([blockedCG]);
-		
-		
-		
-		tongueArray.push(new Phaser.Point(0, 0));
-		tongueArray.push(new Phaser.Point(0, 0));
-		tongue = this.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
-		tongue.updateAnimation = function(){
-			updateTonguePoints();
-		};
-		
-		tongueAnchored = false;
-		tongueBeingRetracted = true;
-		
-		markerGroup = this.add.group(); //sets up a group for our tongue markers
-		
-		this.backgroundLayer.resizeWorld(); //make world the size of background tile map
+		/*
+			if(flag){
+		logo.alpha = 0;
+		homeMenu.alpha = 0;
+		playGame.alpha = 0;
 
-		//adjust starting camera position
-		this.camera.x = 0;
-		this.camera.y = 1200;
+		controls.alpha = 0;
+
+		greenVolume.alpha = 0;
+
+		greenHelp.alpha = 0;
+		flag = false;
+		this.add.tween(logo).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, -1, false);
+		this.add.tween(homeMenu).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
+		this.add.tween(playGame).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
+		this.add.tween(controls).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
+		this.add.tween(greenVolume).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
+		this.add.tween(greenHelp).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
+		}
+		*/
+				initControls();
+		
 	},
+	
 	update: function(){
 		checkControls(); //checks if controls have been pressed
 		clearConstraints();
@@ -284,7 +278,254 @@ top_down.Game.prototype = {
 		} else {
 			
 		}
-		
+	
+		if (menuButton != null){
+			console.log("Menu Button: " + menuButton);
+			menuButton.x = top_down.game.camera.x + 768 - 58;
+			menuButton.y = top_down.game.camera.y + 512  - 58;
 
+		}
 	}
+}
+
+function createGame(){
+		top_down.game.physics.startSystem(Phaser.Physics.P2JS); //start physics system
+		top_down.game.physics.p2.setImpactEvents(true);
+		top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
+		
+		//set up tilemap and layers
+		top_down.game.map = top_down.game.add.tilemap('test_map');
+		top_down.game.map.addTilesetImage('spritesheet2','tiles2');
+		top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
+		top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
+		top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
+	
+		top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
+		
+		//set up collision groups
+		frogCG = top_down.game.physics.p2.createCollisionGroup();
+		blockedCG = top_down.game.physics.p2.createCollisionGroup();
+		markerCG = top_down.game.physics.p2.createCollisionGroup();
+		rockCG = top_down.game.physics.p2.createCollisionGroup();
+		
+		initRocks(); //spawn rock objects
+		initControls(); //tell Phaser to look for key presses
+		
+		//make all tiles in the blocked layer impassable
+		var blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
+		for(var i = 0; i < blockedLayerTiles.length; i++){
+			blockedLayerTiles[i].setCollisionGroup(blockedCG);
+			blockedLayerTiles[i].collides([frogCG]);
+		}
+		
+		//set up frog and frog physics
+		frog = top_down.game.add.sprite(160, 1400, 'frog'); //add frog to game
+		top_down.game.physics.p2.enable(frog); //give the frog physics
+		frog.enableBody = true;
+		frog.body.mass = 4;
+		frog.body.setCollisionGroup(frogCG);
+		frog.body.collides([blockedCG]);
+		
+		
+		
+		tongueArray.push(new Phaser.Point(0, 0));
+		tongueArray.push(new Phaser.Point(0, 0));
+		tongue = top_down.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
+		tongue.updateAnimation = function(){
+			updateTonguePoints();
+		};
+		
+		tongueAnchored = false;
+		tongueBeingRetracted = true;
+		
+		markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
+		
+		top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
+
+		//adjust starting camera position
+			
+		top_down.game.camera.x = 0;
+		top_down.game.camera.y = 1200;
+		
+		menuButton = top_down.game.add.sprite(top_down.game.camera.x - 58, top_down.game.camera.y - 58, 'menu');
+		menuButton.inputEnabled = true;
+		menuButton.events.onInputDown.add(menuCreate, this);
+		
+		
+	}
+
+function newGame(){
+	kill();
+
+}
+
+function menuCreate(){
+	homeMenu = top_down.game.add.sprite(top_down.game.camera.x + 380 - (332/2), top_down.game.camera.y + 256 - 128, 'popup');
+	resumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 - 24, 'resume');
+	restartButton = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 - 24, 'restart');
+	volumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 + 48, 'volumeOn');
+	home = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 + 48, 'home');
+	resumeButton.inputEnabled = true;
+	resumeButton.events.onInputDown.add(menuKill, this);
+	homeMenu.inputEnabled = true;
+	homeMenu.events.onInputDown.add(goHome, this);
+	volumeButton.inputEnabled = true;
+	volumeButton.events.onInputDown.add(swapVolume, this);
+	restartButton.inputEnabled = true;
+	restartButton.events.onInputDown.add(restartLevel, this);
+}
+
+function homeCreate(){
+	top_down.game.camera.x = 0;
+	top_down.game.camera.y = 0;
+	
+	background = top_down.game.add.sprite(0, 0, 'background');
+	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'popup');
+	playGame = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91, 'playGame');
+	controls = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 41, 'controls');
+	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
+	greenHelp= top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 123, 'greenHelp');
+	logo = top_down.game.add.sprite(380 - (500/8), 256 - (500/2), 'logo');
+	logo.scale.setTo(logo.scale.x/3, logo.scale.y/3);
+	
+	playGame.inputEnabled = true;
+	controls.inputEnabled = true;
+	greenVolume.inputEnabled = true;
+	greenHelp.inputEnabled = true;
+	playGame.events.onInputDown.add(levelStage, this);
+	controls.events.onInputDown.add(showControl, this);
+	greenVolume.events.onInputDown.add(swapGreenVolume, this);
+	greenHelp.events.onInputDown.add(showHelp, this);
+}
+
+function goHome(){
+	//kill();
+	greenNum = 0;
+	volNum = 0;
+	homeCreate();
+}
+
+function menuKill(){
+	homeMenu.destroy();
+	resumeButton.destroy();
+	restartButton.destroy();
+	volumeButton.destroy();
+	home.destroy();
+}
+
+function kill(){
+	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	playGame = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	controls = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	greenVolume = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	greenHelp = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	gameMenu = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	menuButton = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	resumeButton = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	helpButton = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	volumeButton = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	restartButton = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	levelSelect = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	helpMenu = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	background = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	popup = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	logo = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+	home = top_down.game.add.sprite(380 - (332/2), 256 - 128, 'popup');
+
+	/*
+	homeMenu.destroy();
+	playGame.destroy();
+	controls.destroy();
+	greenVolume.destroy();
+	greenHelp.destroy();
+
+	gameMenu.destroy();
+	menuButton.destroy();
+	resumeButton.destroy();
+	helpButton.destroy();
+	volumeButton.destroy();
+	restartButton.destroy();
+	levelSelect.destroy();
+	helpMenu.destroy();
+	background.destroy();
+	popup.destroy();
+	logo.destroy();
+	home.destroy();
+	*/
+}
+var volNum = 0;
+function swapVolume(){
+	volumeButton.destroy();
+	if (volNum%2 == 0){
+	volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOff');
+	}else{
+	volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOn');
+	}
+	volNum++;
+	volumeButton.inputEnabled = true;
+	volumeButton.events.onInputDown.add(swapVolume, this);
+}
+var greenNum = 0
+function swapGreenVolume(){
+	greenVolume.destroy();
+	if (greenNum%2 == 0){
+	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOff');
+	}else{
+	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
+	}
+	greenNum++;
+	greenVolume.inputEnabled = true;
+	greenVolume.events.onInputDown.add(swapGreenVolume, this);
+}
+
+function showControl(){
+	homeMenu.destroy();
+	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'controlScreen');
+	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
+	home.inputEnabled = true;
+	home.events.onInputDown.add(goHome, this);
+	
+}
+
+function showHelp(){
+	homeMenu.destroy();
+	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'helpScreen');
+	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
+	home.inputEnabled = true;
+	home.events.onInputDown.add(goHome, this);
+}
+
+function restartLevel(){
+	kill();
+	createGame();
+}
+
+function levelStage(){
+	kill();
+	background = top_down.game.add.sprite(0, 0, 'levelSelect');
+	
+	level = top_down.game.add.sprite(70, 87, 'lvlone');
+	
+	for(var i = 0; i < 3; i++){
+		locked[i] = top_down.game.add.sprite(160*i + 30 + 200, 87 , 'lock');
+	}
+	level[4] = top_down.game.add.sprite(70, 87 + 120, 'lock');
+	
+	for (var i = 0; i < 3; i++){
+		locked[i + 4] = top_down.game.add.sprite(160*i + 30 + 200, 87 + 120 , 'lock');
+	}
+	
+	level[8] = top_down.game.add.sprite(70, 87 + 240, 'lock');
+	
+	for (var i = 0; i < 3; i++){
+		locked[i + 8] = top_down.game.add.sprite(160*i + 30 + 200, 87 + 240 , 'lock');
+	}
+	
+	
+	level.inputEnabled = true;
+	level.events.onInputDown.add(createGame, this);
+	
+	home = top_down.game.add.sprite(20, 20, 'home');
+	home.inputEnabled = true;
+	home.events.onInputDown.add(goHome, this);
 }
