@@ -10,9 +10,8 @@ top_down.Preload.prototype = {
 		this.load.setPreloadSprite(this.preloadBar);
 		
 		this.load.tilemap('test_map', 'assets/tilemaps/test_tilemap.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.image('frog', 'assets/frog.png');
+		this.load.spritesheet('frog', 'assets/frog.png', 48, 48);
 		this.load.image('tiles2', 'assets/spritesheet2.png');
-		//this.load.spritesheet('player', 'assets/player_spritesheet.png', 16, 16, 5);	
 		this.load.image('rock1', 'assets/rock1.png');
 		this.load.image('tongue', 'assets/tongue.png');
 		//this.load.image('open_marker', 'assets/open_marker.png');
@@ -43,6 +42,7 @@ top_down.Preload.prototype = {
 	},
 	
 	create: function(){
+        
 		this.state.start('Game');
 	}
 }
