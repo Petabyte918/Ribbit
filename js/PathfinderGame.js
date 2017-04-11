@@ -156,7 +156,6 @@ function moveObjToXY(obj, x, y, speed){
 
 function shootMarker(destX, destY){
 	tongueOut = true;
-    console.log("SHOOTING TONGUE");
 	tongueAnchored = false;
 	//console.log(markerGroup.length);
 	for(var i = 0; i < markerGroup.length; i++){
@@ -252,7 +251,7 @@ function checkControls(){
         }
 		if(eKey.isDown){
 			//markerGroup.destroy();
-			console.log(markerGroup);
+			//console.log(markerGroup);
 		}
 }
 
@@ -283,21 +282,21 @@ top_down.Game.prototype = {
 		this.add.tween(greenHelp).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, -1, false);
 		}
 		*/
-				initControls();
+		initControls();
 		
 	},
 	
 	update: function(){
-		checkControls(); //checks if controls have been pressed
+		//checkControls(); //checks if controls have been pressed
 		clearConstraints();
 		if(tongueAnchored){
-			console.log(distanceBetweenFrogAndRock);
+			//console.log(distanceBetweenFrogAndRock);
 			if(distanceBetweenFrogAndRock >= 40){
 				distanceBetweenFrogAndRock -= 3;
 			}
-			console.log(distanceBetweenFrogAndRock);
+			//console.log(distanceBetweenFrogAndRock);
 			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
-			console.log(constraints);
+			//console.log(constraints);
 		} else {
 			
 		}
@@ -359,7 +358,10 @@ function createGame(){
     
 		tongueArray.push(new Phaser.Point(0, 0));
 		tongueArray.push(new Phaser.Point(0, 0));
+		//console.log(tongue);
+		
 		tongue = top_down.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
+
 		tongue.updateAnimation = function(){
 			updateTonguePoints();
 		};
@@ -420,6 +422,8 @@ function createGame(){
 				distanceBetweenFrogAndRock -= 4.5;
 			}
 			//console.log(distanceBetweenFrogAndRock);
+			
+			consolg.log(frog);
 			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
 
 
@@ -432,13 +436,12 @@ function createGame(){
 		menuButton = top_down.game.add.sprite(top_down.game.camera.x - 58, top_down.game.camera.y - 58, 'menu');
 		menuButton.inputEnabled = true;
 		menuButton.events.onInputDown.add(menuCreate, this);
-		
+		top_down.game.world.bringToTop(menuButton);
 		
 	}
 
 function newGame(){
 	kill();
-
 }
 
 function menuCreate(){
