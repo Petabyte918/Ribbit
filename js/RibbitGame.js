@@ -32,6 +32,7 @@ var aKey;
 var sKey;
 var dKey;
 var eKey;
+var spaceKey;
 
 var frog;
 var tongue;
@@ -66,8 +67,6 @@ var markerX;
 var markerY;
 
 var tongueOut;
-
-var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 
 function updateTonguePoints(){
 	var startX = frog.x + 20;
@@ -187,7 +186,17 @@ function rockClicked(rock){
 	}
 }
 
-function initRocks(){
+function initRocks(rockLayerData){
+	var rockPlacement = [];//[200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
+	for(var i = 0; i < rockLayerData.data.length; i++){
+			if(rockLayerData.data[i] != 0){
+				console.log(rockLayerData.width, rockLayerData.height);
+				rockPlacement.push((i%rockLayerData.width) * 16);
+				rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
+			}
+		
+	}	
+	//console.log(rockPlacement);
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 2){
@@ -216,47 +225,72 @@ function initControls(){
 	aKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.A);
 	sKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.S);
 	dKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    // To test opening mouth
+    spaceKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+	
+	
+	/*spaceKey.addCallbacks(this, null, null, function(){
+});
+	*/
+	//spaceKey.onHoldCallback.push(function(){});
+	//console.log(spaceKey.onHoldCallback);
+	// To test opening mouth
     xKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.X);
 	eKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.E);
+	
 }
 
 /*called by update function to check/handle any controls being pressed*/
 var singlePress = true;
 function checkControls(){
+		
 		if(wKey.isDown){
 			top_down.game.camera.y -= 10;
 		}
 		if(aKey.isDown){
 			top_down.game.camera.x -= 10;
-			frog.body.velocity.x = 0
+			//frog.body.velocity.x = 0
 		}
 		if(sKey.isDown){
 			top_down.game.camera.y += 10;
-			frog.body.velocity.x = 100;
+			//frog.body.velocity.x = 100;
 		}
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
 		}
+	
         // testng open mouth
         if(xKey.isDown){
             frog.animations.play('openMouth');
-        }    
+        }
     
-        else{
+        //else{
             //plays idle animation if nothing is pressed
             if (tongueAnchored==false){
                 frog.animations.play('idle');
             }
-        }
-		if(eKey.isDown){
+        //}
+		
+		if(spaceKey.isDown){
 			if(singlePress){
-				console.log(frog);
+				//top_down.game.camera.x = frog.body.x - 384;
+				//top_down.game.camera.y = frog.body.y - 256;
+				top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_LOCKON);
 			}
 			singlePress = false;
 		} else {
 			singlePress = true;
+			top_down.game.camera.follow();
 		}
+}
+
+function getDataLayerFromTilemap(tilemapName, layerName){
+	var length = top_down.game.cache.getTilemapData(tilemapName).data.layers.length;
+	for(var i = 0; i < length; i++){
+		var name = top_down.game.cache.getTilemapData(tilemapName).data.layers[i].name;
+		if(name === layerName){
+			return top_down.game.cache.getTilemapData(tilemapName).data.layers[i];
+		}
+	}
 }
 
 function createGame(){
@@ -270,6 +304,10 @@ function createGame(){
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
+	
+	//top_down.game.map.createLayer('rock_ci');
+	//console.log(rockLayerData);
+	
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	
 	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
@@ -284,7 +322,7 @@ function createGame(){
 	markerCG = top_down.game.physics.p2.createCollisionGroup();
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
 	
-	initRocks(); //spawn rock objects
+	initRocks(getDataLayerFromTilemap("test_map", "rock_ci")); //spawn rock objects
 	initControls(); //tell Phaser to look for key presses
 	
 	//make all tiles in the blocked layer impassable
@@ -296,13 +334,14 @@ function createGame(){
 	}
 	
 	//set up frog and frog physics
-	frog = top_down.game.add.sprite(160, 1400, 'frog'); //add frog to game
+	frog = top_down.game.add.sprite(180, 1800, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
 	frog.body.collides([blockedCG]);
-    frog.anchor.setTo(.39, .60);
+    //frog.anchor.setTo(.39, .60);
+	frog.anchor.setTo(.5, .5);
     //frog.body.fixedRotation = true;
 	//adding frog animations
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
@@ -325,19 +364,18 @@ function createGame(){
 	top_down.game.world.bringToTop(frog);
 	
 	top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
-	//adjust starting camera position
-	top_down.game.camera.x = 0;
-	top_down.game.camera.y = 1200;
-	top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
+	
+	//top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
 	var helper = Math.max(top_down.game.width, top_down.game.height) / 4;
 	//top_down.game.camera.deadzone = new Phaser.Rectangle((top_down.game.width - helper) / 2, (top_down.game.height - helper) / 2, helper, helper);
 	//top_down.game.camera.deadzone = new Phaser.Rectangle(100,100,top_down.game.width-200, top_down.game.height-200);
        
 	//checkControls(); //checks if controls have been pressed
 	clearConstraints();
-			
+	
+	//adjust starting camera position
 	top_down.game.camera.x = 0;
-	top_down.game.camera.y = 1200;
+	top_down.game.camera.y = 1800;
 		
 	menuButton = top_down.game.add.sprite(top_down.game.camera.x - 58, top_down.game.camera.y - 58, 'menu');
 	menuButton.inputEnabled = true;
@@ -499,7 +537,6 @@ top_down.Game.prototype = {
 	},
 	update: function(){
 		checkControls(); //checks if controls have been pressed
-
 		if (tongueOut == true){
 			frog.animations.play("openMouthRight");     
 			if(marker != undefined){
@@ -532,6 +569,20 @@ top_down.Game.prototype = {
 			tongueOut = true;
 			if(distanceBetweenFrogAndRock >= 40){
 				distanceBetweenFrogAndRock -= (distanceBetweenFrogAndRock/200) * 4.5;
+			}
+			if(distanceBetweenFrogAndRock <= 160){
+				//frog.body.acceleration -= .1;
+				//console.log(frog.body.x);
+				if(frog.body.velocity.x > 40){
+					frog.body.velocity.x -= 6;
+				} else if(frog.body.velocity.x < -40){
+					frog.body.velocity.x += 6;
+				}
+				if(frog.body.velocity.y > 40){
+					frog.body.velocity.y -= 6;
+				} else if(frog.body.velocity.y < -40){
+					frog.body.velocity.y += 6;
+				}
 			}
 			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
         }
