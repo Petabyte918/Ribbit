@@ -195,8 +195,7 @@ function initRocks(rockLayerData){
 				rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
 			}
 		
-	}	
-	//console.log(rockPlacement);
+	}
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 2){
@@ -207,8 +206,6 @@ function initRocks(rockLayerData){
 		tempRock.body.static = true;
 		tempRock.events.onInputDown.add(rockClicked, this);
 		top_down.game.physics.p2.enable(tempRock);
-		//tempRock.body.setCollisionGroup(rockCG);
-		//tempRock.body.collides([markerCG]);
 	}
 }
 
@@ -355,6 +352,8 @@ function createGame(){
 	tongue.updateAnimation = function(){
 		updateTonguePoints();
 	};
+	
+	spawnFlies([]);	
 		
 	tongueBeingRetracted = false;
 	tongueOut = false;
