@@ -69,6 +69,16 @@ var tongueOut;
 
 var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 
+//sounds
+var hitWallSound = null;
+var fireSound; //not implemented yet
+var completeSounds; //not in yet
+var selectSound;
+var releaseSound;
+var tongueSound;
+var music;
+
+
 function updateTonguePoints(){
 	var startX = frog.x + 20;
 	var startY = frog.y + 20;
@@ -174,6 +184,8 @@ var curRock = null;
 
 function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){
+		if(!mute)
+		tongueSound.play();
 		top_down.game.physics.p2.collisionGroups.pop()
 		rockCG = top_down.game.physics.p2.createCollisionGroup();
 		rock.body.setCollisionGroup(rockCG);
@@ -181,6 +193,8 @@ function rockClicked(rock){
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		curRock = rock;
 	} else {
+		if(!mute)
+		releaseSound.play();
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		tongueBeingRetracted = true;
 		curRock = null;
@@ -270,6 +284,7 @@ function createGame(){
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
+	collideLayer = top_down.game.blockedLayer;
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	
 	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
@@ -301,7 +316,7 @@ function createGame(){
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
-	frog.body.collides([blockedCG]);
+	frog.body.collides([blockedCG], wallSound);
     frog.anchor.setTo(.39, .60);
     //frog.body.fixedRotation = true;
 	//adding frog animations
@@ -354,6 +369,8 @@ function createPopupMenu(){
 		menuKill();
 		return;
 	}
+	if(!mute)
+	selectSound.play();
 	homeMenu = top_down.game.add.sprite(top_down.game.camera.x + 380 - (332/2), top_down.game.camera.y + 256 - 128, 'popup');
 	resumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 - 24, 'resume');
 	restartButton = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 - 24, 'restart');
@@ -401,6 +418,8 @@ function goHome(){
 }
 
 function menuKill(){
+	if(!mute)
+	selectSound.play();
 	homeMenu.destroy();
 	resumeButton.destroy();
 	restartButton.destroy();
@@ -410,17 +429,21 @@ function menuKill(){
 }
 
 function killAll(){
+	if(!mute)
+	selectSound.play();
 	top_down.game.world.removeAll();
 	
 }
 
 var volNum = 0;
 function swapVolume(){
+	muteSounds();
 	volumeButton.destroy();
 	if (volNum%2 == 0){
 		volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOff');
 	}else{
 		volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOn');
+		selectSound.play();
 	}
 	volNum++;
 	volumeButton.inputEnabled = true;
@@ -428,11 +451,13 @@ function swapVolume(){
 }
 var greenNum = 0
 function swapGreenVolume(){
+	muteSounds();
 	greenVolume.destroy();
 	if (greenNum%2 == 0){
 	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOff');
 	}else{
 	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
+	selectSound.play();
 	}
 	greenNum++;
 	greenVolume.inputEnabled = true;
@@ -440,6 +465,8 @@ function swapGreenVolume(){
 }
 
 function showControl(){
+	if(!mute)
+	selectSound.play();
 	homeMenu.destroy();
 	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'controlScreen');
 	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
@@ -481,6 +508,7 @@ function createLevelStage(){
 	
 	level[8] = top_down.game.add.sprite(70, 87 + 240, 'lock');
 
+	
 	for (var i = 0; i < 3; i++){
 		locked[i + 8] = top_down.game.add.sprite(160*i + 30 + 200, 87 + 240 , 'lock');
 	}
@@ -491,15 +519,40 @@ function createLevelStage(){
 	home.inputEnabled = true;
 	home.events.onInputDown.add(goHome, this);
 }
+var mute;
+function muteSounds(){
+	if(!mute){
+	mute = true;
+	music.stop();
+	return;
+	}
+	mute = false;
+	music.play();
+}
+function loadSounds(){
+	hitWallSound = top_down.game.add.audio('hitwall');
+	fireSound = top_down.game.add.audio('fire');
+	completeSounds = top_down.game.add.audio('complete');
+	selectSound = top_down.game.add.audio('select');
+	releaseSound = top_down.game.add.audio('release');
+	tongueSound = top_down.game.add.audio('tongueSound');
+	music = top_down.game.add.audio('music');
+}
+
+function wallSound(){
+	if(!mute)
+	hitWallSound.play();
+}
 
 top_down.Game.prototype = {
-	create: function(){	
+	create: function(){
+		loadSounds();
+		music.play();
 		createHomeScreen();
 		initControls();
 	},
 	update: function(){
 		checkControls(); //checks if controls have been pressed
-
 		if (tongueOut == true){
 			frog.animations.play("openMouthRight");     
 			if(marker != undefined){

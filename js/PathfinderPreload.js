@@ -39,6 +39,16 @@ top_down.Preload.prototype = {
 		this.load.image('lock', 'Ribbit/locked.png');
 		this.load.image('lvlone', 'Ribbit/levelOne.png');
 		
+		//sounds:
+		this.load.audio('complete', 'Sounds/complete.mp3');
+		this.load.audio('fire', 'Sounds/fire.mp3');
+		this.load.audio('hitwall', 'Sounds/hitwall.mp3');
+		this.load.audio('release', 'Sounds/release.mp3');
+		this.load.audio('select', 'Sounds/select.mp3');
+		this.load.audio('tongueSound', 'Sounds/tongue.mp3');
+		this.load.audio('music', 'Sounds/backgroundMusic.mp3');
+		
+		
 	},
 	
 	create: function(){
