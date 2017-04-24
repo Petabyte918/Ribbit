@@ -10,6 +10,18 @@ top_down.Preload.prototype = {
 		this.load.setPreloadSprite(this.preloadBar);
 		
 		this.load.tilemap('test_map', 'assets/tilemaps/test_tilemap.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_1', 'assets/tilemaps/level_1.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_2', 'assets/tilemaps/level_2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_3', 'assets/tilemaps/level_3.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_4', 'assets/tilemaps/level_4.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_5', 'assets/tilemaps/level_5.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_6', 'assets/tilemaps/level_6.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_7', 'assets/tilemaps/level_7.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_8', 'assets/tilemaps/level_8.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_9', 'assets/tilemaps/level_9.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_10', 'assets/tilemaps/level_10.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_11', 'assets/tilemaps/level_11.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_12', 'assets/tilemaps/level_12.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.spritesheet('frog', 'assets/frog.png', 48, 48);
 		this.load.image('tiles2', 'assets/spritesheet2.png');
 		this.load.image('rock1', 'assets/rock1.png');
@@ -38,6 +50,18 @@ top_down.Preload.prototype = {
 		this.load.image('levelSelect', 'Ribbit/levelSelect.png');
 		this.load.image('lock', 'Ribbit/locked.png');
 		this.load.image('lvlone', 'Ribbit/levelOne.png');
+		this.load.image('lvl1', 'Ribbit/level1.png');
+		this.load.image('lvl2', 'Ribbit/level2.png');
+		this.load.image('lvl3', 'Ribbit/level3.png');
+		this.load.image('lvl4', 'Ribbit/level4.png');
+		this.load.image('lvl5', 'Ribbit/level5.png');
+		this.load.image('lvl6', 'Ribbit/level6.png');
+		this.load.image('lvl7', 'Ribbit/level7.png');
+		this.load.image('lvl8', 'Ribbit/level8.png');
+		this.load.image('lvl9', 'Ribbit/level9.png');
+		this.load.image('lvl10', 'Ribbit/level10.png');
+		this.load.image('lvl11', 'Ribbit/level11.png');
+		this.load.image('lvl12', 'Ribbit/level12.png');
 		
 		//sounds:
 		this.load.audio('complete', 'Sounds/complete.mp3');
