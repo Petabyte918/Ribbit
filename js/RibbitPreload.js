@@ -17,6 +17,10 @@ top_down.Preload.prototype = {
 		this.load.image('ttongue', 'assets/ttongue.png');
 		//this.load.image('path_marker', 'assets/path_marker.png');
 		//this.load.image('trace_marker', 'assets/trace_marker.png');
+        
+        //Loading fly
+        this.load.spritesheet('fly','assets/Fly1.png',16,16);
+        
 		
 		this.load.image('background', 'Ribbit/background.png');
 		this.load.image('help', 'Ribbit/Help.png');

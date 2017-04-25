@@ -68,6 +68,11 @@ var markerY;
 
 var tongueOut;
 
+
+//Kevin's code
+var fly1;
+var fly2;
+
 function updateTonguePoints(){
 	var startX = frog.x + 20;
 	var startY = frog.y + 20;
@@ -318,6 +323,7 @@ function createGame(){
 	blockedCG = top_down.game.physics.p2.createCollisionGroup();
 	markerCG = top_down.game.physics.p2.createCollisionGroup();
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
+    flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
 	initRocks(getDataLayerFromTilemap("test_map", "rock_ci")); //spawn rock objects
 	initControls(); //tell Phaser to look for key presses
@@ -328,6 +334,7 @@ function createGame(){
 		blockedLayerTiles[i].setCollisionGroup(blockedCG);
 		blockedLayerTiles[i].collides([frogCG]);
 		blockedLayerTiles[i].collides([markerCG]);
+        blockedLayerTiles[i].collides([flyCG]);
 	}
 	
 	//set up frog and frog physics
@@ -353,7 +360,10 @@ function createGame(){
 		updateTonguePoints();
 	};
 	
-	spawnFlies([]);	
+    
+    //Kevin's code
+	fly1 = spawnFlies(fly1,[300,2000]);
+    fly2 = spawnFlies(fly2,[300,2100]);
 		
 	tongueBeingRetracted = false;
 	tongueOut = false;
@@ -536,6 +546,12 @@ top_down.Game.prototype = {
 	},
 	update: function(){
 		checkControls(); //checks if controls have been pressed
+    
+        
+        //Kevin's code
+        moveFlies(fly1,1);
+        moveFlies(fly2,2);
+        
 		if (tongueOut == true){
 			frog.animations.play("openMouthRight");     
 			if(marker != undefined){
@@ -603,6 +619,7 @@ top_down.Game.prototype = {
 			home.x = top_down.game.camera.x + 380 + 29;
 			home.y = top_down.game.camera.y + 256 + 48;
 	}
+
 	
 	}
 }
