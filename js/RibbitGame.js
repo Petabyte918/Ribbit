@@ -81,12 +81,14 @@ var markerY;
 
 var tongueOut;
 
+var fly1;
+var fly2;
+
 /*
 <<<<<<< HEAD
 
 //Kevin's code
-var fly1;
-var fly2;
+
 =======
 var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 
@@ -446,13 +448,15 @@ function createGame(level){
 		updateTonguePoints();
 	};
 
+	fly1 = spawnFlies(fly1,[300,2000]);
+    fly2 = spawnFlies(fly2,[300,2100]);
+	
     /*
 <<<<<<< HEAD
 	
     
     //Kevin's code
-	fly1 = spawnFlies(fly1,[300,2000]);
-    fly2 = spawnFlies(fly2,[300,2100]);
+
 =======
 	180, 1800
 	spawnFlies([1, 100, 1900, 2, 200, 1900, 3, 300, 1900, 4, 400, 1900]);	
