@@ -34,6 +34,19 @@ var dKey;
 var eKey;
 var spaceKey;
 
+var key1;
+var key2;
+var key3;
+var key4;
+var key5;
+var key6;
+var key7;
+var key8;
+var key9;
+var keyI;
+var keyO;
+var keyP;
+
 var frog;
 var tongue;
 var tongueMarker;
@@ -68,10 +81,25 @@ var markerY;
 
 var tongueOut;
 
+/*
+<<<<<<< HEAD
 
 //Kevin's code
 var fly1;
 var fly2;
+=======
+var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
+
+//sounds
+var hitWallSound = null;
+var fireSound; //not implemented yet
+var completeSounds; //not in yet
+var selectSound;
+var releaseSound;
+var tongueSound;
+var music;
+>>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
+*/
 
 function updateTonguePoints(){
 	var startX = frog.x + 20;
@@ -178,6 +206,8 @@ var curRock = null;
 
 function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){
+		if(!mute)
+		tongueSound.play();
 		top_down.game.physics.p2.collisionGroups.pop()
 		rockCG = top_down.game.physics.p2.createCollisionGroup();
 		rock.body.setCollisionGroup(rockCG);
@@ -185,6 +215,8 @@ function rockClicked(rock){
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		curRock = rock;
 	} else {
+		if(!mute)
+		releaseSound.play();
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		tongueBeingRetracted = true;
 		curRock = null;
@@ -229,7 +261,18 @@ function initControls(){
 	dKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.D);
     spaceKey = top_down.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	
-	
+	key1 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+	key2 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+	key3 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+	key4 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+	key5 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
+	key6 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.SIX);
+	key7 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.SEVEN);
+	key8 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.EIGHT);
+	key9 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.NINE);
+	key10 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.I);
+	key11 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.O);
+	key12 = top_down.game.input.keyboard.addKey(Phaser.Keyboard.P);
 	/*spaceKey.addCallbacks(this, null, null, function(){
 });
 	*/
@@ -243,6 +286,8 @@ function initControls(){
 
 /*called by update function to check/handle any controls being pressed*/
 var singlePress = true;
+var singlePressLevel = true;
+
 function checkControls(){
 		
 		if(wKey.isDown){
@@ -259,7 +304,40 @@ function checkControls(){
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
 		}
-	
+		
+		if(singlePressLevel){
+			if(key1.isDown){
+				createGame(1);
+			} else if(key2.isDown){
+				createGame(2);
+			} else if(key3.isDown){
+				createGame(3);
+			} else if(key4.isDown){
+				createGame(4);
+			} else if(key5.isDown){
+				createGame(5);
+			} else if(key6.isDown){
+				createGame(6);
+			} else if(key7.isDown){
+				createGame(7);
+			} else if(key8.isDown){
+				createGame(8);
+			} else if(key9.isDown){
+				createGame(9);
+			} else if(key10.isDown){
+				createGame(10);
+			} else if(key11.isDown){
+				createGame(11);
+			} else if(key12.isDown){
+				createGame(12);			
+			}
+			singlePressLevel = false;
+		} else {
+			if(!key1.isDown && !key2.isDown && !key3.isDown && !key4.isDown && !key5.isDown && !key6.isDown && !key7.isDown && !key8.isDown && !key9.isDown && !key10.isDown && !key11.isDown && !key12.isDown){
+				singlePressLevel = true;
+			}		
+		}
+		
         // testng open mouth
         if(xKey.isDown){
             frog.animations.play('openMouth');
@@ -295,14 +373,22 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 	}
 }
 
-function createGame(){
+function createGame(level){
+	var currenLevel;
+	if(typeof level == "number"){
+		currenLevel = level;
+	} else {
+		currenLevel = parseInt(level.key.substr(3,4));
+	}
+	
+	
 	killAll();
 	top_down.game.physics.startSystem(Phaser.Physics.P2JS); //start physics system
 	top_down.game.physics.p2.setImpactEvents(true);
 	top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
 	
 	//set up tilemap and layers
-	top_down.game.map = top_down.game.add.tilemap('test_map');
+	top_down.game.map = top_down.game.add.tilemap('level_' + currenLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
@@ -338,12 +424,12 @@ function createGame(){
 	}
 	
 	//set up frog and frog physics
-	frog = top_down.game.add.sprite(180, 1800, 'frog'); //add frog to game
+	frog = top_down.game.add.sprite(180, 2100, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
-	frog.body.collides([blockedCG]);
+	frog.body.collides([blockedCG], wallSound);
     //frog.anchor.setTo(.39, .60);
 	frog.anchor.setTo(.5, .5);
     //frog.body.fixedRotation = true;
@@ -359,12 +445,20 @@ function createGame(){
 	tongue.updateAnimation = function(){
 		updateTonguePoints();
 	};
+
+    /*
+<<<<<<< HEAD
 	
     
     //Kevin's code
 	fly1 = spawnFlies(fly1,[300,2000]);
     fly2 = spawnFlies(fly2,[300,2100]);
+=======
+	180, 1800
+	spawnFlies([1, 100, 1900, 2, 200, 1900, 3, 300, 1900, 4, 400, 1900]);	
+>>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
 		
+*/
 	tongueBeingRetracted = false;
 	tongueOut = false;
 	
@@ -401,6 +495,8 @@ function createPopupMenu(){
 		menuKill();
 		return;
 	}
+	if(!mute)
+	selectSound.play();
 	homeMenu = top_down.game.add.sprite(top_down.game.camera.x + 380 - (332/2), top_down.game.camera.y + 256 - 128, 'popup');
 	resumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 - 24, 'resume');
 	restartButton = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 - 24, 'restart');
@@ -448,6 +544,8 @@ function goHome(){
 }
 
 function menuKill(){
+	if(!mute)
+	selectSound.play();
 	homeMenu.destroy();
 	resumeButton.destroy();
 	restartButton.destroy();
@@ -457,17 +555,21 @@ function menuKill(){
 }
 
 function killAll(){
+	if(!mute)
+	selectSound.play();
 	top_down.game.world.removeAll();
 	
 }
 
 var volNum = 0;
 function swapVolume(){
+	muteSounds();
 	volumeButton.destroy();
 	if (volNum%2 == 0){
 		volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOff');
 	}else{
 		volumeButton = top_down.game.add.sprite(380 - 29, 256 + 48, 'volumeOn');
+		selectSound.play();
 	}
 	volNum++;
 	volumeButton.inputEnabled = true;
@@ -475,11 +577,13 @@ function swapVolume(){
 }
 var greenNum = 0
 function swapGreenVolume(){
+	muteSounds();
 	greenVolume.destroy();
 	if (greenNum%2 == 0){
 	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOff');
 	}else{
 	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
+	selectSound.play();
 	}
 	greenNum++;
 	greenVolume.inputEnabled = true;
@@ -487,6 +591,8 @@ function swapGreenVolume(){
 }
 
 function showControl(){
+	if(!mute)
+	selectSound.play();
 	homeMenu.destroy();
 	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'controlScreen');
 	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
@@ -515,32 +621,66 @@ function createLevelStage(){
 	killAll();
 	homeMenu = null;
 	background = top_down.game.add.sprite(0, 0, 'levelSelect');
-	level = top_down.game.add.sprite(70, 87, 'lvlone');
-	
-	for(var i = 0; i < 3; i++){
-		locked[i] = top_down.game.add.sprite(160*i + 30 + 200, 87 , 'lock');
-	}
-	level[4] = top_down.game.add.sprite(70, 87 + 120, 'lock');
-	
-	for (var i = 0; i < 3; i++){
-		locked[i + 4] = top_down.game.add.sprite(160*i + 30 + 200, 87 + 120 , 'lock');
-	}
-	
-	level[8] = top_down.game.add.sprite(70, 87 + 240, 'lock');
-
-	for (var i = 0; i < 3; i++){
-		locked[i + 8] = top_down.game.add.sprite(160*i + 30 + 200, 87 + 240 , 'lock');
-	}
-	
+	var levelName = "lvl1";
+	level = top_down.game.add.sprite(70, 87, levelName);
 	level.inputEnabled = true;
 	level.events.onInputDown.add(createGame, this);
+	for(var i = 0; i < 3; i++){
+		levelName = "lvl" + (2 + i);
+		level = top_down.game.add.sprite(160*i + 30 + 200, 87 , levelName);
+		level.inputEnabled = true;
+		level.events.onInputDown.add(createGame, this);
+	}
+	
+	for (var i = 0; i < 4; i++){
+		levelName = "lvl" + (5 + i);
+		level = top_down.game.add.sprite(160*i + 70, 87 + 120 , levelName);
+		level.inputEnabled = true;
+		level.events.onInputDown.add(createGame, this);
+	}
+
+
+	for (var i = 0; i < 4; i++){
+		levelName = "lvl" + (9 + i);
+		level = top_down.game.add.sprite(160*i + 70, 87 + 240 , levelName);
+		level.inputEnabled = true;
+		level.events.onInputDown.add(createGame, this);
+	}
+	
+
 	home = top_down.game.add.sprite(20, 20, 'home');
 	home.inputEnabled = true;
 	home.events.onInputDown.add(goHome, this);
 }
+var mute;
+function muteSounds(){
+	if(!mute){
+	mute = true;
+	music.stop();
+	return;
+	}
+	mute = false;
+	music.play();
+}
+function loadSounds(){
+	hitWallSound = top_down.game.add.audio('hitwall');
+	fireSound = top_down.game.add.audio('fire');
+	completeSounds = top_down.game.add.audio('complete');
+	selectSound = top_down.game.add.audio('select');
+	releaseSound = top_down.game.add.audio('release');
+	tongueSound = top_down.game.add.audio('tongueSound');
+	music = top_down.game.add.audio('music');
+}
+
+function wallSound(){
+	if(!mute)
+	hitWallSound.play();
+}
 
 top_down.Game.prototype = {
-	create: function(){	
+	create: function(){
+		loadSounds();
+		music.play();
 		createHomeScreen();
 		initControls();
 	},
