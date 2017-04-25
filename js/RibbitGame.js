@@ -245,6 +245,7 @@ function initRocks(rockLayerData){
 		tempRock.body.static = true;
 		tempRock.events.onInputDown.add(rockClicked, this);
 		top_down.game.physics.p2.enable(tempRock);
+		console.log("Rock Spawned: " + rockPlacement[i] + "," + rockPlacement[i+1])
 	}
 }
 
@@ -413,7 +414,10 @@ function createGame(level){
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
-	initRocks(getDataLayerFromTilemap("test_map", "rock_ci")); //spawn rock objects
+	var rockLayerTest = getDataLayerFromTilemap("level_1", "rock_ci");
+	console.log(rockLayerTest);
+	initRocks(rockLayerTest); //spawn rock objects
+	
 	initControls(); //tell Phaser to look for key presses
 	
 	//make all tiles in the blocked layer impassable
