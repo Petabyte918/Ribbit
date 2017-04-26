@@ -84,6 +84,8 @@ var tongueOut;
 var fly1;
 var fly2;
 
+var currentLevel;
+
 /*
 <<<<<<< HEAD
 
@@ -245,7 +247,7 @@ function initRocks(rockLayerData){
 		tempRock.body.static = true;
 		tempRock.events.onInputDown.add(rockClicked, this);
 		top_down.game.physics.p2.enable(tempRock);
-		console.log("Rock Spawned: " + rockPlacement[i] + "," + rockPlacement[i+1])
+		//console.log("Rock Spawned: " + rockPlacement[i] + "," + rockPlacement[i+1])
 	}
 }
 
@@ -333,10 +335,12 @@ function checkControls(){
 				createGame(11);
 			} else if(key12.isDown){
 				createGame(12);			
+			} else if (eKey.isDown){
+				console.log(top_down.game.world.children);
 			}
 			singlePressLevel = false;
 		} else {
-			if(!key1.isDown && !key2.isDown && !key3.isDown && !key4.isDown && !key5.isDown && !key6.isDown && !key7.isDown && !key8.isDown && !key9.isDown && !key10.isDown && !key11.isDown && !key12.isDown){
+			if(!key1.isDown && !key2.isDown && !key3.isDown && !key4.isDown && !key5.isDown && !key6.isDown && !key7.isDown && !key8.isDown && !key9.isDown && !key10.isDown && !key11.isDown && !key12.isDown && !eKey.isDown){
 				singlePressLevel = true;
 			}		
 		}
@@ -357,12 +361,12 @@ function checkControls(){
 			if(singlePress){
 				//top_down.game.camera.x = frog.body.x - 384;
 				//top_down.game.camera.y = frog.body.y - 256;
-				top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_LOCKON);
+				
 			}
 			singlePress = false;
 		} else {
 			singlePress = true;
-			top_down.game.camera.follow();
+			//top_down.game.camera.follow();
 		}
 }
 
@@ -377,11 +381,11 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 }
 
 function createGame(level){
-	var currenLevel;
+	currentLevel = level;
 	if(typeof level == "number"){
-		currenLevel = level;
+		currentLevel = level;
 	} else {
-		currenLevel = parseInt(level.key.substr(3,4));
+		currentLevel = parseInt(level.key.substr(3,4));
 	}
 	
 	
@@ -391,7 +395,7 @@ function createGame(level){
 	top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
 	
 	//set up tilemap and layers
-	top_down.game.map = top_down.game.add.tilemap('level_' + currenLevel);
+	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
@@ -415,7 +419,7 @@ function createGame(level){
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
 	var rockLayerTest = getDataLayerFromTilemap("level_1", "rock_ci");
-	console.log(rockLayerTest);
+	//console.log(rockLayerTest);
 	initRocks(rockLayerTest); //spawn rock objects
 	
 	initControls(); //tell Phaser to look for key presses
@@ -443,9 +447,11 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+	
+	tongueArray = [];
     tongueArray.push(new Phaser.Point(0, 0));
 	tongueArray.push(new Phaser.Point(0, 0));
-		
+	
 	tongue = top_down.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
 
 	tongue.updateAnimation = function(){
@@ -476,7 +482,7 @@ function createGame(level){
 	
 	top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
 	
-	//top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
+	top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
 	var helper = Math.max(top_down.game.width, top_down.game.height) / 4;
 	//top_down.game.camera.deadzone = new Phaser.Rectangle((top_down.game.width - helper) / 2, (top_down.game.height - helper) / 2, helper, helper);
 	//top_down.game.camera.deadzone = new Phaser.Rectangle(100,100,top_down.game.width-200, top_down.game.height-200);
@@ -567,6 +573,15 @@ function killAll(){
 	selectSound.play();
 	top_down.game.world.removeAll();
 	
+	console.log(top_down.game);
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 var volNum = 0;
@@ -622,7 +637,7 @@ function restartLevel(){
 	shootMarker(0, 0);
 	tongueBeingRetracted = true;
 	curRock = null;
-	createGame();
+	createGame(currentLevel);
 }
 
 function createLevelStage(){

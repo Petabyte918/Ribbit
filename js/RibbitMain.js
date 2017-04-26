@@ -1,5 +1,6 @@
 var top_down = top_down || {};
-top_down.game = new Phaser.Game(768, 512, Phaser.AUTO, 'phaser-game');
+//top_down.game = new Phaser.Game(768, 512, Phaser.AUTO, 'phaser-game');
+top_down.game = new Phaser.Game(1024, 624, Phaser.AUTO, 'phaser-game');
 
 top_down.game.state.add('Boot', top_down.Boot);
 top_down.game.state.add('Preload', top_down.Preload);
