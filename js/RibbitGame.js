@@ -47,6 +47,8 @@ var keyI;
 var keyO;
 var keyP;
 
+var frogSpawnX = null;
+var frogSpawnY = null;
 var frog;
 var tongue;
 var tongueMarker;
@@ -231,9 +233,16 @@ function initRocks(rockLayerData){
 	var rockPlacement = [];//[200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 	for(var i = 0; i < rockLayerData.data.length; i++){
 			if(rockLayerData.data[i] != 0){
-				console.log(rockLayerData.width, rockLayerData.height);
-				rockPlacement.push((i%rockLayerData.width) * 16);
-				rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
+				
+				//console.log(rockLayerData.width, rockLayerData.height);
+				if(rockLayerData.data[i] == 14){
+					frogSpawnX = (i%rockLayerData.width) * 16;
+					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
+				}
+				if(rockLayerData.data[i] == 3){
+					rockPlacement.push((i%rockLayerData.width) * 16);
+					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
+				}
 			}
 		
 	}
@@ -400,17 +409,10 @@ function createGame(level){
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	
-	//top_down.game.map.createLayer('rock_ci');
-	//console.log(rockLayerData);
-	
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	
 	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
-	
-	
-	//this.input.onDown.add(screenClicked, this); //listen for the screen to be be clicked
-	//this.input.onUp.add(screenReleased, this);
-	
+
 	//set up collision groups
 	frogCG = top_down.game.physics.p2.createCollisionGroup();
 	blockedCG = top_down.game.physics.p2.createCollisionGroup();
@@ -418,9 +420,7 @@ function createGame(level){
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
-	var rockLayerTest = getDataLayerFromTilemap("level_1", "rock_ci");
-	//console.log(rockLayerTest);
-	initRocks(rockLayerTest); //spawn rock objects
+	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
 	
 	initControls(); //tell Phaser to look for key presses
 	
@@ -434,7 +434,12 @@ function createGame(level){
 	}
 	
 	//set up frog and frog physics
-	frog = top_down.game.add.sprite(180, 2100, 'frog'); //add frog to game
+	if(frogSpawnX < 0 | frogSpawnY < 0){
+		alert("Frog not found");
+		frogSpawnX = 100;
+		frogSpawnY = 100;
+	}
+	frog = top_down.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
 	frog.body.mass = 4;
