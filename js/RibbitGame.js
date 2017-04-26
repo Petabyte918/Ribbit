@@ -231,6 +231,10 @@ function rockClicked(rock){
 	}
 }
 
+function frogDies(){
+	alert("You have died.\nGame will now restart.");
+}
+
 function initRocks(rockLayerData){
 	var rockPlacement = [];//[200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 	for(var i = 0; i < rockLayerData.data.length; i++){
