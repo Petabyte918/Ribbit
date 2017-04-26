@@ -241,6 +241,9 @@ function initRocks(rockLayerData){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
 				}
+				if(rockLayerData.data[i] == 22){
+					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
+				}
 				if(rockLayerData.data[i] == 3){
 					rockPlacement.push((i%rockLayerData.width) * 16);
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
