@@ -392,6 +392,8 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 }
 
 function createGame(level){
+	//var currenLevel;
+	gameState = "gameStart";
 	currentLevel = level;
 	if(typeof level == "number"){
 		currentLevel = level;
@@ -494,7 +496,7 @@ function createGame(level){
 	
 	
 	//Enable this
-	//top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
+	top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
 	
 	
 	
@@ -514,6 +516,8 @@ function createGame(level){
 	menuButton.inputEnabled = true;
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);
+	
+	addTrigger();
 	}
 
 function newGame(){
@@ -807,5 +811,23 @@ top_down.Game.prototype = {
 			//backgroundImage.y = (top_down.game.camera.y/2);
 		
 		}
+	
+	
+		if(gameState == 'gameStart'){
+		if (this.physics.arcade.intersects(frog,triggerbox))
+				testTurtorial();
+				
+		if(!(this.physics.arcade.intersects(frog, triggerbox)))
+			exitBox();
+		
+		
+			currentAlpha = testTrigger.alpha;
+	}
+	
+	
+	
+	
+	
+	
 	}
 }
