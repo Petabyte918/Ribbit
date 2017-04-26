@@ -366,6 +366,7 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 
 function createGame(level){
 	var currenLevel;
+	gameState = "gameStart";
 	if(typeof level == "number"){
 		currenLevel = level;
 	} else {
@@ -462,6 +463,8 @@ function createGame(level){
 	menuButton.inputEnabled = true;
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);
+	
+	addTrigger();
 	}
 
 function newGame(){
@@ -731,6 +734,21 @@ top_down.Game.prototype = {
 			home.x = top_down.game.camera.x + 380 + 29;
 			home.y = top_down.game.camera.y + 256 + 48;
 	}
+	
+	if(gameState == 'gameStart'){
+
+		//if(tweenFlag != 1)
+		if (this.physics.arcade.intersects(frog,triggerbox))
+				testTurtorial();
+				
+		//if(tweenFlag != 0)
+		if(!(this.physics.arcade.intersects(frog, triggerbox)))
+			exitBox();
+		
+		
+			currentAlpha = testTrigger.alpha;
+	}
+		
 	
 	}
 }
