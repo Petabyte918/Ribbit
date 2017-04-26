@@ -5,6 +5,8 @@ top_down.Game = function(){};
 
 var gameState = null;
 
+var backgroundImage;
+
 var homeMenu;
 var playGame;
 var controls;
@@ -235,7 +237,7 @@ function initRocks(rockLayerData){
 			if(rockLayerData.data[i] != 0){
 				
 				//console.log(rockLayerData.width, rockLayerData.height);
-				if(rockLayerData.data[i] == 14){
+				if(rockLayerData.data[i] == 21){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
 				}
@@ -404,6 +406,9 @@ function createGame(level){
 	top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
 	
 	//set up tilemap and layers
+	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
+	
+	
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
@@ -487,7 +492,13 @@ function createGame(level){
 	
 	top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
 	
-	top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
+	
+	//Enable this
+	//top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
+	
+	
+	
+	
 	var helper = Math.max(top_down.game.width, top_down.game.height) / 4;
 	//top_down.game.camera.deadzone = new Phaser.Rectangle((top_down.game.width - helper) / 2, (top_down.game.height - helper) / 2, helper, helper);
 	//top_down.game.camera.deadzone = new Phaser.Rectangle(100,100,top_down.game.width-200, top_down.game.height-200);
@@ -786,8 +797,15 @@ top_down.Game.prototype = {
 			volumeButton.y = top_down.game.camera.y + 256 + 48;
 			home.x = top_down.game.camera.x + 380 + 29;
 			home.y = top_down.game.camera.y + 256 + 48;
-	}
-
-	
+		}
+		if(backgroundImage != undefined){
+			//console.log(top_down.game);
+			//backgroundImage.x = top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/backgroundImage.width);
+			backgroundImage.x = (top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/(backgroundImage.width + (top_down.game.camera.width * (backgroundImage.width/top_down.game.camera.width)))));
+			backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
+			//backgroundImage.x = (top_down.game.camera.x/2);
+			//backgroundImage.y = (top_down.game.camera.y/2);
+		
+		}
 	}
 }
