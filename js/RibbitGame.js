@@ -231,6 +231,10 @@ function rockClicked(rock){
 	}
 }
 
+function frogWins(){
+	alert("You have won!\nTry out another level.");
+}
+
 function frogDies(){
 	alert("You have died.\nGame will now restart.");
 }
