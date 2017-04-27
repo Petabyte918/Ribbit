@@ -90,6 +90,10 @@ var fly2;
 
 var currentLevel;
 
+var fire;
+
+
+
 /*
 <<<<<<< HEAD
 
@@ -464,7 +468,14 @@ function createGame(level){
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
+    
+    
+    
 	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
+        //Fire animations
+   // fire = top_down.game.add.sprite("fire");
+    //fire.animations.add("default",[0,1,2,3,4], 20, true);
+
 	
 	initControls(); //tell Phaser to look for key presses
 	
@@ -496,6 +507,8 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+    
+    
 	
 	tongueArray = [];
     tongueArray.push(new Phaser.Point(0, 0));
@@ -549,7 +562,7 @@ function createGame(level){
 	top_down.game.camera.x = 0;
 	top_down.game.camera.y = 1800;
 		
-	menuButton = top_down.game.add.sprite(top_down.game.camera.x - 58, top_down.game.camera.y - 58, 'menu');
+	menuButton = top_down.game.add.sprite(top_down.game.camera.x  + 198, top_down.game.camera.y + 58, 'menu');
 	menuButton.inputEnabled = true;
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);
@@ -568,11 +581,11 @@ function createPopupMenu(){
 	}
 	if(!mute)
 	selectSound.play();
-	homeMenu = top_down.game.add.sprite(top_down.game.camera.x + 380 - (332/2), top_down.game.camera.y + 256 - 128, 'popup');
-	resumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 - 24, 'resume');
-	restartButton = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 - 24, 'restart');
-	volumeButton = top_down.game.add.sprite(top_down.game.camera.x + 380 - 29, top_down.game.camera.y + 256 + 48, 'volumeOn');
-	home = top_down.game.add.sprite(top_down.game.camera.x + 380 + 29, top_down.game.camera.y + 256 + 48, 'home');
+	homeMenu = top_down.game.add.sprite(top_down.game.camera.x + 512 - (495/2), top_down.game.camera.y + 412 - (377/2), 'popup');
+	resumeButton = top_down.game.add.sprite(top_down.game.camera.x + 512 - 68, top_down.game.camera.y + 312 - 29, 'resume');
+	restartButton = top_down.game.add.sprite(top_down.game.camera.x + 512 + 10, top_down.game.camera.y + 312 - 29, 'restart');
+	volumeButton = top_down.game.add.sprite(top_down.game.camera.x + 512 - 68, top_down.game.camera.y + 312 + 59, 'volumeOn');
+	home = top_down.game.add.sprite(top_down.game.camera.x + 512 + 10, top_down.game.camera.y + 312 + 59, 'home');
 	resumeButton.inputEnabled = true;
 	resumeButton.events.onInputDown.add(menuKill, this);
 	homeMenu.inputEnabled = true;
@@ -588,14 +601,14 @@ function createHomeScreen(){
 	gameState = "homeScreen";
 	top_down.game.camera.x = 0;
 	top_down.game.camera.y = 0;
-	background = top_down.game.add.sprite(0, 0, 'background');
-	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'popup');
-	playGame = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91, 'playGame');
-	controls = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 41, 'controls');
-	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
-	greenHelp= top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 123, 'greenHelp');
-	logo = top_down.game.add.sprite(380 - (500/8), 256 - (500/2), 'logo');
-	logo.scale.setTo(logo.scale.x/3, logo.scale.y/3);
+	background = top_down.game.add.sprite(-1, -1, 'background');
+	homeMenu = top_down.game.add.sprite(512 - (495/2), 412 - (377/2), 'popup');
+	playGame = top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91, 'playGame');
+	controls = top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 41, 'controls');
+	greenVolume = top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 82, 'greenOn');
+	greenHelp= top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 123, 'greenHelp');
+	logo = top_down.game.add.sprite(512 - (500/6), 262 - (500/2), 'logo');
+	logo.scale.setTo(logo.scale.x/2.5, logo.scale.y/2.5);
 	playGame.inputEnabled = true;
 	controls.inputEnabled = true;
 	greenVolume.inputEnabled = true;
@@ -660,9 +673,9 @@ function swapGreenVolume(){
 	muteSounds();
 	greenVolume.destroy();
 	if (greenNum%2 == 0){
-	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOff');
+	greenVolume = top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 82, 'greenOff');
 	}else{
-	greenVolume = top_down.game.add.sprite(380 - (161/3) - 10, 256 - (128/2) + 91 + 82, 'greenOn');
+	greenVolume = top_down.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 82, 'greenOn');
 	selectSound.play();
 	}
 	greenNum++;
@@ -674,8 +687,8 @@ function showControl(){
 	if(!mute)
 	selectSound.play();
 	homeMenu.destroy();
-	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'controlScreen');
-	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
+	homeMenu = top_down.game.add.sprite(512 - (495/2), 412 - (377/2), 'controlScreen');
+	home = top_down.game.add.sprite(512 + 495/32, 312 + 180, 'home');
 	home.inputEnabled = true;
 	home.events.onInputDown.add(goHome, this);
 	
@@ -683,8 +696,8 @@ function showControl(){
 
 function showHelp(){
 	homeMenu.destroy();
-	homeMenu = top_down.game.add.sprite(380 - (332/2), 256 - (128/2), 'helpScreen');
-	home = top_down.game.add.sprite(380 + 29, 256 + 135, 'home');
+	homeMenu = top_down.game.add.sprite(512 - (495/2), 412 - (377/2), 'helpScreen');
+	home = top_down.game.add.sprite(512 + 495/32, 312 + 180, 'home');
 	home.inputEnabled = true;
 	home.events.onInputDown.add(goHome, this);
 }
@@ -702,19 +715,19 @@ function createLevelStage(){
 	homeMenu = null;
 	background = top_down.game.add.sprite(0, 0, 'levelSelect');
 	var levelName = "lvl1";
-	level = top_down.game.add.sprite(70, 87, levelName);
+	level = top_down.game.add.sprite(94, 106, levelName);
 	level.inputEnabled = true;
 	level.events.onInputDown.add(createGame, this);
 	for(var i = 0; i < 3; i++){
 		levelName = "lvl" + (2 + i);
-		level = top_down.game.add.sprite(160*i + 30 + 200, 87 , levelName);
+		level = top_down.game.add.sprite(214*i + 41 + 268, 106 , levelName);
 		level.inputEnabled = true;
 		level.events.onInputDown.add(createGame, this);
 	}
 	
 	for (var i = 0; i < 4; i++){
 		levelName = "lvl" + (5 + i);
-		level = top_down.game.add.sprite(160*i + 70, 87 + 120 , levelName);
+		level = top_down.game.add.sprite(214*i + 94, 106 + 146 , levelName);
 		level.inputEnabled = true;
 		level.events.onInputDown.add(createGame, this);
 	}
@@ -722,7 +735,7 @@ function createLevelStage(){
 
 	for (var i = 0; i < 4; i++){
 		levelName = "lvl" + (9 + i);
-		level = top_down.game.add.sprite(160*i + 70, 87 + 240 , levelName);
+		level = top_down.game.add.sprite(214*i + 94, 106 + 294 , levelName);
 		level.inputEnabled = true;
 		level.events.onInputDown.add(createGame, this);
 	}
@@ -823,21 +836,21 @@ top_down.Game.prototype = {
         }
 		
 		if (menuButton != null){
-			menuButton.x = top_down.game.camera.x + 768 - 58;
-			menuButton.y = top_down.game.camera.y + 512  - 58;
+			menuButton.x = top_down.game.camera.x + 768 + 198;
+			menuButton.y = top_down.game.camera.y + 512  + 58;
 		}
 		
 		if(resumeButton != null){
-			homeMenu.x = top_down.game.camera.x + 380 - (332/2);
-			homeMenu.y = top_down.game.camera.y + 256 - 128;
-			resumeButton.x = top_down.game.camera.x + 380 - 29;
-			resumeButton.y = top_down.game.camera.y + 256 - 24;
-			restartButton.x = top_down.game.camera.x + 380 + 29;
-			restartButton.y = top_down.game.camera.y + 256 - 24;
-			volumeButton.x = top_down.game.camera.x + 380 - 29;
-			volumeButton.y = top_down.game.camera.y + 256 + 48;
-			home.x = top_down.game.camera.x + 380 + 29;
-			home.y = top_down.game.camera.y + 256 + 48;
+			homeMenu.x = top_down.game.camera.x + 512 - (495/2);
+			homeMenu.y = top_down.game.camera.y + 312 - (377/2);
+			resumeButton.x = top_down.game.camera.x + 512 - 68;
+			resumeButton.y = top_down.game.camera.y + 312 - 29;
+			restartButton.x = top_down.game.camera.x + 512 + 10;
+			restartButton.y = top_down.game.camera.y + 312 - 29;
+			volumeButton.x = top_down.game.camera.x + 512 - 68;
+			volumeButton.y = top_down.game.camera.y + 312 + 59;
+			home.x = top_down.game.camera.x + 512 + 10;
+			home.y = top_down.game.camera.y + 312 + 59;
 		}
 		if(backgroundImage != undefined){
 			//console.log(top_down.game);
