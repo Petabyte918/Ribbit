@@ -448,7 +448,7 @@ function createGame(level){
 	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
         //Fire animations
    // fire = top_down.game.add.sprite("fire");
-    fire.animations.add("default",[0,1,2,3,4], 20, true);
+    //fire.animations.add("default",[0,1,2,3,4], 20, true);
 
 	
 	initControls(); //tell Phaser to look for key presses
