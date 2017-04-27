@@ -90,8 +90,10 @@ var fly2;
 
 var currentLevel;
 
-var fire;
+var blockedLayerTiles = null;
 
+var fire;
+var gamePreviouslyInit = false;
 
 
 /*
@@ -166,33 +168,13 @@ function clearConstraints(){
 
 function markerHitBlock(marker, block){
 	tongueBeingRetracted = true;
-	console.log("MARKER HIT BLOCK!!!");
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
 
 function markerHitRock(marker, rock){
-	
-	rock.clearCollision();
-	
+	rock.clearCollision();	
 	markerX = rock.x;
 	markerY = rock.y;
-	
-	
-	
-	//do the code here
-	console.log(marker);
 	marker.clearCollision();
-	
 	marker.sprite.kill();
 	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
 	top_down.game.physics.p2.enable(wallAnchor);
@@ -242,16 +224,10 @@ function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){
 		if(!mute)
 		tongueSound.play();
-		console.log("_______________");
-		//top_down.game.physics.p2.collisionGroups.pop();	
-		//rockCG = top_down.game.physics.p2.createCollisionGroup();
-		//console.log(top_down.game.physics.p2.collisionGroups);
-		//console.log("_______________");
 		rock.body.setCollisionGroup(rockCG);
 		rock.body.collides([markerCG])
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		curRock = rock;
-		console.log(top_down.game.physics.p2.collisionGroups);
 	} else {
 		if(!mute)
 		releaseSound.play();
@@ -273,8 +249,6 @@ function initRocks(rockLayerData){
 	var rockPlacement = [];//[200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 	for(var i = 0; i < rockLayerData.data.length; i++){
 			if(rockLayerData.data[i] != 0){
-				
-				//console.log(rockLayerData.width, rockLayerData.height);
 				if(rockLayerData.data[i] == 21){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
@@ -299,7 +273,6 @@ function initRocks(rockLayerData){
 		tempRock.body.static = true;
 		tempRock.events.onInputDown.add(rockClicked, this);
 		top_down.game.physics.p2.enable(tempRock);
-		//console.log("Rock Spawned: " + rockPlacement[i] + "," + rockPlacement[i+1])
 	}
 }
 
@@ -388,7 +361,6 @@ function checkControls(){
 			} else if(key12.isDown){
 				createGame(12);			
 			} else if (eKey.isDown){
-				console.log(top_down.game.world.children);
 			}
 			singlePressLevel = false;
 		} else {
@@ -432,7 +404,28 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 	}
 }
 
+function initGame(){
+	top_down.game.physics.startSystem(Phaser.Physics.P2JS); //start physics system
+	top_down.game.physics.p2.setImpactEvents(true);
+	top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
+	
+	//set up collision groups
+	frogCG = top_down.game.physics.p2.createCollisionGroup();
+	blockedCG = top_down.game.physics.p2.createCollisionGroup();
+	markerCG = top_down.game.physics.p2.createCollisionGroup();
+	rockCG = top_down.game.physics.p2.createCollisionGroup();
+    flyCG = top_down.game.physics.p2.createCollisionGroup();
+	
+	initControls(); //tell Phaser to look for key presses
+		
+	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
+	
+	gamePreviouslyInit = true;
+}
+
 function createGame(level){
+	killAll();
+	
 	//var currenLevel;
 	gameState = "gameStart";
 	currentLevel = level;
@@ -442,45 +435,34 @@ function createGame(level){
 		currentLevel = parseInt(level.key.substr(3,4));
 	}
 	
+	if(!gamePreviouslyInit){
+			initGame();
+	}
 	
-	killAll();
-	top_down.game.physics.startSystem(Phaser.Physics.P2JS); //start physics system
-	top_down.game.physics.p2.setImpactEvents(true);
-	top_down.game.physics.p2.gravity.y = 1400; //set up world gravity
+
 	
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
-	
-	
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
-	
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
+	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	
-	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
-
-	//set up collision groups
-	frogCG = top_down.game.physics.p2.createCollisionGroup();
-	blockedCG = top_down.game.physics.p2.createCollisionGroup();
-	markerCG = top_down.game.physics.p2.createCollisionGroup();
-	rockCG = top_down.game.physics.p2.createCollisionGroup();
-    flyCG = top_down.game.physics.p2.createCollisionGroup();
+	console.log(top_down.game.map);
 	
-    
-    
-    
-	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
-        //Fire animations
-   // fire = top_down.game.add.sprite("fire");
+    //Fire animations
+	// fire = top_down.game.add.sprite("fire");
     //fire.animations.add("default",[0,1,2,3,4], 20, true);
 
-	
-	initControls(); //tell Phaser to look for key presses
-	
 	//make all tiles in the blocked layer impassable
-	var blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
+
+	
+	//blockedCG.clearCollision();	
+	
+	
+	blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
 	for(var i = 0; i < blockedLayerTiles.length; i++){
 		blockedLayerTiles[i].setCollisionGroup(blockedCG);
 		blockedLayerTiles[i].collides([frogCG]);
@@ -494,6 +476,7 @@ function createGame(level){
 		frogSpawnX = 100;
 		frogSpawnY = 100;
 	}
+
 	frog = top_down.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
@@ -515,7 +498,6 @@ function createGame(level){
 	tongueArray.push(new Phaser.Point(0, 0));
 	
 	tongue = top_down.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
-
 	tongue.updateAnimation = function(){
 		updateTonguePoints();
 	};
@@ -539,23 +521,16 @@ function createGame(level){
 	tongueOut = false;
 	
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
-	
 	top_down.game.world.bringToTop(frog);
-	
 	top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
-	
 	
 	//Enable this
 	top_down.game.camera.follow(frog, Phaser.Camera.FOLLOW_TOPDOWN);
-	
-	
-	
-	
-	var helper = Math.max(top_down.game.width, top_down.game.height) / 4;
+
+	//var helper = Math.max(top_down.game.width, top_down.game.height) / 4;
 	//top_down.game.camera.deadzone = new Phaser.Rectangle((top_down.game.width - helper) / 2, (top_down.game.height - helper) / 2, helper, helper);
 	//top_down.game.camera.deadzone = new Phaser.Rectangle(100,100,top_down.game.width-200, top_down.game.height-200);
        
-	//checkControls(); //checks if controls have been pressed
 	clearConstraints();
 	
 	//adjust starting camera position
@@ -639,19 +614,12 @@ function menuKill(){
 }
 
 function killAll(){
+	if(top_down.game.map!=null && top_down.game.blockedLayer!=null){
+		top_down.game.physics.p2.clearTilemapLayerBodies(top_down.game.map, top_down.game.blockedLayer);
+	}
 	if(!mute)
-	selectSound.play();
-	top_down.game.world.removeAll();
-	
-	console.log(top_down.game);
-	
-	
-	
-	
-	
-	
-	
-	
+		selectSound.play();
+	top_down.game.world.removeAll();	
 }
 
 var volNum = 0;
@@ -778,7 +746,7 @@ top_down.Game.prototype = {
 		initControls();
 	},
 	update: function(){
-		checkControls(); //checks if controls have been pressed
+		//checkControls(); //checks if controls have been pressed
     
         
         //Kevin's code
@@ -820,7 +788,6 @@ top_down.Game.prototype = {
 			}
 			if(distanceBetweenFrogAndRock <= 160){
 				//frog.body.acceleration -= .1;
-				//console.log(frog.body.x);
 				if(frog.body.velocity.x > 40){
 					frog.body.velocity.x -= 6;
 				} else if(frog.body.velocity.x < -40){
@@ -853,31 +820,16 @@ top_down.Game.prototype = {
 			home.y = top_down.game.camera.y + 312 + 59;
 		}
 		if(backgroundImage != undefined){
-			//console.log(top_down.game);
-			//backgroundImage.x = top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/backgroundImage.width);
 			backgroundImage.x = (top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/(backgroundImage.width + (top_down.game.camera.width * (backgroundImage.width/top_down.game.camera.width)))));
 			backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
-			//backgroundImage.x = (top_down.game.camera.x/2);
-			//backgroundImage.y = (top_down.game.camera.y/2);
-		
 		}
-	
-	
 		if(gameState == 'gameStart'){
 		if (this.physics.arcade.intersects(frog,triggerbox))
 				testTurtorial();
 				
 		if(!(this.physics.arcade.intersects(frog, triggerbox)))
 			exitBox();
-		
-		
 			currentAlpha = testTrigger.alpha;
-	}
-	
-	
-	
-	
-	
-	
+		}
 	}
 }
