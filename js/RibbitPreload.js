@@ -82,6 +82,16 @@ top_down.Preload.prototype = {
 		this.load.image('testTrigger', 'Ribbit/testTrigger.png');		
 		this.load.image('triggerbox', 'Ribbit/triggerbox.png');
 		
+		//arrows
+		this.load.image('up', 'Ribbit/uparrow.png');
+		this.load.image('upright', 'Ribbit/upright.png');
+		this.load.image('right', 'Ribbit/right.png');
+		this.load.image('downright', 'Ribbit/downright.png');
+		this.load.image('down', 'Ribbit/down.png');
+		this.load.image('downleft', 'Ribbit/downleft.png');
+		this.load.image('left', 'Ribbit/left.png');
+		this.load.image('upleft', 'Ribbit/upleft.png');
+		
 	},
 	
 	create: function(){
