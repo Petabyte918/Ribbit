@@ -166,11 +166,33 @@ function clearConstraints(){
 
 function markerHitBlock(marker, block){
 	tongueBeingRetracted = true;
+	console.log("MARKER HIT BLOCK!!!");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 function markerHitRock(marker, rock){
+	
+	rock.clearCollision();
+	
 	markerX = rock.x;
 	markerY = rock.y;
+	
+	
+	
+	//do the code here
+	console.log(marker);
+	marker.clearCollision();
+	
 	marker.sprite.kill();
 	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
 	top_down.game.physics.p2.enable(wallAnchor);
@@ -220,12 +242,16 @@ function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){
 		if(!mute)
 		tongueSound.play();
-		top_down.game.physics.p2.collisionGroups.pop()
-		rockCG = top_down.game.physics.p2.createCollisionGroup();
+		console.log("_______________");
+		//top_down.game.physics.p2.collisionGroups.pop();	
+		//rockCG = top_down.game.physics.p2.createCollisionGroup();
+		//console.log(top_down.game.physics.p2.collisionGroups);
+		//console.log("_______________");
 		rock.body.setCollisionGroup(rockCG);
-		rock.body.collides([markerCG]);
+		rock.body.collides([markerCG])
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		curRock = rock;
+		console.log(top_down.game.physics.p2.collisionGroups);
 	} else {
 		if(!mute)
 		releaseSound.play();
