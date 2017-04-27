@@ -90,6 +90,10 @@ var fly2;
 
 var currentLevel;
 
+var fire;
+
+
+
 /*
 <<<<<<< HEAD
 
@@ -438,7 +442,14 @@ function createGame(level){
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
+    
+    
+    
 	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
+        //Fire animations
+   // fire = top_down.game.add.sprite("fire");
+    fire.animations.add("default",[0,1,2,3,4], 20, true);
+
 	
 	initControls(); //tell Phaser to look for key presses
 	
@@ -470,6 +481,8 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+    
+    
 	
 	tongueArray = [];
     tongueArray.push(new Phaser.Point(0, 0));
