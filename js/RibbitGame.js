@@ -90,6 +90,10 @@ var fly2;
 
 var currentLevel;
 
+var fire;
+
+
+
 /*
 <<<<<<< HEAD
 
@@ -231,6 +235,14 @@ function rockClicked(rock){
 	}
 }
 
+function frogWins(){
+	alert("You have won!\nTry out another level.");
+}
+
+function frogDies(){
+	alert("You have died.\nGame will now restart.");
+}
+
 function initRocks(rockLayerData){
 	var rockPlacement = [];//[200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
 	for(var i = 0; i < rockLayerData.data.length; i++){
@@ -240,6 +252,9 @@ function initRocks(rockLayerData){
 				if(rockLayerData.data[i] == 21){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
+				}
+				if(rockLayerData.data[i] == 22){
+					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
 				}
 				if(rockLayerData.data[i] == 3){
 					rockPlacement.push((i%rockLayerData.width) * 16);
@@ -427,7 +442,14 @@ function createGame(level){
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
 	
+    
+    
+    
 	initRocks(getDataLayerFromTilemap("level_1", "rock_ci")); //spawn rock objects
+        //Fire animations
+   // fire = top_down.game.add.sprite("fire");
+    //fire.animations.add("default",[0,1,2,3,4], 20, true);
+
 	
 	initControls(); //tell Phaser to look for key presses
 	
@@ -459,6 +481,8 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+    
+    
 	
 	tongueArray = [];
     tongueArray.push(new Phaser.Point(0, 0));

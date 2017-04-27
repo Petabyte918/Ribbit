@@ -23,6 +23,7 @@ top_down.Preload.prototype = {
 		this.load.tilemap('level_11', 'assets/tilemaps/level_11.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_12', 'assets/tilemaps/level_12.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.spritesheet('frog', 'assets/frog.png', 48, 48);
+		this.load.spritesheet('fire', 'assets/fire.png', 32, 32);
 		this.load.image('tiles2', 'assets/spritesheet2.png');
 		this.load.image('levelBackground1', 'assets/levelBackground1.png');
 		this.load.image('rock1', 'assets/rock1.png');
