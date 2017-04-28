@@ -154,7 +154,7 @@ function screenReleased(){
 
 function screenClicked(){
 	console.log("A:" + top_down.timeUp);
-	console.log("A:" top_down.previousTapTime);
+	console.log("B:" + top_down.previousTapTime);
 	if(top_down.timeUp - top_down.previousTapTime < top_down.game.input.doubleTapRate){
 		console.log("DOUBLE TAPPED");
 	}
