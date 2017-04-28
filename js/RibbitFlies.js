@@ -1,5 +1,4 @@
 
-
 // (flyName, [x, y])
 
 function spawnFlies(flyID,array){
