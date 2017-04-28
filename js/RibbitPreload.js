@@ -27,6 +27,9 @@ top_down.Preload.prototype = {
 		this.load.image('tiles2', 'assets/spritesheet2.png');
 		this.load.image('levelBackground1', 'assets/levelBackground1.png');
 		this.load.image('rock1', 'assets/rock1.png');
+		this.load.image('rockA1', 'assets/rockA1.png');
+		this.load.image('rockA2', 'assets/rockA2.png');
+		this.load.image('rockA3', 'assets/rockA3.png');
 		this.load.image('tongue', 'assets/tongue.png');
 		this.load.image('ttongue', 'assets/ttongue.png');
 		//this.load.image('path_marker', 'assets/path_marker.png');

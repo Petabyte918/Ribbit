@@ -150,6 +150,11 @@ function screenReleased(){
 }
 
 function screenClicked(){
+	console.log("A:" + top_down.timeUp);
+	console.log("A:" top_down.previousTapTime);
+	if(top_down.timeUp - top_down.previousTapTime < top_down.game.input.doubleTapRate){
+		console.log("DOUBLE TAPPED");
+	}
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
 	console.log("x:" + clickedWorldX + ", y:" + clickedWorldY);
@@ -226,7 +231,8 @@ function rockClicked(rock){
 		tongueSound.play();
 		rock.body.setCollisionGroup(rockCG);
 		rock.body.collides([markerCG])
-		shootMarker(getClickedWorldX(), getClickedWorldY());
+		//shootMarker(getClickedWorldX(), getClickedWorldY());
+		shootMarker(rock.x, rock.y);
 		curRock = rock;
 	} else {
 		if(!mute)
@@ -256,6 +262,9 @@ function initRocks(rockLayerData){
 				if(rockLayerData.data[i] == 22){
 					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
 				}
+				if(rockLayerData.data[i] == 10){
+					//spawn castle
+				}
 				if(rockLayerData.data[i] == 3){
 					rockPlacement.push((i%rockLayerData.width) * 16);
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
@@ -266,7 +275,9 @@ function initRocks(rockLayerData){
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 2){
-		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rock1')
+		var rockType = '1';
+		rockType = Math.floor(Math.random() * 3) + 1;
+		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rockA' + rockType)
 		top_down.game.physics.p2.enable(tempRock);
 		tempRock.inputEnabled = true;
 		tempRock.enableBody = true;
@@ -824,6 +835,9 @@ top_down.Game.prototype = {
 			backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
 		}
 		if(gameState == 'gameStart'){
+			
+			
+			
 		if (this.physics.arcade.intersects(frog,tb1))
 				enterBox(arrow1, tt1, ft1, ca1);
 				
