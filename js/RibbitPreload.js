@@ -39,7 +39,7 @@ top_down.Preload.prototype = {
         this.load.spritesheet('fly','assets/Fly1.png',16,16);
         
         //Loading castle sprite
-        this.load.spritesheet('castle',"assets/castle.png",32,32);
+        this.load.spritesheet('castle',"assets/castle.png",96,96);
         
 		
 		this.load.image('background', 'Ribbit/background.png');

@@ -15,8 +15,15 @@ function spawnCastle(x,y){
 function checkifWin(){
     if (castle!= undefined){
     distanceBetweenFrogAndCastle = Math.sqrt(((castle.body.x-frog.body.x)*(castle.body.x-frog.body.x))+((castle.body.y-frog.body.y)*(castle.body.y-frog.body.y)));
-    if (distanceBetweenFrogAndCastle <=32){
+    if (distanceBetweenFrogAndCastle <=64){
+        console.log("FrogWins");
         frogWins();
         }
     }
+}
+
+function spawnFire(x,y){
+    fire=top_down.game.add.sprite(x,y,'fire');
+    fire.animations.add("default",[0,1,2,3,4], 20, true);
+    
 }

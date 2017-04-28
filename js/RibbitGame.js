@@ -271,7 +271,7 @@ function initRocks(rockLayerData){
 					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
 				}
 				if(rockLayerData.data[i] == 10){
-					//spawn castle
+                    castle= spawnCastle((i%rockLayerData.width) * 16,(Math.floor(i/rockLayerData.width)) * 16);
 				}
 				if(rockLayerData.data[i] == 3){
 					rockPlacement.push((i%rockLayerData.width) * 16);
@@ -525,7 +525,6 @@ function createGame(level){
 
 	fly1 = spawnFlies(fly1,[300,2000]);
     fly2 = spawnFlies(fly2,[300,2100]);
-    castle= spawnCastle(1545,2713);
 	
     /*
 <<<<<<< HEAD
