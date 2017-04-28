@@ -29,6 +29,8 @@ var popup;
 var logo;
 var home;
 
+var lastClickTime = 0;
+
 var wKey;
 var aKey;
 var sKey;
@@ -153,11 +155,14 @@ function screenReleased(){
 }
 
 function screenClicked(){
-	console.log("A:" + top_down.timeUp);
-	console.log("B:" + top_down.previousTapTime);
-	if(top_down.timeUp - top_down.previousTapTime < top_down.game.input.doubleTapRate){
-		console.log("DOUBLE TAPPED");
+	var currentTime = new Date();
+	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+		releaseSound.play();
+		shootMarker(getClickedWorldX(), getClickedWorldY());
+		tongueBeingRetracted = true;
+		curRock = null;
 	}
+	lastClickTime = currentTime;
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
 	console.log("x:" + clickedWorldX + ", y:" + clickedWorldY);
