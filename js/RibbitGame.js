@@ -28,6 +28,7 @@ var background;
 var popup;
 var logo;
 var home;
+var doubleClickRelease = false;
 
 var lastClickTime = 0;
 
@@ -157,10 +158,18 @@ function screenReleased(){
 function screenClicked(){
 	var currentTime = new Date();
 	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+		
+		
+		doubleClickRelease = true;
+		
 		releaseSound.play();
 		shootMarker(getClickedWorldX(), getClickedWorldY());
 		tongueBeingRetracted = true;
-		curRock = null;
+		
+		
+		
+		//markerGroup.removeAll();
+		
 	}
 	lastClickTime = currentTime;
 	var clickedWorldX = getClickedWorldX();
@@ -184,16 +193,20 @@ function markerHitBlock(marker, block){
 }
 
 function markerHitRock(marker, rock){
-	rock.clearCollision();	
-	markerX = rock.x;
-	markerY = rock.y;
-	marker.clearCollision();
-	marker.sprite.kill();
-	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
-	top_down.game.physics.p2.enable(wallAnchor);
-	wallAnchor.body.static = true;
-	tongueAnchored = true;
-	distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
+	rock.clearCollision();
+	if(curRock == null){
+		markerGroup.removeAll();	
+	} else {
+		markerX = rock.x;
+		markerY = rock.y;
+		marker.clearCollision();
+		marker.sprite.kill();
+		wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
+		top_down.game.physics.p2.enable(wallAnchor);
+		wallAnchor.body.static = true;
+		tongueAnchored = true;
+		distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
+	}
 }
 
 function moveObjToObj(obj1, obj2, speed){
@@ -215,9 +228,17 @@ function moveObjToXY(obj, x, y, speed){
 function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
+	/*
 	for(var i = 0; i < markerGroup.length; i++){
 		markerGroup.remove(markerGroup.getAt(i));
 	}
+	*/
+	
+	markerGroup.removeAll();	
+	
+	
+	
+	
 	marker = markerGroup.create(frog.x, frog.y, 'ttongue', 1);
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
@@ -234,20 +255,23 @@ function shootMarker(destX, destY){
 var curRock = null;
 
 function rockClicked(rock){
-	if((curRock != rock) || (curRock == null)){
-		if(!mute)
-		tongueSound.play();
-		rock.body.setCollisionGroup(rockCG);
-		rock.body.collides([markerCG])
-		//shootMarker(getClickedWorldX(), getClickedWorldY());
-		shootMarker(rock.x, rock.y);
-		curRock = rock;
-	} else {
-		if(!mute)
-		releaseSound.play();
-		shootMarker(getClickedWorldX(), getClickedWorldY());
-		tongueBeingRetracted = true;
-		curRock = null;
+	var currentTime = new Date();
+	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+		if((curRock != rock) || (curRock == null)){		
+			if(!mute)
+				tongueSound.play();
+			rock.body.setCollisionGroup(rockCG);
+			rock.body.collides([markerCG])
+			//shootMarker(getClickedWorldX(), getClickedWorldY());
+			shootMarker(rock.x, rock.y);
+			curRock = rock;
+		} else {
+			if(!mute)
+			releaseSound.play();
+			shootMarker(getClickedWorldX(), getClickedWorldY());
+			tongueBeingRetracted = true;
+			curRock = null;
+		}
 	}
 }
 
@@ -301,6 +325,7 @@ function tongueGone(){
 	tongueOut = false;
 	tongueArray[1].x = 20;
 	tongueArray[1].y = 20;
+	markerGroup.removeAll();
 }
 
 function initControls(){
