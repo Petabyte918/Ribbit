@@ -95,6 +95,9 @@ var blockedLayerTiles = null;
 var fire;
 var gamePreviouslyInit = false;
 
+//castle Kevin
+var castle;
+
 
 /*
 <<<<<<< HEAD
@@ -426,6 +429,7 @@ function initGame(){
 	markerCG = top_down.game.physics.p2.createCollisionGroup();
 	rockCG = top_down.game.physics.p2.createCollisionGroup();
     flyCG = top_down.game.physics.p2.createCollisionGroup();
+    castleCG = top_down.game.physics.p2.createCollisionGroup();
 	
 	initControls(); //tell Phaser to look for key presses
 		
@@ -479,6 +483,7 @@ function createGame(level){
 		blockedLayerTiles[i].collides([frogCG]);
 		blockedLayerTiles[i].collides([markerCG]);
         blockedLayerTiles[i].collides([flyCG]);
+        blockedLayerTiles[i].collides([castleCG]);
 	}
 	
 	//set up frog and frog physics
@@ -515,6 +520,7 @@ function createGame(level){
 
 	fly1 = spawnFlies(fly1,[300,2000]);
     fly2 = spawnFlies(fly2,[300,2100]);
+    castle= spawnCastle(1545,2713);
 	
     /*
 <<<<<<< HEAD
@@ -760,6 +766,7 @@ top_down.Game.prototype = {
 		//checkControls(); //checks if controls have been pressed
     
         
+        checkifWin();
         //Kevin's code
         moveFlies(fly1,1);
         moveFlies(fly2,2);
