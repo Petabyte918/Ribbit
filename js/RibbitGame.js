@@ -425,7 +425,6 @@ function initGame(){
 
 function createGame(level){
 	killAll();
-	
 	//var currenLevel;
 	gameState = "gameStart";
 	currentLevel = level;
@@ -476,7 +475,8 @@ function createGame(level){
 		frogSpawnX = 100;
 		frogSpawnY = 100;
 	}
-
+	
+	addTrigger(); // trigger system has to be rendered before frog
 	frog = top_down.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
@@ -542,7 +542,6 @@ function createGame(level){
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);
 	
-	addTrigger();
 	}
 
 function newGame(){
@@ -721,7 +720,7 @@ function muteSounds(){
 	return;
 	}
 	mute = false;
-	music.play();
+	music.play('', 0, 1, true, true);
 }
 function loadSounds(){
 	hitWallSound = top_down.game.add.audio('hitwall');
@@ -741,7 +740,7 @@ function wallSound(){
 top_down.Game.prototype = {
 	create: function(){
 		loadSounds();
-		music.play();
+		music.play('', 0, 1, true, true);
 		createHomeScreen();
 		initControls();
 	},
@@ -824,86 +823,8 @@ top_down.Game.prototype = {
 			backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
 		}
 		if(gameState == 'gameStart'){
-		if (this.physics.arcade.intersects(frog,tb1))
-				enterBox(arrow1, tt1, ft1, ca1);
-				
-		if(!(this.physics.arcade.intersects(frog, tb1)))
-			exitBox(arrow1, tt1, ft1, ca1);
+		checkTriggers();
 		
-		
-			ca1 = arrow1.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb2))
-				enterBox(arrow2, tt2, ft2, ca2);
-				
-		if(!(this.physics.arcade.intersects(frog, tb2)))
-			exitBox(arrow2, tt2, ft2, ca2);
-		
-		
-			ca2 = arrow2.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb3))
-				enterBox(arrow3, tt3, ft3, ca3);
-				
-		if(!(this.physics.arcade.intersects(frog, tb3)))
-			exitBox(arrow3, tt3, ft3, ca3);
-		
-		
-			ca3 = arrow3.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb4))
-				enterBox(arrow4, tt4, ft4, ca4);
-				
-		if(!(this.physics.arcade.intersects(frog, tb2)))
-			exitBox(arrow4, tt4, ft4, ca4);
-		
-		
-			ca4 = arrow4.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb5))
-				enterBox(arrow2, tt2, ft2, ca2);
-				
-		if(!(this.physics.arcade.intersects(frog, tb5)))
-			exitBox(arrow5, tt5, ft5, ca5);
-		
-		
-			ca5 = arrow5.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb6))
-				enterBox(arrow6, tt6, ft6, ca6);
-				
-		if(!(this.physics.arcade.intersects(frog, tb6)))
-			exitBox(arrow6, tt6, ft6, ca6);
-		
-		
-			ca6 = arrow6.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb7))
-				enterBox(arrow7, tt7, ft7, ca7);
-				
-		if(!(this.physics.arcade.intersects(frog, tb7)))
-			exitBox(arrow7, tt7, ft7, ca7);
-		
-		
-			ca7 = arrow7.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb8))
-				enterBox(arrow8, tt8, ft8, ca8);
-				
-		if(!(this.physics.arcade.intersects(frog, tb8)))
-			exitBox(arrow8, tt8, ft8, ca8);
-		
-		
-			ca8 = arrow8.alpha;
-		
-		/*
-		if (this.physics.arcade.intersects(frog,tb9))
-				enterBox(arrow9, tt9, ft9, ca9);
-				
-		if(!(this.physics.arcade.intersects(frog, tb9)))
-			exitBox(arrow9, tt9, ft9, ca9);
-			ca9 = arrow9.alpha;
-			*/
 		}
 	}
 }
