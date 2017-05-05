@@ -93,6 +93,8 @@ var currentLevel;
 var blockedLayerTiles = null;
 
 var fire;
+var fireGroup;
+
 var gamePreviouslyInit = false;
 
 //castle Kevin
@@ -262,9 +264,11 @@ function initRocks(rockLayerData){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
 				}
+                
 				if(rockLayerData.data[i] == 22){
-					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
+					spawnFire((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
 				}
+
 				if(rockLayerData.data[i] == 10){
                     castle= spawnCastle((i%rockLayerData.width) * 16,(Math.floor(i/rockLayerData.width)) * 16);
 				}
@@ -272,8 +276,7 @@ function initRocks(rockLayerData){
 					rockPlacement.push((i%rockLayerData.width) * 16);
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
 				}
-			}
-		
+            }
 	}
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
@@ -440,7 +443,8 @@ function initGame(){
 
 function createGame(level){
 	killAll();
-	
+    
+
 	//var currenLevel;
 	gameState = "gameStart";
 	currentLevel = level;
@@ -463,6 +467,12 @@ function createGame(level){
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
+    
+    
+    //creates firegroup game
+	fireGroup=top_down.game.add.group();
+
+    
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	
 	console.log(top_down.game.map);
@@ -520,6 +530,7 @@ function createGame(level){
 
 	fly1 = spawnFlies(fly1,[300,2000]);
     fly2 = spawnFlies(fly2,[300,2100]);
+    animateFire();
 	
     /*
 <<<<<<< HEAD
@@ -763,8 +774,8 @@ top_down.Game.prototype = {
 	},
 	update: function(){
 		//checkControls(); //checks if controls have been pressed
-    
         
+        checkifLose();
         checkifWin();
         //Kevin's code
         moveFlies(fly1,1);
