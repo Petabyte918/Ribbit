@@ -539,6 +539,7 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+    frog.animations.add('die',[6,7,8,9,10,11,12,13,14,15,16],5, false);
     
     
 	
@@ -865,6 +866,10 @@ top_down.Game.prototype = {
 			}
 			constraints.push(this.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
         }
+            else{
+                if ((frog!=undefined) && (tongueOut==false)){
+                frog.animations.play('idle');            
+            }}
 		
 		if (menuButton != null){
 			menuButton.x = top_down.game.camera.x + 768 + 198;
