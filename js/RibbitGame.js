@@ -95,30 +95,12 @@ var currentLevel;
 var blockedLayerTiles = null;
 
 var fire;
+var fireGroup;
+
 var gamePreviouslyInit = false;
 
 //castle Kevin
 var castle;
-
-
-/*
-<<<<<<< HEAD
-
-//Kevin's code
-
-=======
-var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
-
-//sounds
-var hitWallSound = null;
-var fireSound; //not implemented yet
-var completeSounds; //not in yet
-var selectSound;
-var releaseSound;
-var tongueSound;
-var music;
->>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
-*/
 
 function updateTonguePoints(){
 	var startX = frog.x + 20;
@@ -294,9 +276,11 @@ function initRocks(rockLayerData){
 					frogSpawnX = (i%rockLayerData.width) * 16;
 					frogSpawnY = (Math.floor(i/rockLayerData.width)) * 16;
 				}
+                
 				if(rockLayerData.data[i] == 22){
-					top_down.game.add.sprite((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
+					spawnFire((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16, "fire");
 				}
+
 				if(rockLayerData.data[i] == 10){
                     castle= spawnCastle((i%rockLayerData.width) * 16,(Math.floor(i/rockLayerData.width)) * 16);
 				}
@@ -304,8 +288,7 @@ function initRocks(rockLayerData){
 					rockPlacement.push((i%rockLayerData.width) * 16);
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
 				}
-			}
-		
+            }
 	}
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
@@ -505,6 +488,12 @@ function createGame(level){
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
 	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
+    
+    
+    //creates firegroup game
+	fireGroup=top_down.game.add.group();
+
+    
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	
 	//console.log(top_down.game.map);
@@ -562,21 +551,11 @@ function createGame(level){
 		updateTonguePoints();
 	};
 
+
+
 	//fly1 = spawnFlies(fly1,[300,2000]);
     //fly2 = spawnFlies(fly2,[300,2100]);
 	
-    /*
-<<<<<<< HEAD
-	
-    
-    //Kevin's code
-
-=======
-	180, 1800
-	spawnFlies([1, 100, 1900, 2, 200, 1900, 3, 300, 1900, 4, 400, 1900]);	
->>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
-		
-*/
 	tongueBeingRetracted = false;
 	tongueOut = false;
 	
@@ -816,9 +795,12 @@ top_down.Game.prototype = {
 		initControls();
 	},
 	update: function(){
+		//checkControls(); //checks if controls have been pressed
+        
+        checkifLose();
+        checkifWin();
 		checkControls(); //checks if controls have been pressed
-    
-        //checkifWin();
+
         //Kevin's code
         moveFlies(fly1,1);
         moveFlies(fly2,2);
