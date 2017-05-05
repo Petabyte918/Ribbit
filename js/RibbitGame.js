@@ -562,8 +562,8 @@ function createGame(level){
 		updateTonguePoints();
 	};
 
-	fly1 = spawnFlies(fly1,[300,2000]);
-    fly2 = spawnFlies(fly2,[300,2100]);
+	//fly1 = spawnFlies(fly1,[300,2000]);
+    //fly2 = spawnFlies(fly2,[300,2100]);
 	
     /*
 <<<<<<< HEAD
