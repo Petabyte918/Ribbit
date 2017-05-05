@@ -102,26 +102,6 @@ var gamePreviouslyInit = false;
 //castle Kevin
 var castle;
 
-
-/*
-<<<<<<< HEAD
-
-//Kevin's code
-
-=======
-var rockPlacement = [200, 1400, 600, 1400, 400, 1200, 500, 1100, 944, 1236, 886, 981, 553, 750, 1325, 660, 1107, 462, 1436, 280, 870, 1149];
-
-//sounds
-var hitWallSound = null;
-var fireSound; //not implemented yet
-var completeSounds; //not in yet
-var selectSound;
-var releaseSound;
-var tongueSound;
-var music;
->>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
-*/
-
 function updateTonguePoints(){
 	var startX = frog.x + 20;
 	var startY = frog.y + 20;
@@ -572,22 +552,11 @@ function createGame(level){
 		updateTonguePoints();
 	};
 
-	fly1 = spawnFlies(fly1,[300,2000]);
-    fly2 = spawnFlies(fly2,[300,2100]);
-    animateFire();
-	
-    /*
-<<<<<<< HEAD
-	
-    
-    //Kevin's code
 
-=======
-	180, 1800
-	spawnFlies([1, 100, 1900, 2, 200, 1900, 3, 300, 1900, 4, 400, 1900]);	
->>>>>>> 8eac6ac1693f7b6592fec1d73878c8eec5451dae
-		
-*/
+
+	//fly1 = spawnFlies(fly1,[300,2000]);
+    //fly2 = spawnFlies(fly2,[300,2100]);
+	
 	tongueBeingRetracted = false;
 	tongueOut = false;
 	
