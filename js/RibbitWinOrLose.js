@@ -58,11 +58,14 @@ function checkifLose(){
                 distanceBetweenFrogAndFire= Math.sqrt(((fireVar.x-frog.x)*(fireVar.x-frog.x)+(fireVar.y-frog.y)*(fireVar.y-frog.y)));
                 if (distanceBetweenFrogAndFire<=32){
                     if (deadcounter%50==0){
+                        console.log("FROG IS ON FIRE");
+                        frog.animations.play("die");     
                         frogDies();
                     }
                     //console.log(distanceBetweenFrogAndFire);
                     //frogInContactWithFire();
                     deadcounter++;
+                    //console.log(deadcounter);
                 }
         }
     }

@@ -242,7 +242,6 @@ function releaseFrogFromRock(){
 		removeCollisionFromAllRocks();
 		shootMarker(frog.x + 1000, frog.y + 1000);
 		tongueGone();
-		//tongueGone();
 }
 
 //////////////////////////////////
@@ -444,6 +443,8 @@ function createGame(level){
     frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
+    frog.animations.add('die',[6,7,8,9,10,11,12,13,14,15,16],5, false);
+	
 	tongueArray = [];
     tongueArray.push(new Phaser.Point(0, 0));
 	tongueArray.push(new Phaser.Point(0, 0));
