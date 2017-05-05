@@ -29,6 +29,8 @@ var popup;
 var logo;
 var home;
 
+var lastClickTime = 0;
+
 var wKey;
 var aKey;
 var sKey;
@@ -155,11 +157,12 @@ function screenReleased(){
 }
 
 function screenClicked(){
-	console.log("A:" + top_down.timeUp);
-	console.log("B:" + top_down.previousTapTime);
-	if(top_down.timeUp - top_down.previousTapTime < top_down.game.input.doubleTapRate){
-		console.log("DOUBLE TAPPED");
+	var currentTime = new Date();
+	
+	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+		doubleClicked();
 	}
+	lastClickTime = currentTime;
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
 	console.log("x:" + clickedWorldX + ", y:" + clickedWorldY);
@@ -181,16 +184,22 @@ function markerHitBlock(marker, block){
 }
 
 function markerHitRock(marker, rock){
-	rock.clearCollision();	
-	markerX = rock.x;
-	markerY = rock.y;
-	marker.clearCollision();
-	marker.sprite.kill();
-	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
-	top_down.game.physics.p2.enable(wallAnchor);
-	wallAnchor.body.static = true;
-	tongueAnchored = true;
-	distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
+	rock.clearCollision();
+	if(curRock == null){
+			
+	} else {
+		markerX = rock.x;
+		markerY = rock.y;
+		marker.clearCollision();
+		marker.sprite.kill();
+		wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
+		top_down.game.physics.p2.enable(wallAnchor);
+		wallAnchor.body.static = true;
+		tongueAnchored = true;
+		//console.log("markerHitRock Tongue Anchored");
+		distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
+	}
+	markerGroup.removeAll();
 }
 
 function moveObjToObj(obj1, obj2, speed){
@@ -209,12 +218,28 @@ function moveObjToXY(obj, x, y, speed){
 	obj.body.velocity.y = Math.sin(angle) * speed;
 }
 
+function removeCollisionFromAllRocks(){
+	console.log(curRock);
+	for(var i = 0; i < rockGroup.children.length; i++){
+		rockGroup.children[i].body.clearCollision();
+	}
+
+}
+
 function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
+	/*
 	for(var i = 0; i < markerGroup.length; i++){
 		markerGroup.remove(markerGroup.getAt(i));
 	}
+	*/
+	
+	//markerGroup.removeAll();	
+	
+	
+	
+	
 	marker = markerGroup.create(frog.x, frog.y, 'ttongue', 1);
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
@@ -231,21 +256,28 @@ function shootMarker(destX, destY){
 var curRock = null;
 
 function rockClicked(rock){
-	if((curRock != rock) || (curRock == null)){
-		if(!mute)
-		tongueSound.play();
-		rock.body.setCollisionGroup(rockCG);
-		rock.body.collides([markerCG])
-		//shootMarker(getClickedWorldX(), getClickedWorldY());
-		shootMarker(rock.x, rock.y);
-		curRock = rock;
-	} else {
-		if(!mute)
-		releaseSound.play();
-		shootMarker(getClickedWorldX(), getClickedWorldY());
-		tongueBeingRetracted = true;
-		curRock = null;
-	}
+	
+	var currentTime = new Date();
+	//console.log("ROCK CLICKED");
+	//if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){}
+		if((curRock != rock) || (curRock == null)){		
+			console.log("STEVE THIS");
+			if(!mute)
+				tongueSound.play();
+			rock.body.setCollisionGroup(rockCG);
+			rock.body.collides([markerCG])
+			//shootMarker(getClickedWorldX(), getClickedWorldY());
+			shootMarker(rock.x, rock.y);
+			curRock = rock;
+		} else {
+			/*
+			if(!mute)
+			releaseSound.play();
+			shootMarker(getClickedWorldX(), getClickedWorldY());
+			tongueBeingRetracted = true;
+			curRock = null;
+			*/
+		}
 }
 
 function frogWins(){
@@ -281,7 +313,7 @@ function initRocks(rockLayerData){
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 2){
-		var rockType = '1';
+		var rockType = '0';
 		rockType = Math.floor(Math.random() * 3) + 1;
 		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rockA' + rockType)
 		top_down.game.physics.p2.enable(tempRock);
@@ -297,8 +329,12 @@ function tongueGone(){
 	marker.x = frog.x;
 	marker.y = frog.y;
 	tongueOut = false;
+	tongueBeingRetracted = false;
 	tongueArray[1].x = 20;
 	tongueArray[1].y = 20;
+	markerGroup.removeAll();
+	//curRock = null;
+	//console.log("curRock: " + curRock);
 }
 
 function initControls(){
@@ -336,7 +372,7 @@ var singlePress = true;
 var singlePressLevel = true;
 
 function checkControls(){
-		
+		/*
 		if(wKey.isDown){
 			top_down.game.camera.y -= 10;
 		}
@@ -351,6 +387,7 @@ function checkControls(){
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
 		}
+		
 		
 		if(singlePressLevel){
 			if(key1.isDown){
@@ -397,18 +434,24 @@ function checkControls(){
                 frog.animations.play('idle');
             }
         //}
-		
+		*/
 		if(spaceKey.isDown){
 			if(singlePress){
 				//top_down.game.camera.x = frog.body.x - 384;
 				//top_down.game.camera.y = frog.body.y - 256;
-				
+				//console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);
 			}
 			singlePress = false;
 		} else {
 			singlePress = true;
 			//top_down.game.camera.follow();
 		}
+}
+var frogCurrentlyHittingWall = 0;
+function frogHitWall(){
+	//console.log("HITTING WALL");
+	frogCurrentlyHittingWall++;
+	wallSound();
 }
 
 function getDataLayerFromTilemap(tilemapName, layerName){
@@ -443,8 +486,6 @@ function initGame(){
 
 function createGame(level){
 	killAll();
-    
-
 	//var currenLevel;
 	gameState = "gameStart";
 	currentLevel = level;
@@ -475,7 +516,7 @@ function createGame(level){
     
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	
-	console.log(top_down.game.map);
+	//console.log(top_down.game.map);
 	
     //Fire animations
 	// fire = top_down.game.add.sprite("fire");
@@ -488,6 +529,7 @@ function createGame(level){
 	
 	
 	blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
+	//console.log(blockedLayerTiles);
 	for(var i = 0; i < blockedLayerTiles.length; i++){
 		blockedLayerTiles[i].setCollisionGroup(blockedCG);
 		blockedLayerTiles[i].collides([frogCG]);
@@ -502,13 +544,14 @@ function createGame(level){
 		frogSpawnX = 100;
 		frogSpawnY = 100;
 	}
-
+	
+	addTrigger(); // trigger system has to be rendered before frog
 	frog = top_down.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
 	top_down.game.physics.p2.enable(frog); //give the frog physics
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
-	frog.body.collides([blockedCG], wallSound);
+	frog.body.collides([blockedCG], frogHitWall);
     //frog.anchor.setTo(.39, .60);
 	frog.anchor.setTo(.5, .5);
     //frog.body.fixedRotation = true;
@@ -569,7 +612,6 @@ function createGame(level){
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);
 	
-	addTrigger();
 	}
 
 function newGame(){
@@ -748,7 +790,7 @@ function muteSounds(){
 	return;
 	}
 	mute = false;
-	music.play();
+	music.play('', 0, 1, true, true);
 }
 function loadSounds(){
 	hitWallSound = top_down.game.add.audio('hitwall');
@@ -760,6 +802,17 @@ function loadSounds(){
 	music = top_down.game.add.audio('music');
 }
 
+function doubleClicked(){
+	removeCollisionFromAllRocks();
+	console.log("DOUBLE CLICKED!");
+		tongueOut = true;
+		releaseSound.play();
+		shootMarker(frog.x, frog.y);
+		tongueBeingRetracted = true;
+
+		//markerGroup.removeAll();
+}
+
 function wallSound(){
 	if(!mute)
 	hitWallSound.play();
@@ -768,7 +821,7 @@ function wallSound(){
 top_down.Game.prototype = {
 	create: function(){
 		loadSounds();
-		music.play();
+		music.play('', 0, 1, true, true);
 		createHomeScreen();
 		initControls();
 	},
@@ -777,6 +830,8 @@ top_down.Game.prototype = {
         
         checkifLose();
         checkifWin();
+		checkControls(); //checks if controls have been pressed
+
         //Kevin's code
         moveFlies(fly1,1);
         moveFlies(fly2,2);
@@ -798,9 +853,19 @@ top_down.Game.prototype = {
 				//frog.animations.play("openMouthLeft");
 				//console.log("Face: Left");
             }
-        }
+        } else {
+			if(tongueBeingRetracted){
+				console.log(marker);
+				console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);	
+				tongueBeingRetracted = false;
+				console.log("Something is wrong here");
+			}
+		}
 		if(tongueBeingRetracted && tongueOut){
-			if(moveObjToObj(marker, frog, 1000)){		
+			//tongueGone();
+			//tongueAnchored = false;
+			if(moveObjToObj(marker, frog, 1000)){
+				//console.log("Marker to frog");
 				tongueBeingRetracted = false;
 				marker.body.velocity.x = 0;
 				marker.body.velocity.y = 0;
@@ -812,7 +877,9 @@ top_down.Game.prototype = {
 		if(tongueAnchored){
 			tongueOut = true;
 			if(distanceBetweenFrogAndRock >= 40){
+				//don't do if frog is touching any twig	
 				distanceBetweenFrogAndRock -= (distanceBetweenFrogAndRock/200) * 4.5;
+			
 			}
 			if(distanceBetweenFrogAndRock <= 160){
 				//frog.body.acceleration -= .1;
@@ -852,89 +919,8 @@ top_down.Game.prototype = {
 			backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
 		}
 		if(gameState == 'gameStart'){
-			
-			
-			
-		if (this.physics.arcade.intersects(frog,tb1))
-				enterBox(arrow1, tt1, ft1, ca1);
-				
-		if(!(this.physics.arcade.intersects(frog, tb1)))
-			exitBox(arrow1, tt1, ft1, ca1);
+		checkTriggers();
 		
-		
-			ca1 = arrow1.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb2))
-				enterBox(arrow2, tt2, ft2, ca2);
-				
-		if(!(this.physics.arcade.intersects(frog, tb2)))
-			exitBox(arrow2, tt2, ft2, ca2);
-		
-		
-			ca2 = arrow2.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb3))
-				enterBox(arrow3, tt3, ft3, ca3);
-				
-		if(!(this.physics.arcade.intersects(frog, tb3)))
-			exitBox(arrow3, tt3, ft3, ca3);
-		
-		
-			ca3 = arrow3.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb4))
-				enterBox(arrow4, tt4, ft4, ca4);
-				
-		if(!(this.physics.arcade.intersects(frog, tb2)))
-			exitBox(arrow4, tt4, ft4, ca4);
-		
-		
-			ca4 = arrow4.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb5))
-				enterBox(arrow2, tt2, ft2, ca2);
-				
-		if(!(this.physics.arcade.intersects(frog, tb5)))
-			exitBox(arrow5, tt5, ft5, ca5);
-		
-		
-			ca5 = arrow5.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb6))
-				enterBox(arrow6, tt6, ft6, ca6);
-				
-		if(!(this.physics.arcade.intersects(frog, tb6)))
-			exitBox(arrow6, tt6, ft6, ca6);
-		
-		
-			ca6 = arrow6.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb7))
-				enterBox(arrow7, tt7, ft7, ca7);
-				
-		if(!(this.physics.arcade.intersects(frog, tb7)))
-			exitBox(arrow7, tt7, ft7, ca7);
-		
-		
-			ca7 = arrow7.alpha;
-			
-		if (this.physics.arcade.intersects(frog,tb8))
-				enterBox(arrow8, tt8, ft8, ca8);
-				
-		if(!(this.physics.arcade.intersects(frog, tb8)))
-			exitBox(arrow8, tt8, ft8, ca8);
-		
-		
-			ca8 = arrow8.alpha;
-		
-		/*
-		if (this.physics.arcade.intersects(frog,tb9))
-				enterBox(arrow9, tt9, ft9, ca9);
-				
-		if(!(this.physics.arcade.intersects(frog, tb9)))
-			exitBox(arrow9, tt9, ft9, ca9);
-			ca9 = arrow9.alpha;
-			*/
 		}
 	}
 }
