@@ -63,8 +63,6 @@ function checkifLose(){
                     //console.log(distanceBetweenFrogAndFire);
                     //frogInContactWithFire();
                     deadcounter++;
-                    console.log(deadcounter);
-
                 }
         }
     }

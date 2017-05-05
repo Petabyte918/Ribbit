@@ -86,7 +86,7 @@ top_down.Preload.prototype = {
 		this.load.audio('music', 'Sounds/backgroundMusic.mp3');
 		
 		//trigger and turtorial images
-		this.load.image('testTrigger', 'Ribbit/testTrigger.png');		
+		//this.load.image('testTrigger', 'Ribbit/testTrigger.png');		
 		this.load.image('triggerbox', 'Ribbit/triggerbox.png');
 		
 		//arrows
