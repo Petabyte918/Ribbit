@@ -76,7 +76,7 @@ top_down.Preload.prototype = {
 		this.load.image('lvl11', 'Ribbit/level11.png');
 		this.load.image('lvl12', 'Ribbit/level12.png');
 		
-		//sounds:
+		//sounds
 		this.load.audio('complete', 'Sounds/complete.mp3');
 		this.load.audio('fire', 'Sounds/fire.mp3');
 		this.load.audio('hitwall', 'Sounds/hitwall.mp3');
@@ -98,6 +98,13 @@ top_down.Preload.prototype = {
 		this.load.image('downleft', 'Ribbit/downleft.png');
 		this.load.image('left', 'Ribbit/left.png');
 		this.load.image('upleft', 'Ribbit/upleft.png');
+		
+		//texts + arrows
+		this.load.image('t0', 'Ribbit/clickonrock.png'); //upright "clock on rock"
+		this.load.image('t1', 'Ribbit/swing.png');		 //downright "try to swing around"
+		this.load.image('t2', 'Ribbit/avoidFire.png');	 //downleft	  "avoid the fire"
+		this.load.image('t3', 'Ribbit/landAt.png');      //downright  "land at castle"
+		this.load.image('t4', 'Ribbit/levelcomplete.png'); //no arrow just says level complete
 		
 	},
 	
