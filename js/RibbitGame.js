@@ -28,7 +28,6 @@ var background;
 var popup;
 var logo;
 var home;
-var doubleClickRelease = false;
 
 var lastClickTime = 0;
 
@@ -157,19 +156,9 @@ function screenReleased(){
 
 function screenClicked(){
 	var currentTime = new Date();
+	
 	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
-		
-		
-		doubleClickRelease = true;
-		
-		releaseSound.play();
-		shootMarker(getClickedWorldX(), getClickedWorldY());
-		tongueBeingRetracted = true;
-		
-		
-		
-		//markerGroup.removeAll();
-		
+		doubleClicked();
 	}
 	lastClickTime = currentTime;
 	var clickedWorldX = getClickedWorldX();
@@ -195,7 +184,7 @@ function markerHitBlock(marker, block){
 function markerHitRock(marker, rock){
 	rock.clearCollision();
 	if(curRock == null){
-		markerGroup.removeAll();	
+			
 	} else {
 		markerX = rock.x;
 		markerY = rock.y;
@@ -205,8 +194,10 @@ function markerHitRock(marker, rock){
 		top_down.game.physics.p2.enable(wallAnchor);
 		wallAnchor.body.static = true;
 		tongueAnchored = true;
+		//console.log("markerHitRock Tongue Anchored");
 		distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
 	}
+	markerGroup.removeAll();
 }
 
 function moveObjToObj(obj1, obj2, speed){
@@ -225,6 +216,14 @@ function moveObjToXY(obj, x, y, speed){
 	obj.body.velocity.y = Math.sin(angle) * speed;
 }
 
+function removeCollisionFromAllRocks(){
+	console.log(curRock);
+	for(var i = 0; i < rockGroup.children.length; i++){
+		rockGroup.children[i].body.clearCollision();
+	}
+
+}
+
 function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
@@ -234,7 +233,7 @@ function shootMarker(destX, destY){
 	}
 	*/
 	
-	markerGroup.removeAll();	
+	//markerGroup.removeAll();	
 	
 	
 	
@@ -255,9 +254,12 @@ function shootMarker(destX, destY){
 var curRock = null;
 
 function rockClicked(rock){
+	
 	var currentTime = new Date();
-	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+	//console.log("ROCK CLICKED");
+	//if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){}
 		if((curRock != rock) || (curRock == null)){		
+			console.log("STEVE THIS");
 			if(!mute)
 				tongueSound.play();
 			rock.body.setCollisionGroup(rockCG);
@@ -266,13 +268,14 @@ function rockClicked(rock){
 			shootMarker(rock.x, rock.y);
 			curRock = rock;
 		} else {
+			/*
 			if(!mute)
 			releaseSound.play();
 			shootMarker(getClickedWorldX(), getClickedWorldY());
 			tongueBeingRetracted = true;
 			curRock = null;
+			*/
 		}
-	}
 }
 
 function frogWins(){
@@ -307,7 +310,7 @@ function initRocks(rockLayerData){
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 2){
-		var rockType = '1';
+		var rockType = '0';
 		rockType = Math.floor(Math.random() * 3) + 1;
 		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rockA' + rockType)
 		top_down.game.physics.p2.enable(tempRock);
@@ -323,9 +326,12 @@ function tongueGone(){
 	marker.x = frog.x;
 	marker.y = frog.y;
 	tongueOut = false;
+	tongueBeingRetracted = false;
 	tongueArray[1].x = 20;
 	tongueArray[1].y = 20;
 	markerGroup.removeAll();
+	//curRock = null;
+	//console.log("curRock: " + curRock);
 }
 
 function initControls(){
@@ -363,7 +369,7 @@ var singlePress = true;
 var singlePressLevel = true;
 
 function checkControls(){
-		
+		/*
 		if(wKey.isDown){
 			top_down.game.camera.y -= 10;
 		}
@@ -378,6 +384,7 @@ function checkControls(){
 		if(dKey.isDown){
 			top_down.game.camera.x += 10;
 		}
+		
 		
 		if(singlePressLevel){
 			if(key1.isDown){
@@ -424,18 +431,24 @@ function checkControls(){
                 frog.animations.play('idle');
             }
         //}
-		
+		*/
 		if(spaceKey.isDown){
 			if(singlePress){
 				//top_down.game.camera.x = frog.body.x - 384;
 				//top_down.game.camera.y = frog.body.y - 256;
-				
+				//console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);
 			}
 			singlePress = false;
 		} else {
 			singlePress = true;
 			//top_down.game.camera.follow();
 		}
+}
+var frogCurrentlyHittingWall = 0;
+function frogHitWall(){
+	//console.log("HITTING WALL");
+	frogCurrentlyHittingWall++;
+	wallSound();
 }
 
 function getDataLayerFromTilemap(tilemapName, layerName){
@@ -495,7 +508,7 @@ function createGame(level){
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	
-	console.log(top_down.game.map);
+	//console.log(top_down.game.map);
 	
     //Fire animations
 	// fire = top_down.game.add.sprite("fire");
@@ -508,6 +521,7 @@ function createGame(level){
 	
 	
 	blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
+	//console.log(blockedLayerTiles);
 	for(var i = 0; i < blockedLayerTiles.length; i++){
 		blockedLayerTiles[i].setCollisionGroup(blockedCG);
 		blockedLayerTiles[i].collides([frogCG]);
@@ -528,7 +542,7 @@ function createGame(level){
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
-	frog.body.collides([blockedCG], wallSound);
+	frog.body.collides([blockedCG], frogHitWall);
     //frog.anchor.setTo(.39, .60);
 	frog.anchor.setTo(.5, .5);
     //frog.body.fixedRotation = true;
@@ -779,6 +793,17 @@ function loadSounds(){
 	music = top_down.game.add.audio('music');
 }
 
+function doubleClicked(){
+	removeCollisionFromAllRocks();
+	console.log("DOUBLE CLICKED!");
+		tongueOut = true;
+		releaseSound.play();
+		shootMarker(frog.x, frog.y);
+		tongueBeingRetracted = true;
+
+		//markerGroup.removeAll();
+}
+
 function wallSound(){
 	if(!mute)
 	hitWallSound.play();
@@ -792,10 +817,9 @@ top_down.Game.prototype = {
 		initControls();
 	},
 	update: function(){
-		//checkControls(); //checks if controls have been pressed
+		checkControls(); //checks if controls have been pressed
     
-        
-        checkifWin();
+        //checkifWin();
         //Kevin's code
         moveFlies(fly1,1);
         moveFlies(fly2,2);
@@ -817,9 +841,19 @@ top_down.Game.prototype = {
 				//frog.animations.play("openMouthLeft");
 				//console.log("Face: Left");
             }
-        }
+        } else {
+			if(tongueBeingRetracted){
+				console.log(marker);
+				console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);	
+				tongueBeingRetracted = false;
+				console.log("Something is wrong here");
+			}
+		}
 		if(tongueBeingRetracted && tongueOut){
-			if(moveObjToObj(marker, frog, 1000)){		
+			//tongueGone();
+			//tongueAnchored = false;
+			if(moveObjToObj(marker, frog, 1000)){
+				//console.log("Marker to frog");
 				tongueBeingRetracted = false;
 				marker.body.velocity.x = 0;
 				marker.body.velocity.y = 0;
@@ -831,7 +865,9 @@ top_down.Game.prototype = {
 		if(tongueAnchored){
 			tongueOut = true;
 			if(distanceBetweenFrogAndRock >= 40){
+				//don't do if frog is touching any twig	
 				distanceBetweenFrogAndRock -= (distanceBetweenFrogAndRock/200) * 4.5;
+			
 			}
 			if(distanceBetweenFrogAndRock <= 160){
 				//frog.body.acceleration -= .1;

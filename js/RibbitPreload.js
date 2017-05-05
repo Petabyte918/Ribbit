@@ -27,6 +27,7 @@ top_down.Preload.prototype = {
 		this.load.image('tiles2', 'assets/spritesheet2.png');
 		this.load.image('levelBackground1', 'assets/levelBackground1.png');
 		this.load.image('rock1', 'assets/rock1.png');
+		this.load.image('rockA0', 'assets/rockA0.png');
 		this.load.image('rockA1', 'assets/rockA1.png');
 		this.load.image('rockA2', 'assets/rockA2.png');
 		this.load.image('rockA3', 'assets/rockA3.png');
