@@ -78,6 +78,9 @@ var wallAnchor;
 var markerX;
 var markerY;
 
+var mapWidth;
+var mapHeight;
+
 var volNum = 0;
 var greenNum = 0
 
@@ -301,12 +304,6 @@ function frogHitWall(){
 		}
 		if(collisionRectangle != undefined){
 			if(checkCollisionRectangle(wp2tFrog, wp2tRock, collisionRectangle)){
-				console.log("frog is going through wall");
-				
-				
-				
-				//working
-				
 				releaseFrogFromRock();
 			}
 		}
@@ -364,44 +361,44 @@ function checkCollisionRectangle(start, end, rectangle){
 	//rectangle[y][x]
 	if((horizontal > 0) && (vertical > 0)){
 		//facing top right
-		ret += rectangle[bot-1][0]
-		ret += rectangle[bot-1][1]	
-		ret += rectangle[bot][0]
-		ret += rectangle[bot][1]
+		ret += rectangle[bot-1][0];
+		ret += rectangle[bot-1][1];	
+		ret += rectangle[bot][0];
+		ret += rectangle[bot][1];
 	} else if((horizontal < 0) && (vertical > 0)){
 		//facing top left
-		ret += rectangle[bot-1][right]
-		ret += rectangle[bot-1][right-1]
-		ret += rectangle[bot][right-1]
-		ret += rectangle[bot][right]
+		ret += rectangle[bot-1][right];
+		ret += rectangle[bot-1][right-1];
+		ret += rectangle[bot][right-1];
+		ret += rectangle[bot][right];
 	} else if((horizontal > 0) && (vertical < 0)){
 		//facing bottom right
-		ret += rectangle[0][0]
-		ret += rectangle[1][0]
-		ret += rectangle[0][1]
-		ret += rectangle[1][1]
+		ret += rectangle[0][0];
+		ret += rectangle[1][0];
+		ret += rectangle[0][1];
+		ret += rectangle[1][1];
 	} else if((horizontal < 0) && (vertical < 0)){
 		//facing bottom left
-		ret += rectangle[0][right]
-		ret += rectangle[1][right]
-		ret += rectangle[0][right + 1]
-		ret += rectangle[1][right + 1]
+		ret += rectangle[0][right];
+		ret += rectangle[1][right];
+		ret += rectangle[0][right + 1];
+		ret += rectangle[1][right + 1];
 	} else if((horizontal > 0) && (vertical == 0)){
 		//facing right
-		ret += rectangle[0][0]
-		ret += rectangle[0][1]
+		ret += rectangle[0][0];
+		ret += rectangle[0][1];
 	} else if((horizontal < 0) && (vertical == 0)){
 		//facing left
-		ret += rectangle[0][right]
-		ret += rectangle[0][right - 1]
+		ret += rectangle[0][right];
+		ret += rectangle[0][right - 1];
 	} else if((horizontal == 0) && (vertical > 0)){
 		///facing up
-		ret += rectangle[bot][0]
-		ret += rectangle[bot-1][0]
+		ret += rectangle[bot][0];
+		ret += rectangle[bot-1][0];
 	} else if((horizontal == 0) && (vertical < 0)){
 		//facing down
-		ret += rectangle[0][0]
-		ret += rectangle[1][0]
+		ret += rectangle[0][0];
+		ret += rectangle[1][0];
 	}
 	if(ret > 0){
 		return true;
@@ -541,11 +538,16 @@ function checkControls(){
 		}
 }
 
+/*
+* getDataLayerFromTilemap returns map data, but also sets mapWidth and mapHeight
+*/
 function getDataLayerFromTilemap(tilemapName, layerName){
 	var length = top_down.game.cache.getTilemapData(tilemapName).data.layers.length;
 	for(var i = 0; i < length; i++){
 		var name = top_down.game.cache.getTilemapData(tilemapName).data.layers[i].name;
 		if(name === layerName){
+			mapWidth = top_down.game.cache.getTilemapData(tilemapName).data.layers[i].width * 16;
+			mapHeight = top_down.game.cache.getTilemapData(tilemapName).data.layers[i].height * 16;
 			return top_down.game.cache.getTilemapData(tilemapName).data.layers[i];
 		}
 	}
@@ -789,26 +791,28 @@ function createLevelStage(){
 	homeMenu = null;
 	background = top_down.game.add.sprite(0, 0, 'levelSelect');
 	var levelName = "lvl1";
-	level = top_down.game.add.sprite(94, 106, levelName);
+	level = top_down.game.add.sprite(94, 116, levelName);
 	level.inputEnabled = true;
 	level.events.onInputDown.add(createGame, this);
 	for(var i = 0; i < 3; i++){
 		levelName = "lvl" + (2 + i);
-		level = top_down.game.add.sprite(214*i + 41 + 268, 106 , levelName);
+		level = top_down.game.add.sprite(214*i + 41 + 268, 116 , levelName);
 		level.inputEnabled = true;
 		level.events.onInputDown.add(createGame, this);
 	}
 	for (var i = 0; i < 4; i++){
 		levelName = "lvl" + (5 + i);
-		level = top_down.game.add.sprite(214*i + 94, 106 + 146 , levelName);
-		level.inputEnabled = true;
-		level.events.onInputDown.add(createGame, this);
+		//level = top_down.game.add.sprite(214*i + 94, 106 + 146 , levelName);
+		level = top_down.game.add.sprite(214*i + 94, 116 + 146 , 'lock');
+		//level.inputEnabled = true;
+		//level.events.onInputDown.add(createGame, this);
 	}
 	for (var i = 0; i < 4; i++){
 		levelName = "lvl" + (9 + i);
-		level = top_down.game.add.sprite(214*i + 94, 106 + 294 , levelName);
-		level.inputEnabled = true;
-		level.events.onInputDown.add(createGame, this);
+		//level = top_down.game.add.sprite(214*i + 94, 106 + 294 , levelName);
+		level = top_down.game.add.sprite(214*i + 94, 116 + 294 , 'lock');
+		//level.inputEnabled = true;
+		//level.events.onInputDown.add(createGame, this);
 	}
 	home = top_down.game.add.sprite(20, 20, 'home');
 	home.inputEnabled = true;
@@ -840,15 +844,21 @@ function doubleClicked(){
 	releaseFrogFromRock();
 }
 
-function wallSound(){
 	if(!mute)
+function wallSound(){
 	hitWallSound.play();
 }
 
 function updateBackground(){
 	if(backgroundImage != undefined){
-		backgroundImage.x = (top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/(backgroundImage.width + (top_down.game.camera.width * (backgroundImage.width/top_down.game.camera.width)))));
-		backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
+		//working
+		//backgroundImage.x = (top_down.game.camera.x/(mapWidth * 16/(backgroundImage.width + (mapWidth * (backgroundImage.width/top_down.game.camera.width)))));
+
+		backgroundImage.x = ((top_down.game.camera.x)/((mapWidth) - top_down.game.camera.width)) * ((mapWidth) - (backgroundImage.width));
+		backgroundImage.y = ((top_down.game.camera.y)/((mapHeight) - top_down.game.camera.height)) * ((mapHeight) - (backgroundImage.height));
+		//backgroundImage.x = (top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/(backgroundImage.width + (top_down.game.camera.width * (backgroundImage.width/top_down.game.camera.width)))));
+		//backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
+	
 	}
 }
 
