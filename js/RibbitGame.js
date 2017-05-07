@@ -104,7 +104,6 @@ var castle;
 
 function updateFrog(){
 		if(tongueBeingRetracted && tongueOut){
-			console.log("TongueBeingRetracted");
 			if(moveObjToObj(marker, frog, 1000)){
 				tongueBeingRetracted = false;
 				marker.body.velocity.x = 0;
@@ -188,7 +187,6 @@ function markerHitRock(marker, rock){
 }
 
 function removeCollisionFromAllRocks(){
-	console.log(curRock);
 	for(var i = 0; i < rockGroup.children.length; i++){
 		rockGroup.children[i].body.clearCollision();
 	}
@@ -244,19 +242,202 @@ function releaseFrogFromRock(){
 		tongueGone();
 }
 
+function frogCoordinatesToWorld(point){
+	var tempPoint = new Phaser.Point();
+	tempPoint.x = frog.body.x + point.x;
+	tempPoint.y = frog.body.y + point.y;	
+	return tempPoint;
+}
+
+function frogHitWall(){
+	if(tongueOut){
+		wallSound();
+		
+		var p0 = frogCoordinatesToWorld(tongueArray[0]);
+		var p1 = frogCoordinatesToWorld(tongueArray[1]);
+		
+		//var a = top_down.game.add.sprite(p0.x , p0.y, 'rock1');
+		//var b = top_down.game.add.sprite(p1.x , p1.y, 'rock1');
+		
+		var lowestX;
+		var highestX;
+		if(p0.x < p1.x){
+			lowestX = p0.x;
+			highestX = p1.x;
+		} else {
+			lowestX = p1.x;
+			highestX = p0.x;
+		}
+		
+		var lowestY;
+		var highestY;
+		if(p0.y < p1.y){
+			lowestY = p0.y;
+			highestY = p1.y;
+		} else {
+			lowestY = p1.y;
+			highestY = p0.y;
+		}
+		
+		var wp2tLowest = wp2t(new Phaser.Point(lowestX, lowestY));
+		var wp2tHighest = wp2t(new Phaser.Point(highestX, highestY));
+		var wp2tFrog = wp2t(new Phaser.Point(p0.x, p0.y));
+		var wp2tRock = wp2t(new Phaser.Point(p1.x, p1.y));
+		
+		var tongueRectangle = new Phaser.Rectangle(wp2tLowest.x, wp2tLowest.y, (wp2tHighest.x - wp2tLowest.x), (wp2tHighest.y - wp2tLowest.y));
+		
+		var collisionRectangle = [];
+		
+		for(var i = 0; i < (wp2tHighest.y - wp2tLowest.y); i++){
+			var rc = [];
+			for(var j = 0; j < (wp2tHighest.x - wp2tLowest.x); j++){
+				if(queryBlockedLayer(wp2tLowest.x + j, wp2tLowest.y + i)){
+					rc.push(1);
+				} else {
+					rc.push(0);
+				}
+			}
+			collisionRectangle.push(rc);
+		}
+		if(collisionRectangle != undefined){
+			if(checkCollisionRectangle(wp2tFrog, wp2tRock, collisionRectangle)){
+				console.log("frog is going through wall");
+				
+				
+				
+				//working
+				
+				releaseFrogFromRock();
+			}
+		}
+	}
+}
+
 //////////////////////////////////
 //////////////////////////////////
 //////////////////////////////////
 
+function checkCollisionRectangle(start, end, rectangle){
+	var slope = ((end.x - start.x)/((end.y - start.y)));
+	var horizontal = 0;
+	var vertical = 0;
+	if(start.x < end.x){
+		//right
+		horizontal = 1;
+	} else if (start.x == end.x){
+		//nothing
+		horizontal = 0;
+	} else if(start.x > end.x) {
+		//left
+		horizontal = -1;
+	}
+	if(start.y < end.y){
+		//up
+		vertical = -1;
+	} else if (start.y == end.y){
+		//nothing
+		vertical = 0;
+	} else if(start.y > end.y) {
+		//down
+		vertical = 1;
+	}
+	if((horizontal == 0) && (vertical == 0)){
+		return false;
+	}
+	var width;
+	if(rectangle[0] != undefined){
+		width = rectangle[0].length;
+	} else {
+		//alert("Game would be crashing here");
+		return false;
+	}
+	var height = rectangle.length;
+	var bot = height - 1;
+	var right = width - 1;
+	var ret = 0;
+	if(width == 1){
+		horizontal = 0;		
+	}
+	if(height == 1){
+		vertical = 0;
+	}
+	//rectangle[y][x]
+	if((horizontal > 0) && (vertical > 0)){
+		//facing top right
+		ret += rectangle[bot-1][0]
+		ret += rectangle[bot-1][1]	
+		ret += rectangle[bot][0]
+		ret += rectangle[bot][1]
+	} else if((horizontal < 0) && (vertical > 0)){
+		//facing top left
+		ret += rectangle[bot-1][right]
+		ret += rectangle[bot-1][right-1]
+		ret += rectangle[bot][right-1]
+		ret += rectangle[bot][right]
+	} else if((horizontal > 0) && (vertical < 0)){
+		//facing bottom right
+		ret += rectangle[0][0]
+		ret += rectangle[1][0]
+		ret += rectangle[0][1]
+		ret += rectangle[1][1]
+	} else if((horizontal < 0) && (vertical < 0)){
+		//facing bottom left
+		ret += rectangle[0][right]
+		ret += rectangle[1][right]
+		ret += rectangle[0][right + 1]
+		ret += rectangle[1][right + 1]
+	} else if((horizontal > 0) && (vertical == 0)){
+		//facing right
+		ret += rectangle[0][0]
+		ret += rectangle[0][1]
+	} else if((horizontal < 0) && (vertical == 0)){
+		//facing left
+		ret += rectangle[0][right]
+		ret += rectangle[0][right - 1]
+	} else if((horizontal == 0) && (vertical > 0)){
+		///facing up
+		ret += rectangle[bot][0]
+		ret += rectangle[bot-1][0]
+	} else if((horizontal == 0) && (vertical < 0)){
+		//facing down
+		ret += rectangle[0][0]
+		ret += rectangle[1][0]
+	}
+	if(ret > 0){
+		return true;
+	}
+	return false;
+}
+
+function queryBlockedLayer(tiledX, tiledY){
+	var blockedData;
+	for(var i = 0; i < top_down.game.cache.getTilemapData("level_" + currentLevel).data.layers.length; i++){
+		var name = top_down.game.cache.getTilemapData("level_" + currentLevel).data.layers[i].name;
+		if(name === "twig_c"){
+			blockedData = top_down.game.cache.getTilemapData("level_" + currentLevel).data.layers[i];
+		}
+	}
+	if(blockedData.data[(tiledX) + (tiledY * blockedData.width)] == 0){
+		return false;
+	}
+	return true;
+}
+
+
+//translates a world point to a point tiled point
+function wp2t(point){
+	return new Phaser.Point(Math.floor(point.x/16), Math.floor(point.y/16));
+}
+
 function screenClicked(){
-	console.log("Screen clicked - x:" + clickedWorldX + ", y:" + clickedWorldY);
+	var clickedWorldX = getClickedWorldX();
+	var clickedWorldY = getClickedWorldY();
+	console.log("Screen clicked\nx:" + clickedWorldX + ", y:" + clickedWorldY);
 	var currentTime = new Date();
 	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
 		doubleClicked();
 	}
 	lastClickTime = currentTime;
-	var clickedWorldX = getClickedWorldX();
-	var clickedWorldY = getClickedWorldY();
 }
 
 function getClickedWorldX(){return top_down.game.input.x + top_down.game.camera.x;}
@@ -360,10 +541,6 @@ function checkControls(){
 		}
 }
 
-function frogHitWall(){
-	wallSound();
-}
-
 function getDataLayerFromTilemap(tilemapName, layerName){
 	var length = top_down.game.cache.getTilemapData(tilemapName).data.layers.length;
 	for(var i = 0; i < length; i++){
@@ -449,6 +626,7 @@ function createGame(level){
     tongueArray.push(new Phaser.Point(0, 0));
 	tongueArray.push(new Phaser.Point(0, 0));
 	tongue = top_down.game.add.rope(frog.x, frog.y, 'tongue', null, tongueArray);
+	top_down.game.physics.p2.enable(tongue);
 	tongue.updateAnimation = function(){
 		updateTonguePoints();
 	};
@@ -705,10 +883,10 @@ top_down.Game.prototype = {
             }
         } else {
 			if(tongueBeingRetracted){
-				console.log(marker);
-				console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);	
+				//console.log(marker);
+				//console.log("Tongue Out: " + tongueOut + "\nTongue Anchored: " + tongueAnchored + "\nTongue Being Retracted: " + tongueBeingRetracted);	
 				tongueBeingRetracted = false;
-				console.log("Something is wrong here");
+				//console.log("Something is wrong here");
 			}
 		}
 		updateFrog();
