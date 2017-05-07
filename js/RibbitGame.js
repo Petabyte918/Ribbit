@@ -121,6 +121,8 @@ function updateFrog(){
 				distanceBetweenFrogAndRock -= (distanceBetweenFrogAndRock/200) * 4.5;
 			}
 			if(distanceBetweenFrogAndRock <= 160){
+				frog.body.damping = .5;
+				/*
 				if(frog.body.velocity.x > 40){
 					frog.body.velocity.x -= 6;
 				} else if(frog.body.velocity.x < -40){
@@ -131,9 +133,16 @@ function updateFrog(){
 				} else if(frog.body.velocity.y < -40){
 					frog.body.velocity.y += 6;
 				}
+				*/
+			} else {
+				frog.body.damping = .1;
 			}
 			constraints.push(top_down.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
-        }
+        } else {
+			if(frog != null){
+				frog.body.damping = .1;
+			}
+		}
 }
 
 function updateTonguePoints(){
@@ -211,6 +220,10 @@ function shootMarker(destX, destY){
 	moveObjToXY(marker, destX, destY, 800);
 }
 
+function slowDownFrog(){
+	frog.body.damping = .8;
+}
+
 function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){		
 		if(!mute)
@@ -219,6 +232,7 @@ function rockClicked(rock){
 		rock.body.collides([markerCG])
 		shootMarker(rock.x, rock.y);
 		curRock = rock;
+		slowDownFrog();
 	} else {
 	}
 }
@@ -514,6 +528,7 @@ function initControls(){
 var singlePress = true;
 var singlePressLevel = true;
 function checkControls(){
+	/*
 		if(wKey.isDown){
 			top_down.game.camera.y -= 10;
 		}
@@ -530,8 +545,12 @@ function checkControls(){
         if(xKey.isDown){
             frog.animations.play('openMouth');
         }
+	*/
 		if(spaceKey.isDown){
-			if(singlePress){}
+			if(singlePress){
+				console.log("SPACE");
+				console.log(top_down.game.world.children);
+			}
 			singlePress = false;
 		} else {
 			singlePress = true;
@@ -575,6 +594,7 @@ function createGame(level){
 	//var currenLevel;
 	gameState = "gameStart";
 	currentLevel = level;
+	menuClicked = false;
 	if(typeof level == "number"){
 		currentLevel = level;
 	} else {
@@ -714,12 +734,23 @@ function goHome(){
 function menuKill(){
 	if(!mute)
 	selectSound.play();
-	homeMenu.destroy();
-	resumeButton.destroy();
-	restartButton.destroy();
-	volumeButton.destroy();
+	if(homeMenu != null){
+		homeMenu.destroy();
+	}
+	if(resumeButton != null){
+		resumeButton.destroy();
+	}
+	if(restartButton != null){
+		restartButton.destroy();
+	}
+	if(volumeButton != null){
+		volumeButton.destroy();
+	}
 	menuClicked = false;
-	home.destroy();
+	if(home != null){
+		home.destroy();
+	}
+	//working
 }
 
 function killAll(){
@@ -851,14 +882,8 @@ function wallSound(){
 
 function updateBackground(){
 	if(backgroundImage != undefined){
-		//working
-		//backgroundImage.x = (top_down.game.camera.x/(mapWidth * 16/(backgroundImage.width + (mapWidth * (backgroundImage.width/top_down.game.camera.width)))));
-
 		backgroundImage.x = ((top_down.game.camera.x)/((mapWidth) - top_down.game.camera.width)) * ((mapWidth) - (backgroundImage.width));
 		backgroundImage.y = ((top_down.game.camera.y)/((mapHeight) - top_down.game.camera.height)) * ((mapHeight) - (backgroundImage.height));
-		//backgroundImage.x = (top_down.game.camera.x/(top_down.game.backgroundLayer.width * 16/(backgroundImage.width + (top_down.game.camera.width * (backgroundImage.width/top_down.game.camera.width)))));
-		//backgroundImage.y = (top_down.game.camera.y/(top_down.game.backgroundLayer.height * 16/(backgroundImage.height + (top_down.game.camera.height * (backgroundImage.height/top_down.game.camera.height)))));
-	
 	}
 }
 
