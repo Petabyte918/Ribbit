@@ -28,8 +28,8 @@ top_down.Preload.prototype = {
 		this.load.image('levelBackground1', 'assets/levelBackground1.png');
 		this.load.image('rock1', 'assets/rock1.png');
 		this.load.image('rockA0', 'assets/rockA0.png');
-		this.load.image('rockA1', 'assets/rockA1.png');
-		this.load.image('rockA2', 'assets/rockA2.png');
+		this.load.image('rockA1', 'assets/rockB1.png');
+		this.load.image('rockA2', 'assets/rockC2.png');
 		this.load.image('rockA3', 'assets/rockA3.png');
 		this.load.image('tongue', 'assets/tongue.png');
 		this.load.image('ttongue', 'assets/ttongue.png');
@@ -105,6 +105,14 @@ top_down.Preload.prototype = {
 		this.load.image('t2', 'Ribbit/avoidFire.png');	 //downleft	  "avoid the fire"
 		this.load.image('t3', 'Ribbit/landAt.png');      //downright  "land at castle"
 		this.load.image('t4', 'Ribbit/levelcomplete.png'); //no arrow just says level complete
+        
+        
+        // KEVINS CODE LOADS MIST
+        this.load.image('mist1','assets/mist1.png');
+        this.load.image('mist2','assets/mist2.png');
+        this.load.image('mist3','assets/mist3.png');
+
+        
 		
 	},
 	

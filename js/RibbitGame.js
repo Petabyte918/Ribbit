@@ -92,7 +92,7 @@ var blockedLayerTiles = null;
 
 var fire;
 var fireGroup;
-
+var mistGroup;
 var gamePreviouslyInit = false;
 
 //castle Kevin
@@ -404,16 +404,22 @@ function createGame(level){
 	if(!gamePreviouslyInit){
 			initGame();
 	}
+      
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
-	top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
+    
+     //KEVIN's Code
+    mistGroup=top_down.game.add.group();
+    spawnMist();
+
+    top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
     
     //creates firegroup game
-	fireGroup=top_down.game.add.group();
+	fireGroup=top_down.game.add.group();        
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
 
@@ -431,6 +437,7 @@ function createGame(level){
 		frogSpawnX = 100;
 		frogSpawnY = 100;
 	}
+    
 	
 	addTrigger(); // trigger system has to be rendered before frog
 	frog = top_down.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
@@ -440,7 +447,7 @@ function createGame(level){
 	frog.body.setCollisionGroup(frogCG);
 	frog.body.collides([blockedCG], frogHitWall);
 	frog.anchor.setTo(.5, .5);
-    frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 5, true);
+    frog.animations.add('idle', [0,0,0,0,0,0,1,1,1,1], 8, true);
     frog.animations.add('openMouthRight', [2], 1, true);
     frog.animations.add('openMouthLeft',[4],1, true);
     frog.animations.add('die',[6,7,8,9,10,11,12,13,14,15,16],5, false);
@@ -475,6 +482,8 @@ function createGame(level){
 	menuButton.inputEnabled = true;
 	menuButton.events.onInputDown.add(createPopupMenu, this);
 	top_down.game.world.bringToTop(menuButton);	
+    
+    
 }
 
 var menuClicked = false;
@@ -686,6 +695,7 @@ top_down.Game.prototype = {
         checkifWin();
 		checkControls(); //checks if controls have been pressed
         //Kevin's code
+        animateFire();
 		if (tongueOut == true){
 			frog.animations.play("openMouthRight");     
 			if(marker != undefined){
@@ -710,6 +720,12 @@ top_down.Game.prototype = {
 				tongueBeingRetracted = false;
 				console.log("Something is wrong here");
 			}
+            
+            //KEVIN
+            if ((tongueOut==false)&&(frogDying==false)){
+                frog.animations.play('idle');
+            }
+            
 		}
 		updateFrog();
 		updateBackground();
@@ -732,5 +748,7 @@ top_down.Game.prototype = {
 		if(gameState == 'gameStart'){
 			checkTriggers();
 		}
+        
+        checkMist();
 	}
 }
