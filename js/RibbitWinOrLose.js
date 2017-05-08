@@ -78,8 +78,12 @@ function frogOnFire(){
     frogDying=true;
     releaseFrogFromRock();
     frog.animations.play("die"); 
-	setInterval(function(){frogDies();}, 2199); 
-
+    if (frogDying){/*
+	setInterval(function(){console.log("TIMED INTERVAL");frogDies();}, 2199);*/ 
+        if (frog.animations.currentFrame.index==16){
+            frogDies();
+        }
+    }
 }
 
 

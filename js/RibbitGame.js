@@ -497,7 +497,8 @@ function frogWins(){
 }
 
 function frogDies(){
-	lostLevel();
+    console.log("Frog Dies");
+    lostLevel();
 }
 
 function initRocks(rockLayerData){
