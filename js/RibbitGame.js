@@ -625,21 +625,20 @@ function createGame(level){
 	if(!gamePreviouslyInit){
 			initGame();
 	}
-<<<<<<< HEAD
+
 	console.log("MARKER GROUP: " + markerGroup);
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
 	//markerGroup.removeChildren();
-=======
-      
->>>>>>> 06c09aa8e65682ac13f1a480510a109353c3030c
+    
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
 	top_down.game.map.addTilesetImage('spritesheet2','tiles2');
+      //KEVIN's Code
+    mistGroup=top_down.game.add.group();
 	top_down.game.backgroundLayer = top_down.game.map.createLayer('background_nc');
     
-     //KEVIN's Code
-    mistGroup=top_down.game.add.group();
+   
 
     top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
