@@ -231,6 +231,7 @@ function slowDownFrog(){
 function rockClicked(rock){
 	if((curRock != rock) || (curRock == null)){		
 		if(!mute)
+            //console.log("tongue sound");
 			tongueSound.play();
 		rock.body.setCollisionGroup(rockCG);
 		rock.body.collides([markerCG])
@@ -256,7 +257,10 @@ function tongueGone(){
 function releaseFrogFromRock(){
 		markerGroup.removeAll();
 		if(!mute){
-			releaseSound.play();
+            if (frogDying==false){
+                console.log("release sound");
+                releaseSound.play();
+            }
 		}
 		curRock = null;
 		removeCollisionFromAllRocks();
