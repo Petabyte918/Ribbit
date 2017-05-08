@@ -477,11 +477,11 @@ function moveObjToXY(obj, x, y, speed){
 }
 
 function frogWins(){
-	alert("You have won!\nTry out another level.");
+	endLevel();
 }
 
 function frogDies(){
-	alert("You have died.\nGame will now restart.");
+	lostLevel();
 }
 
 function initRocks(rockLayerData){
@@ -628,7 +628,6 @@ function createGame(level){
 	if(!gamePreviouslyInit){
 			initGame();
 	}
-
 	//console.log("MARKER GROUP: " + markerGroup);
 	if(markerGroup != undefined){
 		markerGroup.destroy();
@@ -767,7 +766,8 @@ function createHomeScreen(){
 }
 
 function goHome(){
-	if(resumeButton != null)
+	complete = false;
+	if(resumeButton != null || endMenu != null)
 	restartLevel();
 	resumeButton = null;
 	killAll();
@@ -800,6 +800,10 @@ function killAll(){
 	curRock = null;
 	if(top_down.game.map!=null && top_down.game.blockedLayer!=null){
 		top_down.game.physics.p2.clearTilemapLayerBodies(top_down.game.map, top_down.game.blockedLayer);
+	}
+	if(endMenu != null){
+		endMenu.destroy();
+		endMenu = null
 	}
 	if(!mute)
 		selectSound.play();	
@@ -860,7 +864,9 @@ function showHelp(){
 function restartLevel(){
 	killAll();
 	console.log("restartLevel");
+	if(!lost && !complete)
 	shootMarker(0, 0);
+	lost = false;
 	tongueBeingRetracted = true;
 	curRock = null;
 	createGame(currentLevel);
@@ -1002,6 +1008,8 @@ top_down.Game.prototype = {
 		if(gameState == 'gameStart'){
 			checkTriggers();
 		}
+		if(complete)
+			endLevel();
         
         checkMist();
 	}
