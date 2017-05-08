@@ -628,6 +628,7 @@ function initGame(){
 }
 
 function createGame(level){
+	
 	curRock = null;
 	frog = null;
 	currentlyDoubleClicked = false;
@@ -645,7 +646,7 @@ function createGame(level){
 	//console.log("createGame");
 	removeCollisionFromAllRocks();
 	//var currenLevel;
-	gameState = "gameStart";
+	
 	currentLevel = level;
 	menuClicked = false;
 	if(typeof level == "number"){
@@ -658,6 +659,7 @@ function createGame(level){
 	}
 	
 	initGame();
+	gameState = "gameStart";
 	
 	//console.log("MARKER GROUP: " + markerGroup);
 	if(markerGroup != undefined){

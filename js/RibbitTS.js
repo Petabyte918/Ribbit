@@ -6,16 +6,14 @@ var restartGame;
 
 function checkTriggers(){
 	for(var i = 0; i < 10; i++){ //when i add 10th arrow it will be success
-	if (top_down.game.physics.arcade.intersects(frog, arrow[i].tb))
+		if (top_down.game.physics.arcade.intersects(frog, arrow[i].tb))
 				arrow[i].enterBox();
 				
 		if(!(top_down.game.physics.arcade.intersects(frog, arrow[i].tb)))
 			arrow[i].exitBox();
-		
-		
-			arrow[i].ca = arrow[i].arrow.alpha;
+					
+		arrow[i].ca = arrow[i].arrow.alpha;
 	}
-
 }
 
 var complete = false;
