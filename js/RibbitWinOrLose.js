@@ -23,13 +23,13 @@ function spawnCastle(x,y){
 // if collision is detected call frogWins()
 
 function checkifWin(){
-    if (castle!= undefined && !frogDying){
-    distanceBetweenFrogAndCastle = Math.sqrt(((castle.body.x-frog.body.x)*(castle.body.x-frog.body.x))+((castle.body.y-frog.body.y)*(castle.body.y-frog.body.y)));
-    if (distanceBetweenFrogAndCastle <=64){
-        console.log("FrogWins");
-        frogWins();
-        }
-    }
+    if (castle!= undefined && castle.body != undefined && !frogDying ){
+		distanceBetweenFrogAndCastle = Math.sqrt(((castle.body.x-frog.body.x)*(castle.body.x-frog.body.x))+((castle.body.y-frog.body.y)*(castle.body.y-frog.body.y)));
+		if (distanceBetweenFrogAndCastle <=64){
+			console.log("FrogWins");
+			frogWins();
+		}
+	}
 }
 
 // spawns one fire, randomly adds fire speed, adds fire to fireGroup
