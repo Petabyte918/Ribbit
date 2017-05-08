@@ -29,6 +29,8 @@ var popup;
 var logo;
 var home;
 
+var currentlyDoubleClicked;
+
 var lastClickTime = 0;
 
 var wKey;
@@ -115,7 +117,7 @@ function updateFrog(){
 			}
 		}
 		clearConstraints();
-		if(tongueAnchored){
+		if(tongueAnchored && frog.body != undefined){
 			tongueOut = true;
 			if(distanceBetweenFrogAndRock >= 40){
 				distanceBetweenFrogAndRock -= (distanceBetweenFrogAndRock/200) * 4.5;
@@ -140,7 +142,9 @@ function updateFrog(){
 			constraints.push(top_down.game.physics.p2.createDistanceConstraint(frog, wallAnchor, distanceBetweenFrogAndRock));
         } else {
 			if(frog != null){
-				frog.body.damping = .1;
+				if(frog.body != null){
+					frog.body.damping = .1;
+				}
 			}
 		}
 }
@@ -182,6 +186,7 @@ function clearConstraints(){
 
 function markerHitBlock(marker, block){
 	tongueBeingRetracted = true;
+	curRock = null;
 }
 
 function markerHitRock(marker, rock){
@@ -191,7 +196,7 @@ function markerHitRock(marker, rock){
 	marker.clearCollision();
 	marker.sprite.kill();
 	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
-	console.log("A creating sprite for the marker group");
+	//console.log("A creating sprite for the marker group");
 	top_down.game.physics.p2.enable(wallAnchor);
 	wallAnchor.body.static = true;
 	tongueAnchored = true;
@@ -211,7 +216,7 @@ function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
 	marker = markerGroup.create(frog.x, frog.y, 'ttongue');
-	console.log("B creating sprite for the marker group");
+	//console.log("B creating sprite for the marker group");
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
 	marker.body.angle = markerAngle;
@@ -229,16 +234,19 @@ function slowDownFrog(){
 }
 
 function rockClicked(rock){
-	if((curRock != rock) || (curRock == null)){		
-		if(!mute)
-            //console.log("tongue sound");
-			tongueSound.play();
-		rock.body.setCollisionGroup(rockCG);
-		rock.body.collides([markerCG])
-		shootMarker(rock.x, rock.y);
-		curRock = rock;
-		slowDownFrog();
-	} else {
+	if(!currentlyDoubleClicked){
+		console.log("rock clicked");
+		if((curRock != rock) || (curRock == null)){		
+			if(!mute)
+				//console.log("tongue sound");
+				tongueSound.play();
+			rock.body.setCollisionGroup(rockCG);
+			rock.body.collides([markerCG])
+			shootMarker(rock.x, rock.y);
+			curRock = rock;
+			slowDownFrog();
+		} else {
+		}
 	}
 }
 
@@ -258,7 +266,7 @@ function releaseFrogFromRock(){
 		markerGroup.removeAll();
 		if(!mute){
             if (frogDying==false){
-                console.log("release sound");
+                //console.log("release sound");
                 releaseSound.play();
             }
 		}
@@ -386,41 +394,41 @@ function checkCollisionRectangle(start, end, rectangle){
 		//facing top right
 		ret += rectangle[bot-1][0];
 		ret += rectangle[bot-1][1];	
-		ret += rectangle[bot][0];
+		//ret += rectangle[bot][0];
 		ret += rectangle[bot][1];
 	} else if((horizontal < 0) && (vertical > 0)){
 		//facing top left
 		ret += rectangle[bot-1][right];
 		ret += rectangle[bot-1][right-1];
 		ret += rectangle[bot][right-1];
-		ret += rectangle[bot][right];
+		//ret += rectangle[bot][right];
 	} else if((horizontal > 0) && (vertical < 0)){
 		//facing bottom right
-		ret += rectangle[0][0];
+		//ret += rectangle[0][0];
 		ret += rectangle[1][0];
 		ret += rectangle[0][1];
 		ret += rectangle[1][1];
 	} else if((horizontal < 0) && (vertical < 0)){
 		//facing bottom left
-		ret += rectangle[0][right];
+		//ret += rectangle[0][right];
 		ret += rectangle[1][right];
 		ret += rectangle[0][right + 1];
 		ret += rectangle[1][right + 1];
 	} else if((horizontal > 0) && (vertical == 0)){
 		//facing right
-		ret += rectangle[0][0];
+		//ret += rectangle[0][0];
 		ret += rectangle[0][1];
 	} else if((horizontal < 0) && (vertical == 0)){
 		//facing left
-		ret += rectangle[0][right];
+		//ret += rectangle[0][right];
 		ret += rectangle[0][right - 1];
 	} else if((horizontal == 0) && (vertical > 0)){
 		///facing up
-		ret += rectangle[bot][0];
+		//ret += rectangle[bot][0];
 		ret += rectangle[bot-1][0];
 	} else if((horizontal == 0) && (vertical < 0)){
 		//facing down
-		ret += rectangle[0][0];
+		//ret += rectangle[0][0];
 		ret += rectangle[1][0];
 	}
 	if(ret > 0){
@@ -455,7 +463,10 @@ function screenClicked(){
 	console.log("Screen clicked\nx:" + clickedWorldX + ", y:" + clickedWorldY);
 	var currentTime = new Date();
 	if(currentTime.getTime() - lastClickTime < top_down.game.input.doubleTapRate){
+		currentlyDoubleClicked = true;
 		doubleClicked();
+	} else {
+		currentlyDoubleClicked = false;
 	}
 	lastClickTime = currentTime;
 }
@@ -490,7 +501,7 @@ function frogDies(){
 }
 
 function initRocks(rockLayerData){
-	console.log("init rocks");
+	//console.log("init rocks");
 	var rockPlacement = [];
 	for(var i = 0; i < rockLayerData.data.length; i++){
 			if(rockLayerData.data[i] != 0){
@@ -520,7 +531,7 @@ function initRocks(rockLayerData){
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 3){
 		var rockType = '0';
-		console.log("rockPlaced");
+		//console.log("rockPlaced");
 		rockType = Math.floor(Math.random() * 3) + 1;
         rockStyle = "A"; //A = normal, B = click once, C = timed
         if(rockPlacement[i+2] === 0){
@@ -573,9 +584,9 @@ function checkControls(){
 	*/
 		if(spaceKey.isDown){
 			if(singlePress){
-				console.log("SPACE");
-				//console.log(top_down.game.physics.p2.total);
-				console.log(markerGroup.length);
+				//console.log("SPACE");
+				console.log(top_down.game.physics.p2.total);
+				//console.log(markerGroup.length);
 			}
 			singlePress = false;
 		} else {
@@ -618,8 +629,20 @@ function initGame(){
 
 function createGame(level){
 	curRock = null;
-	//killAll();
-	console.log("createGame");
+	frog = null;
+	currentlyDoubleClicked = false;
+	tongueAnchored = false;
+	tongueBeingRetracted = false;	
+	tongueOut = false;
+	
+	
+	//working
+	
+	
+	
+	
+	killAll();
+	//console.log("createGame");
 	removeCollisionFromAllRocks();
 	//var currenLevel;
 	gameState = "gameStart";
@@ -631,15 +654,17 @@ function createGame(level){
 		currentLevel = parseInt(level.key.substr(3,4));
 	}
 	if(!gamePreviouslyInit){
-			initGame();
+			
 	}
+	
+	initGame();
+	
 	//console.log("MARKER GROUP: " + markerGroup);
 	if(markerGroup != undefined){
 		markerGroup.destroy();
 	}
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
 	//markerGroup.removeChildren();
-	//working
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
@@ -702,8 +727,7 @@ function createGame(level){
 	//fly1 = spawnFlies(fly1,[300,2000]);
     //fly2 = spawnFlies(fly2,[300,2100]);
 	
-	tongueBeingRetracted = false;
-	tongueOut = false;
+
 	
 	top_down.game.world.bringToTop(frog);
 	top_down.game.backgroundLayer.resizeWorld(); //make world the size of background tile map
@@ -719,9 +743,7 @@ function createGame(level){
 	menuButton = top_down.game.add.sprite(top_down.game.camera.x  + 198, top_down.game.camera.y + 58, 'menu');
 	menuButton.inputEnabled = true;
 	menuButton.events.onInputDown.add(createPopupMenu, this);
-	top_down.game.world.bringToTop(menuButton);	
-    
-    
+	top_down.game.world.bringToTop(menuButton);	   
 }
 
 var menuClicked = false;
@@ -771,6 +793,10 @@ function createHomeScreen(){
 }
 
 function goHome(){
+	/*
+	top_down.game.state.clearCurrentState();
+	top_down.game.state.start('Boot');
+	*/
 	frogDying = false;
 	distanceBetweenFrogAndCastle = 100;
 	complete = false;
@@ -778,7 +804,7 @@ function goHome(){
 	restartLevel();
 	resumeButton = null;
 	killAll();
-	console.log("go_home");
+	//console.log("go_home");
 	createHomeScreen();
 }
 
@@ -804,7 +830,11 @@ function menuKill(){
 }
 
 function killAll(){
+	
+	top_down.game.physics.startSystem(null);
+	
 	curRock = null;
+	
 	if(top_down.game.map!=null && top_down.game.blockedLayer!=null){
 		top_down.game.physics.p2.clearTilemapLayerBodies(top_down.game.map, top_down.game.blockedLayer);
 	}
@@ -813,11 +843,11 @@ function killAll(){
 		endMenu = null
 	}
 	if(!mute)
-		selectSound.play();	
+		//selectSound.play();	
 	top_down.game.world.removeAll();
 	if(top_down.game.physics.p2 != null){
 		top_down.game.physics.p2.clear();
-		console.log("physics bodies cleared");
+		//console.log("physics bodies cleared");
 	}
 }
 
@@ -870,7 +900,7 @@ function showHelp(){
 
 function restartLevel(){
 	killAll();
-	console.log("restartLevel");
+	//console.log("restartLevel");
 	if(!lost && !complete)
 	shootMarker(0, 0);
 	lost = false;
@@ -881,7 +911,7 @@ function restartLevel(){
 
 function createLevelStage(){
 	killAll();
-	console.log("createLevelStage");
+	//console.log("createLevelStage");
 	homeMenu = null;
 	background = top_down.game.add.sprite(0, 0, 'levelSelect');
 	var levelName = "lvl1";
@@ -952,6 +982,7 @@ function updateBackground(){
 
 top_down.Game.prototype = {
 	create: function(){
+		killAll();
 		loadSounds();
 		music.play('', 0, 1, true, true);
 		createHomeScreen();
@@ -963,7 +994,7 @@ top_down.Game.prototype = {
 		checkControls(); //checks if controls have been pressed
         //Kevin's code
         animateFire();
-		if (tongueOut == true){
+		if (tongueOut == true && frog.body != undefined){
 			frog.animations.play("openMouthRight");     
 			if(marker != undefined){
 				var tempAngle = (Math.atan2(marker.y-(frog.y),marker.x-(frog.x)))*(180/Math.PI);
@@ -989,7 +1020,7 @@ top_down.Game.prototype = {
 			}
             
             //KEVIN
-            if ((tongueOut==false)&&(frogDying==false)){
+            if ((tongueOut==false)&&(frogDying==false) && frog != null){
                 frog.animations.play('idle');
             }
             
@@ -1000,7 +1031,7 @@ top_down.Game.prototype = {
 			menuButton.x = top_down.game.camera.x + 768 + 198;
 			menuButton.y = top_down.game.camera.y + 512  + 58;
 		}
-		if(resumeButton != null){
+		if(resumeButton != null && homeMenu != null){
 			homeMenu.x = top_down.game.camera.x + 512 - (495/2);
 			homeMenu.y = top_down.game.camera.y + 312 - (377/2);
 			resumeButton.x = top_down.game.camera.x + 512 - 68;
