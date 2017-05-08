@@ -78,7 +78,7 @@ function frogOnFire(){
     frogDying=true;
     releaseFrogFromRock();
     frog.animations.play("die");   
-	setInterval(function(){frog.kill();frogDies();}, 2199); 
+	setInterval(function(){frogDies();}, 2199); 
 
 }
 
