@@ -93,6 +93,7 @@ function addTrigger(){
 		
 		arrow[9] = new Arrow(752, 512, 416, 480, .5, .5, 1248, 624, 't4');
 		break;
+	/*
 	case 2:
 		arrow[0] = new Arrow(208, 2320, 402, 208, 1, 0, 736, 2128, 't0');
 		arrow[1] = new Arrow(608, 2032, 1, 1, 1, 1, 1024, 2336, 't1');
@@ -225,6 +226,8 @@ function addTrigger(){
 		arrow[8] = new Arrow(752, 512, 416, 480, .5, .5, 1088, 624, 't3');
 		arrow[9] = new Arrow(1552, 880, 224, 96, .5, .5, 1696, 864, 't4');
 		break;
+		*/
+		default:
 	}
 }
 
