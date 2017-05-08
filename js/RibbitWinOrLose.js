@@ -77,7 +77,7 @@ function checkifLose(){
 function frogOnFire(){
     frogDying=true;
     releaseFrogFromRock();
-    frog.animations.play("die");   
+    frog.animations.play("die"); 
 	setInterval(function(){frogDies();}, 2199); 
 
 }
