@@ -494,17 +494,31 @@ function initRocks(rockLayerData){
                     castle= spawnCastle((i%rockLayerData.width) * 16,(Math.floor(i/rockLayerData.width)) * 16);
 				}
 				if(rockLayerData.data[i] == 3){
+					rockPlacement.push((i%rockLayerData.width) * 16); //x position
+					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16); //y position
+                    rockPlacement.push(0); //rock type - 0, normal rock
+				}
+                if(rockLayerData.data[i] == 4){
 					rockPlacement.push((i%rockLayerData.width) * 16);
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
+                    rockPlacement.push(1); //rock type - 0, only can click once
 				}
             }
 	}
 	rockGroup = top_down.game.add.group();
 	var tempRock;		
-	for(var i = 0; i < rockPlacement.length; i += 2){
+	for(var i = 0; i < rockPlacement.length; i += 3){
 		var rockType = '0';
 		rockType = Math.floor(Math.random() * 3) + 1;
-		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rockA' + rockType)
+        rockStyle = "A"; //A = normal, B = click once, C = timed
+        if(rockPlacement[i+2] === 0){
+            rockStyle = 'A';
+        } else if (rockPlacement[i+2] === 1){
+            rockStyle = 'B';
+        } else if (rockPlacement[i+2] === 2){
+            rockStyle = 'C';
+        }
+		tempRock = rockGroup.create(rockPlacement[i], rockPlacement[i+1], 'rock' + rockStyle + rockType);
 		top_down.game.physics.p2.enable(tempRock);
 		tempRock.inputEnabled = true;
 		tempRock.enableBody = true;
