@@ -725,6 +725,7 @@ function createHomeScreen(){
 
 function goHome(){
 	if(resumeButton != null)
+	complete = false;
 	restartLevel();
 	resumeButton = null;
 	killAll();

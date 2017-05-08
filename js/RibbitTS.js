@@ -41,6 +41,7 @@ function endLevel(){
 }
 
 function nextLevel(){
+	complete = false;
 	createGame(currentLevel + 1);
 }
 
@@ -80,7 +81,7 @@ function addTrigger(){
 		arrow[6] = new Arrow(464, 1360, 448, 400, .5, .5, 704, 1520, 'upleft');
 		arrow[7] = new Arrow(208, 928, 416, 384, .5, .5, 592, 1104, 'up');
 		
-		arrow[8] = new Arrow(368, 448, 1.473, 1, .5, .5, 800, 736, 't3');
+		arrow[8] = new Arrow(368, 448, 2.473, 1.2, .5, .5, 800, 736, 't3');
 		
 		arrow[9] = new Arrow(752, 512, 416, 480, .5, .5, 1248, 624, 't4');
 		break;
