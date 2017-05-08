@@ -101,10 +101,16 @@ top_down.Preload.prototype = {
 		
 		//texts + arrows
 		this.load.image('t0', 'Ribbit/clickonrock.png'); //upright "clock on rock"
-		this.load.image('t1', 'Ribbit/swing.png');		 //downright "try to swing around"
+		this.load.image('t1', 'Ribbit/detach.png');		 //no arrow, double click to let go
 		this.load.image('t2', 'Ribbit/avoidFire.png');	 //downleft	  "avoid the fire"
-		this.load.image('t3', 'Ribbit/landAt.png');      //downright  "land at castle"
-		this.load.image('t4', 'Ribbit/levelcomplete.png'); //no arrow just says level complete
+		this.load.image('t3', 'Ribbit/reachCastle.png');
+		this.load.image('t4', 'Ribbit/landAt.png');      //downright  "land at castle"
+
+		
+		this.load.image('gameControls', 'Ribbit/controlsLevelOne.png');
+		this.load.image('winmenu', 'Ribbit/youwin.png');
+		this.load.image('next', 'Ribbit/NextLevel.png');
+		this.load.image('losemenu', 'Ribbit/youlose.png');
 		
 	},
 	

@@ -280,11 +280,11 @@ function moveObjToXY(obj, x, y, speed){
 }
 
 function frogWins(){
-	alert("You have won!\nTry out another level.");
+	endLevel();
 }
 
 function frogDies(){
-	alert("You have died.\nGame will now restart.");
+	lostLevel();
 }
 
 function initRocks(rockLayerData){
@@ -600,6 +600,7 @@ function showHelp(){
 
 function restartLevel(){
 	killAll();
+	lost = false;
 	shootMarker(0, 0);
 	tongueBeingRetracted = true;
 	curRock = null;
@@ -732,5 +733,7 @@ top_down.Game.prototype = {
 		if(gameState == 'gameStart'){
 			checkTriggers();
 		}
+		if(complete)
+			endLevel();
 	}
 }
