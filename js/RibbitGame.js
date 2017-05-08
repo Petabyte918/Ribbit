@@ -185,18 +185,18 @@ function markerHitBlock(marker, block){
 }
 
 function markerHitRock(marker, rock){
-	//alert("STEEVE");
 	rock.clearCollision();	
 	markerX = rock.x;
 	markerY = rock.y;
 	marker.clearCollision();
 	marker.sprite.kill();
 	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
+	console.log("A creating sprite for the marker group");
 	top_down.game.physics.p2.enable(wallAnchor);
 	wallAnchor.body.static = true;
 	tongueAnchored = true;
 	distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
-	markerGroup.removeAll();
+	markerGroup.removeAll(); 
 }
 
 function removeCollisionFromAllRocks(){
@@ -211,6 +211,7 @@ function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
 	marker = markerGroup.create(frog.x, frog.y, 'ttongue');
+	console.log("B creating sprite for the marker group");
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
 	marker.body.angle = markerAngle;
@@ -606,6 +607,7 @@ function initGame(){
     castleCG = top_down.game.physics.p2.createCollisionGroup();
 	initControls(); //tell Phaser to look for key presses
 	top_down.game.input.onDown.add(screenClicked, top_down.game); //listen for the screen to be be clicked
+	
 	gamePreviouslyInit = true;
 }
 
@@ -627,10 +629,13 @@ function createGame(level){
 			initGame();
 	}
 
-	console.log("MARKER GROUP: " + markerGroup);
+	//console.log("MARKER GROUP: " + markerGroup);
+	if(markerGroup != undefined){
+		markerGroup.destroy();
+	}
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
 	//markerGroup.removeChildren();
-
+	//working
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
