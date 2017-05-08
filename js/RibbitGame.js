@@ -185,6 +185,7 @@ function markerHitBlock(marker, block){
 }
 
 function markerHitRock(marker, rock){
+	//alert("STEEVE");
 	rock.clearCollision();	
 	markerX = rock.x;
 	markerY = rock.y;
@@ -209,7 +210,7 @@ function removeCollisionFromAllRocks(){
 function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
-	marker = markerGroup.create(frog.x, frog.y, 'ttongue', 1);
+	marker = markerGroup.create(frog.x, frog.y, 'ttongue');
 	top_down.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(top_down.game.camera.y + destY - frog.y, top_down.game.camera.x + destX - frog.x);
 	marker.body.angle = markerAngle;
@@ -252,6 +253,7 @@ function tongueGone(){
 }
 
 function releaseFrogFromRock(){
+		markerGroup.removeAll();
 		if(!mute){
 			releaseSound.play();
 		}
@@ -528,7 +530,6 @@ function initRocks(rockLayerData){
 		tempRock.enableBody = true;
 		tempRock.body.static = true;
 		tempRock.events.onInputDown.add(rockClicked, this);
-		top_down.game.physics.p2.enable(tempRock);
 	}
 }
 
@@ -625,13 +626,10 @@ function createGame(level){
 	if(!gamePreviouslyInit){
 			initGame();
 	}
-<<<<<<< HEAD
 	console.log("MARKER GROUP: " + markerGroup);
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
 	//markerGroup.removeChildren();
-=======
-      
->>>>>>> 06c09aa8e65682ac13f1a480510a109353c3030c
+
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
@@ -802,9 +800,6 @@ function killAll(){
 	if(top_down.game.physics.p2 != null){
 		top_down.game.physics.p2.clear();
 		console.log("physics bodies cleared");
-	}
-	if(markerGroup != undefined){
-		markerGroup.destroy();
 	}
 }
 
