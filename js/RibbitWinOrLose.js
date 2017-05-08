@@ -6,6 +6,7 @@ var deadcounter=1;
 var justHitFire = false;
 var fireHitTime = 0;
 var currentTime1 = 0;
+var frogDying=false;
 // Spawns castke sprite and enables collision
 
 function spawnCastle(x,y){   
@@ -40,13 +41,11 @@ function spawnFire(x,y){
     fireGroup.add(tempFire);    
 }
 
-
 // tells all the fire sprites in fireGroup to play animations
 function animateFire(){
     if (fireGroup!=null){
         fireGroup.callAll('animations.play', 'animations', 'default');
     }
-
 }
 
 //checks collision between frog and each fire sprite in fireGroup
@@ -56,21 +55,32 @@ function checkifLose(){
         for (var i = 0; i<fireGroup.children.length; i++){
                 fireVar = fireGroup.children[i];
                 distanceBetweenFrogAndFire= Math.sqrt(((fireVar.x-frog.x)*(fireVar.x-frog.x)+(fireVar.y-frog.y)*(fireVar.y-frog.y)));
-                if (distanceBetweenFrogAndFire<=32){
-                    if (deadcounter%50==0){
-                        console.log("FROG IS ON FIRE");
-                        frog.animations.play("die");     
-                        frogDies();
-                    }
+                if (distanceBetweenFrogAndFire<=25){
+                    /*if (deadcounter%50==0){
+                        //console.log("FROG IS ON FIRE");
+                        
+                        frogOnFire();
+                        
+                    }*/
                     //console.log(distanceBetweenFrogAndFire);
                     //frogInContactWithFire();
-                    deadcounter++;
+                    //deadcounter++;
                     //console.log(deadcounter);
+                    frogOnFire();
                 }
         }
     }
     
 }
+
+function frogOnFire(){
+    frogDying=true;
+    releaseFrogFromRock();
+    frog.animations.play("die");   
+    setInterval(function(){frog.kill();frogDies();}, 2199); 
+
+}
+
 
 /*
 function frogInContactWithFire(){

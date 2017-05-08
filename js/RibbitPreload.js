@@ -31,6 +31,12 @@ top_down.Preload.prototype = {
 		this.load.image('rockA1', 'assets/rockA1.png');
 		this.load.image('rockA2', 'assets/rockA2.png');
 		this.load.image('rockA3', 'assets/rockA3.png');
+        this.load.image('rockB1', 'assets/rockB1.png');
+		this.load.image('rockB2', 'assets/rockB2.png');
+		this.load.image('rockB3', 'assets/rockB3.png');
+        this.load.image('rockC1', 'assets/rockC1.png');
+		this.load.image('rockC2', 'assets/rockC2.png');
+		this.load.image('rockC3', 'assets/rockC3.png');
 		this.load.image('tongue', 'assets/tongue.png');
 		this.load.image('ttongue', 'assets/ttongue.png');
 		//this.load.image('path_marker', 'assets/path_marker.png');
@@ -111,7 +117,14 @@ top_down.Preload.prototype = {
 		this.load.image('winmenu', 'Ribbit/youwin.png');
 		this.load.image('next', 'Ribbit/NextLevel.png');
 		this.load.image('losemenu', 'Ribbit/youlose.png');
-		
+        
+        
+        // KEVINS CODE LOADS MIST
+        this.load.image('mist1','assets/mist1.png');
+        this.load.image('mist2','assets/mist2.png');
+        this.load.image('mist3','assets/mist3.png');
+
+        
 	},
 	
 	create: function(){
