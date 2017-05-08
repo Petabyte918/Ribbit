@@ -247,6 +247,8 @@ function rockClicked(rock){
 			slowDownFrog();
 		} else {
 		}
+	} else {
+		removeCollisionFromAllRocks();
 	}
 }
 
@@ -629,7 +631,11 @@ function initGame(){
 }
 
 function createGame(level){
-	
+	killAll();
+	if(marker != undefined){
+		console.log("Shooting marker")
+		shootMarker(0, 0);
+	}
 	curRock = null;
 	frog = null;
 	currentlyDoubleClicked = false;
@@ -643,7 +649,7 @@ function createGame(level){
 	
 	
 	
-	killAll();
+	
 	//console.log("createGame");
 	removeCollisionFromAllRocks();
 	//var currenLevel;
