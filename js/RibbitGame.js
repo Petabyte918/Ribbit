@@ -477,6 +477,7 @@ function moveObjToXY(obj, x, y, speed){
 }
 
 function frogWins(){
+	releaseFrogFromRock();
 	endLevel();
 }
 
