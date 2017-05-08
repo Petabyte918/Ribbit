@@ -71,7 +71,7 @@ function lostLevel(){
 
 function lostLevel2(){
 	frogDying = false;
-	distanceBetweenFrogAndCastle = 100;
+	frog.reset(frogSpawnX, frogSpawnY);
 	restartLevel();
 }
 
