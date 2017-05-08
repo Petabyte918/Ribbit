@@ -47,7 +47,7 @@ function nextLevel(){
 
 var lost = false;
 function lostLevel(){
-	if(frogDying){
+	if(frogDying){ //prevents endMenu from popping after restart
 	if(!lost){
 	endMenu = top_down.game.add.sprite(top_down.game.camera.x + 512 - (495/2), top_down.game.camera.y + 312 - (377/2), 'losemenu');
 	homeButton = top_down.game.add.sprite(top_down.game.camera.x + 512 - 80, top_down.game.camera.y + 312 + 60, 'home');
@@ -71,6 +71,7 @@ function lostLevel(){
 
 function lostLevel2(){
 	frogDying = false;
+	distanceBetweenFrogAndCastle = 100;
 	restartLevel();
 }
 

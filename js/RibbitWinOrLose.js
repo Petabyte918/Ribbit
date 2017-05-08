@@ -7,6 +7,7 @@ var justHitFire = false;
 var fireHitTime = 0;
 var currentTime1 = 0;
 var frogDying=false;
+var distanceBetweenFrogAndCastle = 100;
 // Spawns castke sprite and enables collision
 
 function spawnCastle(x,y){   

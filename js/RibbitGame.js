@@ -766,6 +766,8 @@ function createHomeScreen(){
 }
 
 function goHome(){
+	frogDying = false;
+	distanceBetweenFrogAndCastle = 100;
 	complete = false;
 	if(resumeButton != null || endMenu != null)
 	restartLevel();
