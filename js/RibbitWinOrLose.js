@@ -40,13 +40,11 @@ function spawnFire(x,y){
     fireGroup.add(tempFire);    
 }
 
-
 // tells all the fire sprites in fireGroup to play animations
 function animateFire(){
     if (fireGroup!=null){
         fireGroup.callAll('animations.play', 'animations', 'default');
     }
-
 }
 
 //checks collision between frog and each fire sprite in fireGroup
