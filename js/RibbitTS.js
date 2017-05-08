@@ -1,5 +1,5 @@
 var arrow = [10];
-var endMenu;
+var endMenu = null;
 var homeButton;
 var nextButton;
 var restartGame;
@@ -47,6 +47,7 @@ function nextLevel(){
 
 var lost = false;
 function lostLevel(){
+	if(frogDying){
 	if(!lost){
 	endMenu = top_down.game.add.sprite(top_down.game.camera.x + 512 - (495/2), top_down.game.camera.y + 312 - (377/2), 'losemenu');
 	homeButton = top_down.game.add.sprite(top_down.game.camera.x + 512 - 80, top_down.game.camera.y + 312 + 60, 'home');
@@ -54,7 +55,7 @@ function lostLevel(){
 	homeButton.inputEnabled = true;
 	homeButton.events.onInputDown.add(goHome, this);
 	restartGame.inputEnabled = true;
-	restartGame.events.onInputDown.add(restartLevel, this);
+	restartGame.events.onInputDown.add(lostLevel2, this);
 	lost = true;
 	}else{
 		endMenu.x = top_down.game.camera.x + 512 - (495/2);
@@ -65,6 +66,12 @@ function lostLevel(){
 		restartGame.y = top_down.game.camera.y + 312 + 60;
 		
 	}
+	}
+}
+
+function lostLevel2(){
+	frogDying = false;
+	restartLevel();
 }
 
 function addTrigger(){
