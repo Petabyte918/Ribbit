@@ -612,7 +612,6 @@ function createGame(level){
     
      //KEVIN's Code
     mistGroup=top_down.game.add.group();
-    spawnMist();
 
     top_down.game.blockedLayer = top_down.game.map.createLayer('twig_c');
 	top_down.game.map.setCollisionBetween(0, 1000, true, 'twig_c');
@@ -621,6 +620,9 @@ function createGame(level){
 	fireGroup=top_down.game.add.group();        
 	initRocks(getDataLayerFromTilemap("level_" + currentLevel, 'rock_ci')); //spawn rock objects
 	blockedLayerTiles = top_down.game.physics.p2.convertTilemap(top_down.game.map, top_down.game.blockedLayer);
+    
+    spawnMist();
+
 
 	for(var i = 0; i < blockedLayerTiles.length; i++){
 		blockedLayerTiles[i].setCollisionGroup(blockedCG);

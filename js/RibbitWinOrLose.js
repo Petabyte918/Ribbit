@@ -57,7 +57,7 @@ function checkifLose(){
         for (var i = 0; i<fireGroup.children.length; i++){
                 fireVar = fireGroup.children[i];
                 distanceBetweenFrogAndFire= Math.sqrt(((fireVar.x-frog.x)*(fireVar.x-frog.x)+(fireVar.y-frog.y)*(fireVar.y-frog.y)));
-                if (distanceBetweenFrogAndFire<=32){
+                if (distanceBetweenFrogAndFire<=25){
                     /*if (deadcounter%50==0){
                         //console.log("FROG IS ON FIRE");
                         
@@ -77,6 +77,7 @@ function checkifLose(){
 
 function frogOnFire(){
     frogDying=true;
+    releaseFrogFromRock();
     frog.animations.play("die");   
     setInterval(function(){frog.kill();frogDies();}, 2199); 
 
