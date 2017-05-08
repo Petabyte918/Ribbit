@@ -626,18 +626,11 @@ function createGame(level){
 	if(!gamePreviouslyInit){
 			initGame();
 	}
-<<<<<<< HEAD
-	console.log("MARKER GROUP: " + markerGroup);
-	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
-	//markerGroup.removeChildren();
-
-=======
 
 	console.log("MARKER GROUP: " + markerGroup);
 	markerGroup = top_down.game.add.group(); //sets up a group for our tongue markers
 	//markerGroup.removeChildren();
-    
->>>>>>> c44b260381640f14e6389e882f3a62efcc286211
+
 	//set up tilemap and layers
 	backgroundImage = top_down.game.add.sprite(0, 0, 'levelBackground1');
 	top_down.game.map = top_down.game.add.tilemap('level_' + currentLevel);
