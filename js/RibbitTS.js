@@ -5,8 +5,9 @@ var nextButton;
 var restartGame;
 
 function checkTriggers(){
-	if(currentLevel == 1) //needs to be removed or changed when trigger system is added to other levels.
-	for(var i = 0; i < 10; i++){ //when i add 10th arrow it will be success
+	if(currentLevel == 1 || currentLevel == 2) //needs to be removed or changed when trigger system is added to other levels.
+	var i = 0
+	while(arrow[i] != null && i < 10){ //when i add 10th arrow it will be success
 		if (top_down.game.physics.arcade.intersects(frog, arrow[i].tb))
 				arrow[i].enterBox();
 				
@@ -14,6 +15,7 @@ function checkTriggers(){
 			arrow[i].exitBox();
 					
 		arrow[i].ca = arrow[i].arrow.alpha;
+		i++;
 	}
 }
 
@@ -79,6 +81,7 @@ function addTrigger(){
 	case 1:
 		var controls = top_down.game.add.sprite(352, 2552, 'gameControls');
 		controls.anchor.setTo(.5, 0);
+		//scalex and scaley was done wrong here, but it works fine in level 1 so didnt change.
 		arrow[0] = new Arrow(208, 2320, 402, 208, 1, 0, 736, 2128, 't0');
 		arrow[1] = new Arrow(608, 2032, 2, 2, 1, 1, 944, 2208, 't1');
 		arrow[2] = new Arrow(752, 2336, 416, 176, .5, .5, 1184, 2464, 'right');
@@ -92,19 +95,19 @@ function addTrigger(){
 		
 		arrow[9] = new Arrow(752, 512, 416, 480, .5, .5, 1248, 624, 't4');
 		break;
-	/*
 	case 2:
-		arrow[0] = new Arrow(208, 2320, 402, 208, 1, 0, 736, 2128, 't0');
-		arrow[1] = new Arrow(608, 2032, 1, 1, 1, 1, 1024, 2336, 't1');
-		arrow[2] = new Arrow(752, 2336, 416, 176, .5, .5, 1184, 2464, 'right');
-		arrow[3] = new Arrow(1456, 2224, 320, 256, .5, .5, 1440, 2208, 'up');
-		arrow[4] = new Arrow(1392, 1408, 320, 480, 0, 0, 1376, 1776, 'upleft');
-		arrow[5] = new Arrow(944, 1376, 496, 464, 0, 1, 1152, 1872, 't2');
-		arrow[6] = new Arrow(464, 1360, 448, 400, .5, .5, 704, 1520, 'upleft');
-		arrow[7] = new Arrow(208, 928, 416, 384, .5, .5, 592, 1104, 'up');
-		arrow[8] = new Arrow(752, 512, 416, 480, .5, .5, 1088, 624, 't3');
-		arrow[9] = new Arrow(1552, 880, 224, 96, .5, .5, 1696, 864, 't4');
+		arrow[0] = new Arrow(2640, 1584, 1.75, .59, .5, .5, 2960, 1760, 'follow');
+		arrow[1] = new Arrow(1712, 2752, 1, 1.23, .5, .5, 2032, 2880, 'throw');
+		arrow[2] = new Arrow(1024, 3200, 1.39, 2, .5, .5, 1296, 3712, 'goUp');
+		arrow[3] = new Arrow(64, 2560, 1.07, 1.32, .5, .5, 144, 3040, 'fall');
+		arrow[4] = null;
+		arrow[5] = null
+		arrow[6] = null;
+		arrow[7] = null;
+		arrow[8] = null;
+		arrow[9] = null;
 		break;
+	/*
 	case 3:
 		arrow[0] = new Arrow(208, 2320, 402, 208, 1, 0, 736, 2128, 't0');
 		arrow[1] = new Arrow(608, 2032, 1, 1, 1, 1, 1024, 2336, 't1');

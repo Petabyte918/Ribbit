@@ -105,12 +105,18 @@ top_down.Preload.prototype = {
 		this.load.image('left', 'Ribbit/left.png');
 		this.load.image('upleft', 'Ribbit/upleft.png');
 		
-		//texts + arrows
+		//texts for level 1
 		this.load.image('t0', 'Ribbit/clickonrock.png'); //upright "clock on rock"
 		this.load.image('t1', 'Ribbit/detach.png');		 //no arrow, double click to let go
 		this.load.image('t2', 'Ribbit/avoidFire.png');	 //downleft	  "avoid the fire"
 		this.load.image('t3', 'Ribbit/reachCastle.png');
 		this.load.image('t4', 'Ribbit/landAt.png');      //downright  "land at castle"
+		
+		//level 2 turtorial
+		this.load.image('follow', 'Ribbit/followArrow.png');
+		this.load.image('throw', 'Ribbit/ThrowArrow.png');
+		this.load.image('goUp', 'Ribbit/keepSwingingUp.png');
+		this.load.image('fall', 'Ribbit/fall.png');
 
 		
 		this.load.image('gameControls', 'Ribbit/controlsLevelOne.png');
