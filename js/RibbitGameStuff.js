@@ -845,7 +845,10 @@ function killAll(){
 	curRock = null;
 	
 	if(top_down.game.map!=null && top_down.game.blockedLayer!=null){
-		top_down.game.physics.p2.clearTilemapLayerBodies(top_down.game.map, top_down.game.blockedLayer);
+		//top_down.game.physics.p2.clearTilemapLayerBodies(top_down.game.map, top_down.game.blockedLayer);
+		top_down.game.map.destroy();
+		top_down.game.blockedLayer.destroy();
+		
 	}
 	if(endMenu != null){
 		endMenu.destroy();

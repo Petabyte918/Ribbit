@@ -13,7 +13,7 @@ function spawnMist(){
 }
 
 function spawnMistHelper(section){
-    var mistSprite= top_down.game.rnd.integerInRange(1,3);
+    var mistSprite= ribbit.game.rnd.integerInRange(1,3);
 
     if (mistSprite==1){
         var mistType="mist1";
@@ -26,27 +26,27 @@ function spawnMistHelper(section){
     }
     
     if (section==1){
-        var randx = top_down.game.rnd.integerInRange(0,mapWidth/2);
-        var randy = top_down.game.rnd.integerInRange(0,mapHeight/2);
+        var randx = ribbit.game.rnd.integerInRange(0,mapWidth/2);
+        var randy = ribbit.game.rnd.integerInRange(0,mapHeight/2);
     }
     if (section==2){
-        var randx = top_down.game.rnd.integerInRange(mapWidth/2,mapWidth);
-        var randy = top_down.game.rnd.integerInRange(0,mapHeight/2);
+        var randx = ribbit.game.rnd.integerInRange(mapWidth/2,mapWidth);
+        var randy = ribbit.game.rnd.integerInRange(0,mapHeight/2);
     }
     if (section==3){
-        var randx = top_down.game.rnd.integerInRange(0,mapWidth/2);
-        var randy = top_down.game.rnd.integerInRange(mapHeight/2,mapHeight);
+        var randx = ribbit.game.rnd.integerInRange(0,mapWidth/2);
+        var randy = ribbit.game.rnd.integerInRange(mapHeight/2,mapHeight);
     }
     if (section==4){
-        var randx = top_down.game.rnd.integerInRange(mapWidth/2,mapWidth);
-        var randy = top_down.game.rnd.integerInRange(mapHeight/2,mapHeight);
+        var randx = ribbit.game.rnd.integerInRange(mapWidth/2,mapWidth);
+        var randy = ribbit.game.rnd.integerInRange(mapHeight/2,mapHeight);
     }    
     
     
-    moveVal = top_down.game.rnd.integerInRange(1, 5);  
-    var tempMist = top_down.game.add.sprite(randx, randy, mistType);
+    moveVal = ribbit.game.rnd.integerInRange(1, 5);  
+    var tempMist = ribbit.game.add.sprite(randx, randy, mistType);
     tempMist.enableBody=true;
-    top_down.game.physics.arcade.enable(tempMist);
+    ribbit.game.physics.arcade.enable(tempMist);
     tempMist.body.velocity.x=moveVal;
     mistGroup.add(tempMist);
     

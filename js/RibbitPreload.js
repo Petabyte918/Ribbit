@@ -1,15 +1,15 @@
-var top_down = top_down || {};
+var ribbit = ribbit || {};
 
-top_down.Preload = function(){};
+ribbit.Preload = function(){};
 
-top_down.Preload.prototype = {
+
+function loadStart(){
+	this.loading = this.add.sprite(0, 0, 'loading');
+}
+
+ribbit.Preload.prototype = {
 	preload: function(){
-		this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.center + 128, 'preloadbar');
-		this.preloadBar.anchor.setTo(0.5);
-		
-		this.load.setPreloadSprite(this.preloadBar);
-		
-		this.load.tilemap('test_map', 'assets/tilemaps/test_tilemap.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.onLoadStart.add(loadStart, this);
 		this.load.tilemap('level_1', 'assets/tilemaps/level_1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_2', 'assets/tilemaps/level_2.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_3', 'assets/tilemaps/level_3.json', null, Phaser.Tilemap.TILED_JSON);
@@ -48,39 +48,38 @@ top_down.Preload.prototype = {
         //Loading castle sprite
         this.load.spritesheet('castle',"assets/castle.png",96,96);
         
-		
-		this.load.image('background', 'Ribbit/background.png');
-		this.load.image('help', 'Ribbit/Help.png');
-		this.load.image('menu','Ribbit/menuButton.png');
-		this.load.image('popup', 'Ribbit/plainMenu.png');
-		this.load.image('restart', 'Ribbit/restart.png');
-		this.load.image('resume', 'Ribbit/resumeButton.png');
-		this.load.image('volumeOff', 'Ribbit/volume.png');
-		this.load.image('volumeOn', 'Ribbit/volumeOn.png');
-		this.load.image('logo', 'Ribbit/logo.png');
-		this.load.image('home', 'Ribbit/home.png');
-		this.load.image('controls', 'Ribbit/controls.png');
-		this.load.image('greenHelp', 'Ribbit/greenHelp.png');
-		this.load.image('greenOn', 'Ribbit/greenVolumeOn.png');
-		this.load.image('greenOff', 'Ribbit/greenVolumeOff.png');
-		this.load.image('playGame', 'Ribbit/playGame.png');
-		this.load.image('helpScreen', 'Ribbit/helpMenu.png');
-		this.load.image('controlScreen', 'Ribbit/controlMenu.png');
-		this.load.image('levelSelect', 'Ribbit/levelSelect.png');
-		this.load.image('lock', 'Ribbit/locked.png');
-		this.load.image('lvlone', 'Ribbit/levelOne.png');
-		this.load.image('lvl1', 'Ribbit/level1.png');
-		this.load.image('lvl2', 'Ribbit/level2.png');
-		this.load.image('lvl3', 'Ribbit/level3.png');
-		this.load.image('lvl4', 'Ribbit/level4.png');
-		this.load.image('lvl5', 'Ribbit/level5.png');
-		this.load.image('lvl6', 'Ribbit/level6.png');
-		this.load.image('lvl7', 'Ribbit/level7.png');
-		this.load.image('lvl8', 'Ribbit/level8.png');
-		this.load.image('lvl9', 'Ribbit/level9.png');
-		this.load.image('lvl10', 'Ribbit/level10.png');
-		this.load.image('lvl11', 'Ribbit/level11.png');
-		this.load.image('lvl12', 'Ribbit/level12.png');
+		this.load.image('background', 'assets/background.png');
+		this.load.image('help', 'assets/Help.png');
+		this.load.image('menu','assets/menuButton.png');
+		this.load.image('popup', 'assets/plainMenu.png');
+		this.load.image('restart', 'assets/restart.png');
+		this.load.image('resume', 'assets/resumeButton.png');
+		this.load.image('volumeOff', 'assets/volume.png');
+		this.load.image('volumeOn', 'assets/volumeOn.png');
+		this.load.image('logo', 'assets/logo.png');
+		this.load.image('home', 'assets/home.png');
+		this.load.image('controls', 'assets/controls.png');
+		this.load.image('greenHelp', 'assets/greenHelp.png');
+		this.load.image('greenOn', 'assets/greenVolumeOn.png');
+		this.load.image('greenOff', 'assets/greenVolumeOff.png');
+		this.load.image('playGame', 'assets/playGame.png');
+		this.load.image('helpScreen', 'assets/helpMenu.png');
+		this.load.image('controlScreen', 'assets/controlMenu.png');
+		this.load.image('levelSelect', 'assets/levelSelect.png');
+		this.load.image('lock', 'assets/locked.png');
+		this.load.image('lvlone', 'assets/levelOne.png');
+		this.load.image('lvl1', 'assets/level1.png');
+		this.load.image('lvl2', 'assets/level2.png');
+		this.load.image('lvl3', 'assets/level3.png');
+		this.load.image('lvl4', 'assets/level4.png');
+		this.load.image('lvl5', 'assets/level5.png');
+		this.load.image('lvl6', 'assets/level6.png');
+		this.load.image('lvl7', 'assets/level7.png');
+		this.load.image('lvl8', 'assets/level8.png');
+		this.load.image('lvl9', 'assets/level9.png');
+		this.load.image('lvl10', 'assets/level10.png');
+		this.load.image('lvl11', 'assets/level11.png');
+		this.load.image('lvl12', 'assets/level12.png');
 		
 		//sounds
 		this.load.audio('complete', 'Sounds/complete.mp3');
@@ -92,37 +91,37 @@ top_down.Preload.prototype = {
 		this.load.audio('music', 'Sounds/backgroundMusic.mp3');
 		
 		//trigger and turtorial images
-		//this.load.image('testTrigger', 'Ribbit/testTrigger.png');		
-		this.load.image('triggerbox', 'Ribbit/triggerbox.png');
+		//this.load.image('testTrigger', 'assets/testTrigger.png');		
+		this.load.image('triggerbox', 'assets/triggerbox.png');
 		
 		//arrows
-		this.load.image('up', 'Ribbit/uparrow.png');
-		this.load.image('upright', 'Ribbit/upright.png');
-		this.load.image('right', 'Ribbit/right.png');
-		this.load.image('downright', 'Ribbit/downright.png');
-		this.load.image('down', 'Ribbit/down.png');
-		this.load.image('downleft', 'Ribbit/downleft.png');
-		this.load.image('left', 'Ribbit/left.png');
-		this.load.image('upleft', 'Ribbit/upleft.png');
+		this.load.image('up', 'assets/uparrow.png');
+		this.load.image('upright', 'assets/upright.png');
+		this.load.image('right', 'assets/right.png');
+		this.load.image('downright', 'assets/downright.png');
+		this.load.image('down', 'assets/down.png');
+		this.load.image('downleft', 'assets/downleft.png');
+		this.load.image('left', 'assets/left.png');
+		this.load.image('upleft', 'assets/upleft.png');
 		
 		//texts for level 1
-		this.load.image('t0', 'Ribbit/clickonrock.png'); //upright "clock on rock"
-		this.load.image('t1', 'Ribbit/detach.png');		 //no arrow, double click to let go
-		this.load.image('t2', 'Ribbit/avoidFire.png');	 //downleft	  "avoid the fire"
-		this.load.image('t3', 'Ribbit/reachCastle.png');
-		this.load.image('t4', 'Ribbit/landAt.png');      //downright  "land at castle"
+		this.load.image('t0', 'assets/clickonrock.png'); //upright "clock on rock"
+		this.load.image('t1', 'assets/detach.png');		 //no arrow, double click to let go
+		this.load.image('t2', 'assets/avoidFire.png');	 //downleft	  "avoid the fire"
+		this.load.image('t3', 'assets/reachCastle.png');
+		this.load.image('t4', 'assets/landAt.png');      //downright  "land at castle"
 		
 		//level 2 turtorial
-		this.load.image('follow', 'Ribbit/followArrow.png');
-		this.load.image('throw', 'Ribbit/ThrowArrow.png');
-		this.load.image('goUp', 'Ribbit/keepSwingingUp.png');
-		this.load.image('fall', 'Ribbit/fall.png');
+		this.load.image('follow', 'assets/followArrow.png');
+		this.load.image('throw', 'assets/ThrowArrow.png');
+		this.load.image('goUp', 'assets/keepSwingingUp.png');
+		this.load.image('fall', 'assets/fall.png');
 
 		
-		this.load.image('gameControls', 'Ribbit/controlsLevelOne.png');
-		this.load.image('winmenu', 'Ribbit/youwin.png');
-		this.load.image('next', 'Ribbit/NextLevel.png');
-		this.load.image('losemenu', 'Ribbit/youlose.png');
+		this.load.image('gameControls', 'assets/controlsLevelOne.png');
+		this.load.image('winmenu', 'assets/youwin.png');
+		this.load.image('next', 'assets/NextLevel.png');
+		this.load.image('losemenu', 'assets/youlose.png');
         
         
         // KEVINS CODE LOADS MIST
@@ -134,7 +133,6 @@ top_down.Preload.prototype = {
 	},
 	
 	create: function(){
-        
-		this.state.start('Game');
+		this.state.start('MainMenu');
 	}
 }

@@ -1,13 +1,14 @@
-var top_down = top_down || {};
+var ribbit = ribbit || {};
 
-top_down.Boot = function(){};
+ribbit.Boot = function(){};
 
-top_down.Boot.prototype = {
+ribbit.Boot.prototype = {
 	preload: function() {
 		this.load.image('preloadbar', 'assets/health_bar.png');
+		this.load.image('loading', 'assets/loading.png');
 	},
 	create: function(){
-		this.game.state.backgroundColor = '#eee';
-		this.game.state.start('Preload');
+		this.state.backgroundColor = '#eee';
+		this.state.start('Preload');
 	}
 }

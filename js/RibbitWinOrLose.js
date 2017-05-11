@@ -11,9 +11,9 @@ var distanceBetweenFrogAndCastle = 100;
 // Spawns castke sprite and enables collision
 
 function spawnCastle(x,y){   
-    castle=top_down.game.add.sprite(x,y,'castle');
+    castle=ribbit.game.add.sprite(x,y,'castle');
     castle.enableBody = true;
-    top_down.game.physics.p2.enable(castle);
+    ribbit.game.physics.p2.enable(castle);
     castle.body.setCollisionGroup(castleCG);
     castle.body.collides([blockedCG]);
     return castle;
@@ -35,8 +35,8 @@ function checkifWin(){
 // spawns one fire, randomly adds fire speed, adds fire to fireGroup
 
 function spawnFire(x,y){
-    animationSpeed = top_down.game.rnd.integerInRange(8, 12);      
-    var tempFire = top_down.game.add.sprite(x,y,"fire");
+    animationSpeed = ribbit.game.rnd.integerInRange(8, 12);      
+    var tempFire = ribbit.game.add.sprite(x,y,"fire");
     tempFire.enableBody=true;
     tempFire.animations.add('default', [0,1,2,3,4], animationSpeed, true);
     fireGroup.add(tempFire);    

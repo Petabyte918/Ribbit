@@ -1,9 +1,10 @@
-var top_down = top_down || {};
-//top_down.game = new Phaser.Game(768, 512, Phaser.AUTO, 'phaser-game');
-top_down.game = new Phaser.Game(1024, 624, Phaser.AUTO, 'phaser-game');
+var ribbit = ribbit || {};
+ribbit.game = new Phaser.Game(1024, 624, Phaser.AUTO, 'phaser-game');
 
-top_down.game.state.add('Boot', top_down.Boot);
-top_down.game.state.add('Preload', top_down.Preload);
-top_down.game.state.add('Game', top_down.Game);
 
-top_down.game.state.start('Boot');
+ribbit.game.state.add('Boot', ribbit.Boot);
+ribbit.game.state.add('Preload', ribbit.Preload);
+ribbit.game.state.add('MainMenu', ribbit.MainMenu);
+ribbit.game.state.add('LevelSelect', ribbit.LevelSelect);
+ribbit.game.state.add('PlayGame', ribbit.PlayGame);
+ribbit.game.state.start('Boot');
