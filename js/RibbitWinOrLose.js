@@ -10,7 +10,8 @@ var frogDying=false;
 var distanceBetweenFrogAndCastle = 100;
 // Spawns castke sprite and enables collision
 
-function spawnCastle(x,y){   
+function spawnCastle(x,y){
+	frogDying = false;
     castle=ribbit.game.add.sprite(x,y,'castle');
     castle.enableBody = true;
     ribbit.game.physics.p2.enable(castle);

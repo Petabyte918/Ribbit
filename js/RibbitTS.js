@@ -6,8 +6,8 @@ var restartGame;
 
 function checkTriggers(){
 	/*
-	if(currentLevel == 1 || currentLevel == 2) //needs to be removed or changed when trigger system is added to other levels.
 	var i = 0
+	if(currentLevel == 1 || currentLevel == 2) //needs to be removed or changed when trigger system is added to other levels.
 	while(arrow[i] != null && i < 10){ //when i add 10th arrow it will be success
 		if (ribbit.game.physics.arcade.intersects(frog, arrow[i].tb))
 				arrow[i].enterBox();
@@ -17,7 +17,8 @@ function checkTriggers(){
 					
 		arrow[i].ca = arrow[i].arrow.alpha;
 		i++;
-	}*/
+	}
+	*/
 }
 
 var complete = false;
@@ -236,7 +237,7 @@ function addTrigger(){
 
 class Arrow{
 	/*
-	* tbx = trigger box x location
+	* tbx = trigger box x locationW
 	* tby = trigger box y location
 	* scalex = scale of trigger box on x axis
 	* scaley = scale of trigger box on y axis

@@ -233,9 +233,9 @@ function rockClicked(rock){
 	if(!currentlyDoubleClicked){
 		console.log("rock clicked");
 		if((curRock != rock) || (curRock == null)){		
-			if(!mute)
+			if(ribbit.music.isPlaying)
 				//console.log("tongue sound");
-				tongueSound.play();
+				ribbit.tongueSound.play();
 			rock.body.setCollisionGroup(rockCG);
 			rock.body.collides([markerCG])
 			shootMarker(rock.x, rock.y);
@@ -262,10 +262,10 @@ function tongueGone(){
 
 function releaseFrogFromRock(){
 		markerGroup.removeAll();
-		if(!mute){
+		if(ribbit.music.isPlaying){
             if (frogDying==false){
                 //console.log("release sound");
-                releaseSound.play();
+                ribbit.releaseSound.play();
             }
 		}
 		curRock = null;
@@ -491,12 +491,35 @@ function moveObjToXY(obj, x, y, speed){
 
 function frogWins(){
 	releaseFrogFromRock();
-	endLevel();
+	endMenu = ribbit.game.add.sprite(512 - (495/2), 312 - (377/2), 'winmenu');
+	var homeButton = ribbit.game.add.sprite(512 - 80, 312 + 60, 'home');
+	var nextButton = ribbit.game.add.sprite(512 + 16, 312 + 60, 'next');
+	endMenu.fixedToCamera = true;
+	homeButton.inputEnabled = true;
+	homeButton.events.onInputDown.add(function(){ribbit.game.state.start('MainMenu');}, this);
+	homeButton.fixedToCamera = true;
+	nextButton.inputEnabled = true;
+	if(currentLevel != 4){
+		nextButton.events.onInputDown.add(function(){ribbit.game.state.start('LevelSelect', true, false, (parseInt(currentLevel) + 1));}, this);
+	}
+	nextButton.fixedToCamera = true;
 }
 
 function frogDies(){
-    console.log("Frog Dies");
-    lostLevel();
+	endMenu = ribbit.game.add.sprite(512 - (495/2), 312 - (377/2), 'losemenu');
+	var homeButton = ribbit.game.add.sprite(512 - 80, 312 + 60, 'home');
+	var restartGame = ribbit.game.add.sprite(512 + 16, 312 + 60, 'restart');
+
+	endMenu.fixedToCamera = true;
+	
+	homeButton.inputEnabled = true;
+	homeButton.events.onInputDown.add(function(){ribbit.game.state.start('MainMenu');}, this);
+	homeButton.fixedToCamera = true;
+	
+	restartGame.inputEnabled = true;
+	restartGame.events.onInputDown.add(function(){ribbit.game.state.start('LevelSelect', true, false, currentLevel);}, this);
+	restartGame.fixedToCamera = true;
+
 }
 
 function initRocks(rockLayerData){
@@ -567,8 +590,9 @@ function checkControls(){
 		if(spaceKey.isDown){
 			if(singlePress){
 				//console.log("SPACE");
-				console.log(ribbit.game.physics.p2.total);
+				//console.log(ribbit.game.physics.p2.total);
 				//console.log(markerGroup.length);
+				frogWins();
 			}
 			singlePress = false;
 		} else {
@@ -591,15 +615,28 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 	}
 }
 
+function killPopupMenu(){
+	homeMenu.destroy();
+	resumeButton.destroy();
+	restartButton.destroy();
+	volumeButton.destroy();
+	home.destroy();
+}
+
 function createPopupMenu(){
 	menuButton.visible = false;
-	if(!mute)
-		selectSound.play();
+	if(ribbit.music.isPlaying)
+		ribbit.selectSound.play();
 	
 	homeMenu = ribbit.game.add.sprite(512 - (495/2), 120, 'popup');
 	resumeButton = ribbit.game.add.sprite(512 - 68, 312 - 29, 'resume');
 	restartButton = ribbit.game.add.sprite(512 + 10, 312 - 29, 'restart');
-	volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOn');
+	
+	if(ribbit.music.isPlaying){
+		volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOn');
+	} else {
+		volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOff');
+	}
 	home = ribbit.game.add.sprite(512 + 10, 312 + 59, 'home');
 	
 	homeMenu.fixedToCamera = true;
@@ -616,7 +653,9 @@ function createPopupMenu(){
 	
 	/*optimized*/
 	volumeButton.inputEnabled = true;
-	volumeButton.events.onInputDown.add(function(){}, this);
+	volumeButton.events.onInputDown.add(function(){
+		if(ribbit.music.isPlaying){ribbit.music.stop();} else{ribbit.music.play();}
+		killPopupMenu(); createPopupMenu();}, this);
 	volumeButton.fixedToCamera = true;
 	
 	/*optimized*/
@@ -638,8 +677,8 @@ function killAll(){
 		endMenu.destroy();
 		endMenu = null
 	}
-	if(!mute)
-		//selectSound.play();	
+	if(ribbit.music.isPlaying)
+		//ribbit.ribbit.selectSound.play();	
 	ribbit.game.world.removeAll();
 	if(ribbit.game.physics.p2 != null){
 		ribbit.game.physics.p2.clear();
@@ -648,7 +687,7 @@ function killAll(){
 }
 
 
-
+/*
 function muteSounds(){
 	if(!mute){
 	mute = true;
@@ -658,25 +697,28 @@ function muteSounds(){
 	mute = false;
 	music.play('', 0, 1, true, true);
 }
-
+*/
+/*
 function loadSounds(){
-	hitWallSound = ribbit.game.add.audio('hitwall');
+	ribbit.hitWallSound = ribbit.game.add.audio('hitwall');
 	fireSound = ribbit.game.add.audio('fire');
-	completeSounds = ribbit.game.add.audio('complete');
-	selectSound = ribbit.game.add.audio('select');
-	releaseSound = ribbit.game.add.audio('release');
-	tongueSound = ribbit.game.add.audio('tongueSound');
+	ribbit.completeSounds = ribbit.game.add.audio('complete');
+	ribbit.ribbit.selectSound = ribbit.game.add.audio('select');
+	ribbit.releaseSound = ribbit.game.add.audio('release');
+	ribbit.tongueSound = ribbit.game.add.audio('ribbit.tongueSound');
 	music = ribbit.game.add.audio('music');
 }
+*/
 
 function doubleClicked(){
 	console.log("DOUBLE CLICKED");
 	releaseFrogFromRock();
 }
 
-if(!mute)
+
 function wallSound(){
-	hitWallSound.play();
+	if(ribbit.music.isPlaying)
+		ribbit.hitWallSound.play();
 }
 
 function updateBackground(){
@@ -710,12 +752,20 @@ function updateGame(){
 		}
 		updateFrog();
 		updateBackground();
+		checkTriggers();
+		/*
 		if(gameState == 'gameStart'){
 			checkTriggers();
 		}
+		*/
+		
+		
+		//working
+		/*
 		if(complete)
 			endLevel();
-        checkMist();
+		*/
+		checkMist();
 	}
 
 function setUpPhysics(){
@@ -797,6 +847,10 @@ function setUpLayerMap(){
 }
 
 function initLevel(level){
+	
+	
+	//find state of mute 
+	complete = false;
 	curRock = null;
 	frog = null;
 	currentlyDoubleClicked = false;
@@ -808,8 +862,6 @@ function initLevel(level){
 	gameState = "gameStart";
 
 	setUpPhysics();
-	loadSounds();
-	music.play('', 0, 1, true, true);
 	initControls(); //tell Phaser to look for key presses
 	
 	backgroundImage = ribbit.game.add.sprite(0, 0, 'levelBackground1');

@@ -133,6 +133,14 @@ ribbit.Preload.prototype = {
 	},
 	
 	create: function(){
+		ribbit.music = ribbit.game.add.audio('music');
+		ribbit.music.play('', 0, 1, true, true);
+		ribbit.hitWallSound = ribbit.game.add.audio('hitwall');
+		ribbit.fireSound = ribbit.game.add.audio('fire');
+		ribbit.completeSounds = ribbit.game.add.audio('complete');
+		ribbit.selectSound = ribbit.game.add.audio('select');
+		ribbit.releaseSound = ribbit.game.add.audio('release');
+		ribbit.tongueSound = ribbit.game.add.audio('tongueSound');
 		this.state.start('MainMenu');
 	}
 }
