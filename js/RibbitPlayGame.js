@@ -622,8 +622,7 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 }
 
 function killPopupMenu(){
-    if (gameIsPaused==true){
-    console.log("killing popupmenu");
+    if (gameIsPaused==true){        
     ribbit.game.physics.p2.paused=false;
 	homeMenu.destroy();
 	resumeButton.destroy();
@@ -639,10 +638,11 @@ function createPopupMenu(){
     menuButton.visible = false;
 	if(ribbit.music.isPlaying)
 		ribbit.selectSound.play();
-	
 	homeMenu = ribbit.game.add.sprite(512 - (495/2), 120, 'popup');
 	resumeButton = ribbit.game.add.sprite(512 - 68, 312 - 29, 'resume');
 	restartButton = ribbit.game.add.sprite(512 + 10, 312 - 29, 'restart');
+  
+    
 	
 	if(ribbit.music.isPlaying){
 		volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOn');
