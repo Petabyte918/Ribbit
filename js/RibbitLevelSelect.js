@@ -3,7 +3,6 @@ var ribbit = ribbit || {};
 ribbit.LevelSelect = function(){
 	var levelIntent = -1;
 	setLevelIntent = function(level){
-		console.log("Inner Level: " + level);
 		if(level != undefined){
 			levelIntent = level;
 		}

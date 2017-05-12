@@ -186,6 +186,19 @@ function markerHitBlock(marker, block){
 	curRock = null;
 }
 
+function makeRockDisappear(){
+	if(curRock != null){
+		var typeOfRock = curRock.key.substring(4, 5);
+		if(typeOfRock == "C"){
+			curRock.destroy();
+			curRock = null;
+			releaseFrogFromRock();
+		}
+	}
+	ribbit.game.time.reset();
+}
+
+
 function markerHitRock(marker, rock){
 	rock.clearCollision();	
 	markerX = rock.x;
@@ -199,6 +212,14 @@ function markerHitRock(marker, rock){
 	tongueAnchored = true;
 	distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
 	markerGroup.removeAll(); 
+	var typeOfRock;
+	if(curRock != null){
+		typeOfRock = curRock.key.substring(4, 5);
+	}
+	if(typeOfRock == "C"){
+		ribbit.game.time.events.add(Phaser.Timer.SECOND *2, makeRockDisappear, this);
+
+	}
 }
 
 function removeCollisionFromAllRocks(){
@@ -233,8 +254,24 @@ function slowDownFrog(){
 function rockClicked(rock){
     if (ribbit.game.physics.p2.paused==false){
 	if(!currentlyDoubleClicked){
-		console.log("rock clicked");
+		//console.log("rock clicked");
 		if((curRock != rock) || (curRock == null)){		
+			if(curRock != null){
+				var typeOfRock = curRock.key.substring(4, 5);
+				if(typeOfRock == "B"){
+						curRock.destroy();
+						curRock = null;
+				} else if(typeOfRock == "C"){
+					makeRockDisappear();
+					/*
+					if(rockTimer.events != undefined){
+						rockTimer.events.destroy();
+					}
+					curRock.destroy();
+					curRock = null;
+					*/
+				}
+			}
 			if(ribbit.music.isPlaying)
 				//console.log("tongue sound");
 				ribbit.tongueSound.play();
@@ -264,6 +301,15 @@ function tongueGone(){
 }
 
 function releaseFrogFromRock(){
+		if(curRock != null){
+			var typeOfRock = curRock.key.substring(4, 5);
+			if(typeOfRock == "B"){
+				curRock.destroy();
+				curRock = null;
+			} else if(typeOfRock == "C"){
+				makeRockDisappear();
+			}
+		}
 		markerGroup.removeAll();
 		if(ribbit.music.isPlaying){
             if (frogDying==false && frogWinning==false){
@@ -462,7 +508,7 @@ function screenClicked(){
     if (ribbit.game.physics.p2.paused==false){
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
-	console.log("Screen clicked\nx:" + clickedWorldX + ", y:" + clickedWorldY);
+	//console.log("Screen clicked\nx:" + clickedWorldX + ", y:" + clickedWorldY);
 	var currentTime = new Date();
 	if(currentTime.getTime() - lastClickTime < ribbit.game.input.doubleTapRate){
 		currentlyDoubleClicked = true;
@@ -529,7 +575,6 @@ function frogDies(){
 }
 
 function initRocks(rockLayerData){
-	//console.log("init rocks");
 	var rockPlacement = [];
 	for(var i = 0; i < rockLayerData.data.length; i++){
 			if(rockLayerData.data[i] != 0){
@@ -553,13 +598,17 @@ function initRocks(rockLayerData){
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
                     rockPlacement.push(1); //rock type - 0, only can click once
 				}
+				if(rockLayerData.data[i] == 5){
+					rockPlacement.push((i%rockLayerData.width) * 16);
+					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16);
+                    rockPlacement.push(2); //rock type - 0, only can click once
+				}
             }
 	}
 	rockGroup = ribbit.game.add.group();
 	var tempRock;		
 	for(var i = 0; i < rockPlacement.length; i += 3){
 		var rockType = '0';
-		//console.log("rockPlaced");
 		rockType = Math.floor(Math.random() * 3) + 1;
         rockStyle = "A"; //A = normal, B = click once, C = timed
         if(rockPlacement[i+2] === 0){
@@ -598,7 +647,7 @@ function checkControls(){
 				//console.log("SPACE");
 				//console.log(ribbit.game.physics.p2.total);
 				//console.log(markerGroup.length);
-				frogWins();
+				console.log(ribbit.game.time.events);
 			}
 			singlePress = false;
 		} else {
@@ -677,57 +726,10 @@ function createPopupMenu(){
 	home.fixedToCamera = true;
 }
 
-function killAll(){	
-	ribbit.game.physics.startSystem(null);
-	curRock = null;
-	if(ribbit.game.map!=null && ribbit.game.blockedLayer!=null){
-		//ribbit.game.physics.p2.clearTilemapLayerBodies(ribbit.game.map, ribbit.game.blockedLayer);
-		ribbit.game.map.destroy();
-		ribbit.game.blockedLayer.destroy();
-		
-	}
-	if(endMenu != null){
-		endMenu.destroy();
-		endMenu = null
-	}
-	if(ribbit.music.isPlaying)
-		//ribbit.ribbit.selectSound.play();	
-	ribbit.game.world.removeAll();
-	if(ribbit.game.physics.p2 != null){
-		ribbit.game.physics.p2.clear();
-		//console.log("physics bodies cleared");
-	}
-}
-
-
-/*
-function muteSounds(){
-	if(!mute){
-	mute = true;
-	music.stop();
-	return;
-	}
-	mute = false;
-	music.play('', 0, 1, true, true);
-}
-*/
-/*
-function loadSounds(){
-	ribbit.hitWallSound = ribbit.game.add.audio('hitwall');
-	fireSound = ribbit.game.add.audio('fire');
-	ribbit.completeSounds = ribbit.game.add.audio('complete');
-	ribbit.ribbit.selectSound = ribbit.game.add.audio('select');
-	ribbit.releaseSound = ribbit.game.add.audio('release');
-	ribbit.tongueSound = ribbit.game.add.audio('ribbit.tongueSound');
-	music = ribbit.game.add.audio('music');
-}
-*/
-
 function doubleClicked(){
-	console.log("DOUBLE CLICKED");
+	//console.log("DOUBLE CLICKED");
 	releaseFrogFromRock();
 }
-
 
 function wallSound(){
 	if(ribbit.music.isPlaying)
