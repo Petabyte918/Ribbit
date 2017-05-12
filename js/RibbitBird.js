@@ -1,12 +1,12 @@
 var bird;
 var hit = false;
 function createBird(){
-	bird = ribbit.game.add.sprite(frogSpawnX, frogSpawnY - 100, 'bird');
+	bird = ribbit.game.add.sprite(frogSpawnX, frogSpawnY - 100, 'bat');
 	ribbit.game.physics.p2.enable(bird);
 	bird.enableBody = true;
 	bird.body.velocity.x = 10;
 	bird.body.velocity.y = 10;
-	bird.animations.add('fly', [0, 1, 2, 3, 4, 5, 6, 7, 8], 9, true);
+	bird.animations.add('fly', [0, 1, 2, 3, 4, 5], 30, true);
 }
 
 function updateBird(){
