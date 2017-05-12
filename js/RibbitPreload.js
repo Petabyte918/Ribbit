@@ -12,13 +12,13 @@ ribbit.Preload.prototype = {
 		this.load.onLoadStart.add(loadStart, this);
 		this.load.tilemap('level_1', 'assets/tilemaps/level_1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_2', 'assets/tilemaps/level_2.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level_3', 'assets/tilemaps/level_3.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level_4', 'assets/tilemaps/level_4.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_3', 'assets/tilemaps/ss_level_3.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_4', 'assets/tilemaps/ss_level_4.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_5', 'assets/tilemaps/level_5.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_6', 'assets/tilemaps/level_6.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_7', 'assets/tilemaps/level_7.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_8', 'assets/tilemaps/level_8.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level_9', 'assets/tilemaps/level_9.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_9', 'assets/tilemaps/ss_level_9.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_10', 'assets/tilemaps/level_10.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_11', 'assets/tilemaps/level_11.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_12', 'assets/tilemaps/level_12.json', null, Phaser.Tilemap.TILED_JSON);
