@@ -5,9 +5,8 @@ var nextButton;
 var restartGame;
 
 function checkTriggers(){
-	/*
 	var i = 0
-	if(currentLevel == 1 || currentLevel == 2) //needs to be removed or changed when trigger system is added to other levels.
+	if(currentLevel == "1" || currentLevel == "2") //needs to be removed or changed when trigger system is added to other levels.
 	while(arrow[i] != null && i < 10){ //when i add 10th arrow it will be success
 		if (ribbit.game.physics.arcade.intersects(frog, arrow[i].tb))
 				arrow[i].enterBox();
@@ -18,7 +17,6 @@ function checkTriggers(){
 		arrow[i].ca = arrow[i].arrow.alpha;
 		i++;
 	}
-	*/
 }
 
 var complete = false;
@@ -79,7 +77,8 @@ function lostLevel2(){
 }
 
 function addTrigger(){
-	switch(currentLevel){
+	var currentLevelInt = parseInt(currentLevel);
+	switch(currentLevelInt){
 	case 1:
 		var controls = ribbit.game.add.sprite(352, 2552, 'gameControls');
 		controls.anchor.setTo(.5, 0);
