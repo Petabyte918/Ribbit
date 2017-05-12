@@ -263,8 +263,8 @@ function tongueGone(){
 function releaseFrogFromRock(){
 		markerGroup.removeAll();
 		if(ribbit.music.isPlaying){
-            if (frogDying==false){
-                //console.log("release sound");
+            if (frogDying==false && frogWinning==false){
+                console.log("release sound");
                 ribbit.releaseSound.play();
             }
 		}
