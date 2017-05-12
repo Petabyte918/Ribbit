@@ -205,20 +205,24 @@ function markerHitRock(marker, rock){
 	markerY = rock.y;
 	marker.clearCollision();
 	marker.sprite.kill();
-	wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
+	//wallAnchor = markerGroup.create(markerX, markerY, 'ttongue');
+	
+	if(wallAnchor != undefined){
+		wallAnchor.destroy();
+	}
+	wallAnchor = ribbit.game.add.sprite(markerX, markerY, 'ttongue');
 	//console.log("A creating sprite for the marker group");
 	ribbit.game.physics.p2.enable(wallAnchor);
 	wallAnchor.body.static = true;
 	tongueAnchored = true;
 	distanceBetweenFrogAndRock = Math.sqrt(((rock.x - frog.x)*(rock.x - frog.x)) + ((rock.y - frog.y)*(rock.y - frog.y)));
-	markerGroup.removeAll(); 
+	//markerGroup.removeAll(); 
 	var typeOfRock;
 	if(curRock != null){
 		typeOfRock = curRock.key.substring(4, 5);
 	}
 	if(typeOfRock == "C"){
 		ribbit.game.time.events.add(Phaser.Timer.SECOND *2, makeRockDisappear, this);
-
 	}
 }
 
@@ -233,7 +237,11 @@ function removeCollisionFromAllRocks(){
 function shootMarker(destX, destY){
 	tongueOut = true;
 	tongueAnchored = false;
-	marker = markerGroup.create(frog.x, frog.y, 'ttongue');
+	if(marker != undefined){
+		marker.destroy();
+	}
+	marker = ribbit.game.add.sprite(frog.x, frog.y, 'ttongue');
+	//marker = markerGroup.create(frog.x, frog.y, 'ttongue');
 	//console.log("B creating sprite for the marker group");
 	ribbit.game.physics.p2.enable(marker);
 	var markerAngle = Math.atan2(ribbit.game.camera.y + destY - frog.y, ribbit.game.camera.x + destX - frog.x);
@@ -253,38 +261,29 @@ function slowDownFrog(){
 
 function rockClicked(rock){
     if (ribbit.game.physics.p2.paused==false){
-	if(!currentlyDoubleClicked){
-		//console.log("rock clicked");
-		if((curRock != rock) || (curRock == null)){		
-			if(curRock != null){
-				var typeOfRock = curRock.key.substring(4, 5);
-				if(typeOfRock == "B"){
+		if(!currentlyDoubleClicked){
+			if((curRock != rock) || (curRock == null)){		
+				if(curRock != null){
+					var typeOfRock = curRock.key.substring(4, 5);
+					if(typeOfRock == "B"){
 						curRock.destroy();
 						curRock = null;
-				} else if(typeOfRock == "C"){
-					makeRockDisappear();
-					/*
-					if(rockTimer.events != undefined){
-						rockTimer.events.destroy();
+					} else if(typeOfRock == "C"){
+						makeRockDisappear();
 					}
-					curRock.destroy();
-					curRock = null;
-					*/
 				}
-			}
 			if(ribbit.music.isPlaying)
-				//console.log("tongue sound");
-				ribbit.tongueSound.play();
+			ribbit.tongueSound.play();
 			rock.body.setCollisionGroup(rockCG);
 			rock.body.collides([markerCG])
 			shootMarker(rock.x, rock.y);
 			curRock = rock;
 			slowDownFrog();
+			} else {
+			}
 		} else {
+			removeCollisionFromAllRocks();
 		}
-	} else {
-		removeCollisionFromAllRocks();
-	}
     }
 }
 
@@ -297,7 +296,6 @@ function tongueGone(){
 	tongueBeingRetracted = false;
 	tongueArray[1].x = 20;
 	tongueArray[1].y = 20;
-	markerGroup.removeAll();
 }
 
 function releaseFrogFromRock(){
@@ -310,7 +308,6 @@ function releaseFrogFromRock(){
 				makeRockDisappear();
 			}
 		}
-		markerGroup.removeAll();
 		if(ribbit.music.isPlaying){
             if (frogDying==false && frogWinning==false){
                 console.log("release sound");
@@ -644,10 +641,7 @@ var singlePressLevel = true;
 function checkControls(){
 		if(spaceKey.isDown){
 			if(singlePress){
-				//console.log("SPACE");
-				//console.log(ribbit.game.physics.p2.total);
-				//console.log(markerGroup.length);
-				console.log(ribbit.game.time.events);
+				console.log(curRock);
 			}
 			singlePress = false;
 		} else {
@@ -701,7 +695,6 @@ function createPopupMenu(){
 	home = ribbit.game.add.sprite(512 + 10, 312 + 59, 'home');
 	
 	homeMenu.fixedToCamera = true;
-    
 	
 	/*optimized*/
 	resumeButton.inputEnabled = true;
@@ -768,18 +761,6 @@ function updateGame(){
 		updateFrog();
 		updateBackground();
 		checkTriggers();
-		/*
-		if(gameState == 'gameStart'){
-			checkTriggers();
-		}
-		*/
-		
-		
-		//working
-		/*
-		if(complete)
-			endLevel();
-		*/
 		checkMist();
 	}
 
@@ -822,7 +803,7 @@ function setUpMenuButton(){
 }
 
 function setUpFrog(){
-	markerGroup = ribbit.game.add.group(); //sets up a group for our tongue markers
+	//markerGroup = ribbit.game.add.group(); //sets up a group for our tongue markers
 	//set up frog and frog physics
 	if(frogSpawnX < 0 | frogSpawnY < 0){
 		alert("Frog not found");
@@ -863,9 +844,6 @@ function setUpLayerMap(){
 }
 
 function initLevel(level){
-	
-	
-	//find state of mute 
 	complete = false;
 	curRock = null;
 	frog = null;
