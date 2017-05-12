@@ -14,7 +14,7 @@ ribbit.Preload.prototype = {
 		this.load.tilemap('level_2', 'assets/tilemaps/level_2.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_3', 'assets/tilemaps/ss_level_3.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_4', 'assets/tilemaps/ss_level_4.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level_5', 'assets/tilemaps/level_5.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level_5', 'assets/tilemaps/ss_level_5.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_6', 'assets/tilemaps/level_6.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_7', 'assets/tilemaps/level_7.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level_8', 'assets/tilemaps/level_8.json', null, Phaser.Tilemap.TILED_JSON);
