@@ -254,7 +254,7 @@ function slowDownFrog(){
 function rockClicked(rock){
     if (ribbit.game.physics.p2.paused==false){
 	if(!currentlyDoubleClicked){
-		//console.log("rock clicked");
+		console.log("rock clicked");
 		if((curRock != rock) || (curRock == null)){		
 			if(curRock != null){
 				var typeOfRock = curRock.key.substring(4, 5);
@@ -727,7 +727,7 @@ function createPopupMenu(){
 }
 
 function doubleClicked(){
-	//console.log("DOUBLE CLICKED");
+	console.log("DOUBLE CLICKED");
 	releaseFrogFromRock();
 }
 
@@ -768,6 +768,7 @@ function updateGame(){
 		updateFrog();
 		updateBackground();
 		checkTriggers();
+		updateBird();
 		/*
 		if(gameState == 'gameStart'){
 			checkTriggers();
@@ -896,6 +897,7 @@ function initLevel(level){
 	clearConstraints();
 	setUpCamera();
 	setUpMenuButton();  
+	createBird();
 }
 
 ribbit.PlayGame = function(){

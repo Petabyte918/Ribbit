@@ -128,6 +128,9 @@ ribbit.Preload.prototype = {
         this.load.image('mist1','assets/mist1.png');
         this.load.image('mist2','assets/mist2.png');
         this.load.image('mist3','assets/mist3.png');
+		
+		//bird
+		this.load.spritesheet('bird', 'assets/fakebird.png', 32, 22);
 
         
 	},
