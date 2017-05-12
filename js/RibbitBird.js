@@ -1,7 +1,7 @@
 var bird;
 var hit = false;
-function createBird(){
-	bird = ribbit.game.add.sprite(frogSpawnX, frogSpawnY - 100, 'bat');
+function createBird(x, y){
+	bird = ribbit.game.add.sprite(x, y, 'bat');
 	ribbit.game.physics.p2.enable(bird);
 	bird.enableBody = true;
 	bird.body.velocity.x = 10;
@@ -10,24 +10,26 @@ function createBird(){
 }
 
 function updateBird(){
-	bird.body.velocity.x = (frog.body.x - bird.body.x)/2;
-	bird.body.velocity.y = (frog.body.y - bird.body.y);
-	
-	if(bird.body.velocity.x < 10 && bird.body.velocity.x > 0)
-		bird.body.velocity.x = 10;
-	if(bird.body.velocity.x > -10 && bird.body.velocity.x < 0)
-		bird.body.velocity.x = -10;
+	if(bird != undefined){
+		bird.body.velocity.x = (frog.body.x - bird.body.x)/2;
+		bird.body.velocity.y = (frog.body.y - bird.body.y);
+		
+		if(bird.body.velocity.x < 10 && bird.body.velocity.x > 0)
+			bird.body.velocity.x = 10;
+		if(bird.body.velocity.x > -10 && bird.body.velocity.x < 0)
+			bird.body.velocity.x = -10;
 
-	
-	if(bird.body.velocity.y < 10 && bird.body.velocity.y > 0)
-		bird.body.velocity.y = 10;
-	if(bird.body.velocity.y > -10 && bird.body.velocity.y < 0)
-		bird.body.velocity.y = -10;
-	
-	bird.animations.play('fly');
-	if(ribbit.game.physics.arcade.intersects(frog, bird)){
-	if(!hit)
-	escapeTime();
+		
+		if(bird.body.velocity.y < 10 && bird.body.velocity.y > 0)
+			bird.body.velocity.y = 10;
+		if(bird.body.velocity.y > -10 && bird.body.velocity.y < 0)
+			bird.body.velocity.y = -10;
+		
+		bird.animations.play('fly');
+		if(ribbit.game.physics.arcade.intersects(frog, bird)){
+		if(!hit)
+		escapeTime();
+		}
 	}
 }
 

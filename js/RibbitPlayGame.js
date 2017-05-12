@@ -584,6 +584,9 @@ function initRocks(rockLayerData){
 				if(rockLayerData.data[i] == 10){
                     castle= spawnCastle((i%rockLayerData.width) * 16,(Math.floor(i/rockLayerData.width)) * 16);
 				}
+				if(rockLayerData.data[i] == 15){
+					createBird((i%rockLayerData.width) * 16, (Math.floor(i/rockLayerData.width)) * 16);
+				}
 				if(rockLayerData.data[i] == 3){
 					rockPlacement.push((i%rockLayerData.width) * 16); //x position
 					rockPlacement.push((Math.floor(i/rockLayerData.width)) * 16); //y position
@@ -683,9 +686,7 @@ function createPopupMenu(){
 	homeMenu = ribbit.game.add.sprite(512 - (495/2), 120, 'popup');
 	resumeButton = ribbit.game.add.sprite(512 - 68, 312 - 29, 'resume');
 	restartButton = ribbit.game.add.sprite(512 + 10, 312 - 29, 'restart');
-  
-    
-	
+
 	if(ribbit.music.isPlaying){
 		volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOn');
 	} else {
@@ -759,6 +760,7 @@ function updateGame(){
 		}
 		updateFrog();
 		updateBackground();
+		updateBird();
 		checkTriggers();
 		checkMist();
 	}
@@ -871,8 +873,7 @@ function initLevel(level){
 	setUpFrog();
 	clearConstraints();
 	setUpCamera();
-	setUpMenuButton();  
-	createBird();
+	setUpMenuButton();
 }
 
 ribbit.PlayGame = function(){
