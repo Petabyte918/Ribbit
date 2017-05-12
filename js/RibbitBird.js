@@ -11,24 +11,26 @@ function createBird(x, y){
 
 function updateBird(){
 	if(bird != undefined){
-		bird.body.velocity.x = (frog.body.x - bird.body.x)/2;
-		bird.body.velocity.y = (frog.body.y - bird.body.y);
-		
-		if(bird.body.velocity.x < 10 && bird.body.velocity.x > 0)
-			bird.body.velocity.x = 10;
-		if(bird.body.velocity.x > -10 && bird.body.velocity.x < 0)
-			bird.body.velocity.x = -10;
+		if(bird.body != undefined){
+			bird.body.velocity.x = (frog.body.x - bird.body.x)/2;
+			bird.body.velocity.y = (frog.body.y - bird.body.y);
+			
+			if(bird.body.velocity.x < 10 && bird.body.velocity.x > 0)
+				bird.body.velocity.x = 10;
+			if(bird.body.velocity.x > -10 && bird.body.velocity.x < 0)
+				bird.body.velocity.x = -10;
 
-		
-		if(bird.body.velocity.y < 10 && bird.body.velocity.y > 0)
-			bird.body.velocity.y = 10;
-		if(bird.body.velocity.y > -10 && bird.body.velocity.y < 0)
-			bird.body.velocity.y = -10;
-		
-		bird.animations.play('fly');
-		if(ribbit.game.physics.arcade.intersects(frog, bird)){
-		if(!hit)
-		escapeTime();
+			
+			if(bird.body.velocity.y < 10 && bird.body.velocity.y > 0)
+				bird.body.velocity.y = 10;
+			if(bird.body.velocity.y > -10 && bird.body.velocity.y < 0)
+				bird.body.velocity.y = -10;
+			
+			bird.animations.play('fly');
+			if(ribbit.game.physics.arcade.intersects(frog, bird)){
+			if(!hit)
+			escapeTime();
+			}
 		}
 	}
 }
