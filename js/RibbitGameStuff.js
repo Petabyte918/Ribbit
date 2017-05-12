@@ -966,9 +966,9 @@ function muteSounds(){
 }
 
 function loadSounds(){
-	hitWallSound = top_down.game.add.audio('hitwall');
+	ribbit.hitWallSound = top_down.game.add.audio('hitwall');
 	fireSound = top_down.game.add.audio('fire');
-	completeSounds = top_down.game.add.audio('complete');
+	ribbit.completeSounds = top_down.game.add.audio('complete');
 	selectSound = top_down.game.add.audio('select');
 	releaseSound = top_down.game.add.audio('release');
 	tongueSound = top_down.game.add.audio('tongueSound');
@@ -982,7 +982,7 @@ function doubleClicked(){
 
 	if(!mute)
 function wallSound(){
-	hitWallSound.play();
+	ribbit.hitWallSound.play();
 }
 
 function updateBackground(){

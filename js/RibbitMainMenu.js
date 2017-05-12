@@ -16,7 +16,6 @@ ribbit.MainMenu = function(){
 		}
 		ribbit.game.state.start('LevelSelect');
 	}
-	//ribbit.music.play('', 0, 1, true, true);
 	clickControls = function(){
 		if(ribbit.music.isPlaying){
 			ribbit.selectSound.play();
@@ -34,7 +33,6 @@ ribbit.MainMenu = function(){
 			}
 			}, this);
 	}
-	
 	clickVolume = function(){
 		volume.destroy();
 		if(!ribbit.music.isPlaying){
@@ -50,7 +48,6 @@ ribbit.MainMenu = function(){
 			ribbit.selectSound.play();
 		}
 	}
-	
 	clickAbout = function(){
 		if(ribbit.music.isPlaying){
 			ribbit.selectSound.play();
@@ -75,7 +72,6 @@ ribbit.MainMenu = function(){
 		volume.destroy();
 		about.destroy();
 	}
-	
 	initMainMenuButtons = function(){
 		play = ribbit.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91, 'playGame');
 		controls = ribbit.game.add.sprite(512 - (218/3) - 35, 312 - (35/2) + 91 + 41, 'controls');
