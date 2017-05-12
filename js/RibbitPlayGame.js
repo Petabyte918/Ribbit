@@ -546,8 +546,10 @@ function frogWins(){
 	homeButton.events.onInputDown.add(function(){ribbit.game.state.start('MainMenu');}, this);
 	homeButton.fixedToCamera = true;
 	nextButton.inputEnabled = true;
-	if(currentLevel != 4){
+	if(currentLevel != 12){
 		nextButton.events.onInputDown.add(function(){ribbit.game.state.start('LevelSelect', true, false, (parseInt(currentLevel) + 1));}, this);
+	} else {
+		ribbit.game.state.start('MainMenu');
 	}
 	nextButton.fixedToCamera = true;
 }
