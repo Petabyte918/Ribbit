@@ -31,6 +31,8 @@ function checkifWin(){
 		if (distanceBetweenFrogAndCastle <=64){
 			console.log("FrogWins");
             frogWinning = true;
+            frog.body.velocity.x=0;
+            frog.body.velocity.y=0;
 			frogWins();
 		}
 	}
