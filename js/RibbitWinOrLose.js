@@ -7,11 +7,13 @@ var justHitFire = false;
 var fireHitTime = 0;
 var currentTime1 = 0;
 var frogDying=false;
+var frogWinning = false;
 var distanceBetweenFrogAndCastle = 100;
 // Spawns castke sprite and enables collision
 
 function spawnCastle(x,y){
 	frogDying = false;
+    frogWinning = false;
     castle=ribbit.game.add.sprite(x,y,'castle');
     castle.enableBody = true;
     ribbit.game.physics.p2.enable(castle);
@@ -28,6 +30,7 @@ function checkifWin(){
 		distanceBetweenFrogAndCastle = Math.sqrt(((castle.body.x-frog.body.x)*(castle.body.x-frog.body.x))+((castle.body.y-frog.body.y)*(castle.body.y-frog.body.y)));
 		if (distanceBetweenFrogAndCastle <=64){
 			console.log("FrogWins");
+            frogWinning = true;
 			frogWins();
 		}
 	}
@@ -77,11 +80,14 @@ function checkifLose(){
 
 function frogOnFire(){
     frogDying=true;
+    frog.body.velocity.x=0;
+    frog.body.velocity.y=0;
     releaseFrogFromRock();
     frog.animations.play("die"); 
     if (frogDying){/*
 	setInterval(function(){console.log("TIMED INTERVAL");frogDies();}, 2199);*/ 
         if (frog.animations.currentFrame.index==16){
+            frog.kill();
             frogDies();
         }
     }

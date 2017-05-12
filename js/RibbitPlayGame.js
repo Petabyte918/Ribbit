@@ -98,6 +98,7 @@ var gamePreviouslyInit = false;
 
 //castle Kevin
 var castle;
+var gameIsPaused = false;
 
 //////////////////////////////////
 //			FROG	STUFF		//
@@ -251,6 +252,7 @@ function slowDownFrog(){
 }
 
 function rockClicked(rock){
+    if (ribbit.game.physics.p2.paused==false){
 	if(!currentlyDoubleClicked){
 		//console.log("rock clicked");
 		if((curRock != rock) || (curRock == null)){		
@@ -283,6 +285,7 @@ function rockClicked(rock){
 	} else {
 		removeCollisionFromAllRocks();
 	}
+    }
 }
 
 function tongueGone(){
@@ -309,8 +312,8 @@ function releaseFrogFromRock(){
 		}
 		markerGroup.removeAll();
 		if(ribbit.music.isPlaying){
-            if (frogDying==false){
-                //console.log("release sound");
+            if (frogDying==false && frogWinning==false){
+                console.log("release sound");
                 ribbit.releaseSound.play();
             }
 		}
@@ -502,6 +505,7 @@ function wp2t(point){
 }
 
 function screenClicked(){
+    if (ribbit.game.physics.p2.paused==false){
 	var clickedWorldX = getClickedWorldX();
 	var clickedWorldY = getClickedWorldY();
 	//console.log("Screen clicked\nx:" + clickedWorldX + ", y:" + clickedWorldY);
@@ -513,6 +517,7 @@ function screenClicked(){
 		currentlyDoubleClicked = false;
 	}
 	lastClickTime = currentTime;
+    }
 }
 
 function getClickedWorldX(){return ribbit.game.input.x + ribbit.game.camera.x;}
@@ -552,6 +557,7 @@ function frogWins(){
 }
 
 function frogDies(){
+    killPopupMenu();
 	endMenu = ribbit.game.add.sprite(512 - (495/2), 312 - (377/2), 'losemenu');
 	var homeButton = ribbit.game.add.sprite(512 - 80, 312 + 60, 'home');
 	var restartGame = ribbit.game.add.sprite(512 + 16, 312 + 60, 'restart');
@@ -665,15 +671,21 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 }
 
 function killPopupMenu(){
+    if (gameIsPaused==true){
+    console.log("killing popupmenu");
+    ribbit.game.physics.p2.paused=false;
 	homeMenu.destroy();
 	resumeButton.destroy();
 	restartButton.destroy();
 	volumeButton.destroy();
 	home.destroy();
+    }
 }
 
 function createPopupMenu(){
-	menuButton.visible = false;
+    ribbit.game.physics.p2.paused=true;
+    gameIsPaused=true;
+    menuButton.visible = false;
 	if(ribbit.music.isPlaying)
 		ribbit.selectSound.play();
 	
@@ -689,6 +701,7 @@ function createPopupMenu(){
 	home = ribbit.game.add.sprite(512 + 10, 312 + 59, 'home');
 	
 	homeMenu.fixedToCamera = true;
+    
 	
 	/*optimized*/
 	resumeButton.inputEnabled = true;
@@ -818,6 +831,7 @@ function setUpFrog(){
 	}
 	frog = ribbit.game.add.sprite(frogSpawnX, frogSpawnY, 'frog'); //add frog to game
 	ribbit.game.physics.p2.enable(frog); //give the frog physics
+    ribbit.game.physics.p2.paused=false;
 	frog.enableBody = true;
 	frog.body.mass = 4;
 	frog.body.setCollisionGroup(frogCG);
