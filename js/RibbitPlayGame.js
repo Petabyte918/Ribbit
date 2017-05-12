@@ -1,7 +1,5 @@
 var ribbit = ribbit || {};
 
-var gameState = null;
-
 var backgroundImage;
 
 var homeMenu;
@@ -262,6 +260,7 @@ function slowDownFrog(){
 function rockClicked(rock){
     if (ribbit.game.physics.p2.paused==false){
 		if(!currentlyDoubleClicked){
+			console.log("rock clicked");
 			if((curRock != rock) || (curRock == null)){		
 				if(curRock != null){
 					var typeOfRock = curRock.key.substring(4, 5);
@@ -665,8 +664,7 @@ function getDataLayerFromTilemap(tilemapName, layerName){
 }
 
 function killPopupMenu(){
-    if (gameIsPaused==true){
-    console.log("killing popupmenu");
+    if (gameIsPaused==true){        
     ribbit.game.physics.p2.paused=false;
 	homeMenu.destroy();
 	resumeButton.destroy();
@@ -682,10 +680,11 @@ function createPopupMenu(){
     menuButton.visible = false;
 	if(ribbit.music.isPlaying)
 		ribbit.selectSound.play();
-	
 	homeMenu = ribbit.game.add.sprite(512 - (495/2), 120, 'popup');
 	resumeButton = ribbit.game.add.sprite(512 - 68, 312 - 29, 'resume');
 	restartButton = ribbit.game.add.sprite(512 + 10, 312 - 29, 'restart');
+  
+    
 	
 	if(ribbit.music.isPlaying){
 		volumeButton = ribbit.game.add.sprite(512 - 68, 312 + 59, 'volumeOn');
@@ -720,7 +719,7 @@ function createPopupMenu(){
 }
 
 function doubleClicked(){
-	//console.log("DOUBLE CLICKED");
+	console.log("DOUBLE CLICKED");
 	releaseFrogFromRock();
 }
 
@@ -853,7 +852,6 @@ function initLevel(level){
 	tongueOut = false;
 	currentLevel = level;
 	menuClicked = false;
-	gameState = "gameStart";
 
 	setUpPhysics();
 	initControls(); //tell Phaser to look for key presses
@@ -874,6 +872,7 @@ function initLevel(level){
 	clearConstraints();
 	setUpCamera();
 	setUpMenuButton();  
+	createBird();
 }
 
 ribbit.PlayGame = function(){
